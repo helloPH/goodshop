@@ -60,6 +60,9 @@
     [self addSubview:oldPrice];
     
     _goinShopCar = [BaseCostomer buttonWithFrame:CGRectZero backGroundColor:[UIColor clearColor] text:@"" image:@"加入购物车"];
+    [_goinShopCar setTitleColor:mainColor forState:UIControlStateNormal];
+    _goinShopCar.titleLabel.font=[UIFont systemFontOfSize:MLwordFont_5];
+    
     [_goinShopCar setImageEdgeInsets: UIEdgeInsetsMake(7,12,7,12)];
     [self addSubview:_goinShopCar];
     
@@ -80,6 +83,7 @@
     oldPrice.frame = CGRectMake(CGRectGetMaxX(nowPrice.frame), CGRectGetMaxY(goodTitle.frame)+10, 70*MCscale, 20*MCscale);
     oldPrice.center = CGPointMake(CGRectGetMaxX(nowPrice.frame)+37*MCscale, CGRectGetMaxY(goodTitle.frame)+20*MCscale);
     _goinShopCar.frame = CGRectMake(CGRectGetMaxX(nowPrice.frame)+SCLgoinCarSpace, CGRectGetMaxY(goodTitle.frame), SCLgoinCarHeight +10, SCLgoinCarHeight);
+    
     line.frame = CGRectMake(0, 0, self.width, 1);
     line1.frame = CGRectMake(self.width-1,5*MCscale, 1, self.height-10*MCscale);
 }
@@ -87,12 +91,25 @@
 {
     ShangpinModel *model = array[indexpath.row];
     [goodImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",model.canpinpic]] placeholderImage:[UIImage imageNamed:@"yonghutouxiang"] options:SDWebImageRefreshCached];
-    
+ 
+
     NSString *biaoq = [NSString stringWithFormat:@"%@",model.biaoqian];
     if (![biaoq isEqualToString:@"1"] && ![biaoq isEqualToString:@""]) [shangbiao sd_setImageWithURL:[NSURL URLWithString:model.biaoqian]];
     
     NSString *zhuangtai = [NSString stringWithFormat:@"%@",model.zhuangtai];
     NSLog(@"状态%@",zhuangtai);
+    
+    NSString *kexuanyanse = [NSString stringWithFormat:@"%@",model.kexuanyanse];
+    if ([kexuanyanse isEqualToString:@"1"]) {
+        [_goinShopCar setTitle:@"可选    " forState:UIControlStateNormal];
+        [_goinShopCar setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+        _goinShopCar.userInteractionEnabled=NO;
+    }else{
+        [_goinShopCar setTitle:@"" forState:UIControlStateNormal];
+        [_goinShopCar setImage:[UIImage imageNamed:@"加入购物车"] forState:UIControlStateNormal];
+        _goinShopCar.userInteractionEnabled=YES;
+    }
+    
     //
     if (zhuangtai.length > 11) {
         tishiLabel.text = zhuangtai;

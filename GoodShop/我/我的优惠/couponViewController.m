@@ -111,7 +111,7 @@
     UIView *line1 = [[UIView alloc]initWithFrame:CGRectMake(0, 39, kDeviceWidth,1)];
     line1.backgroundColor = txtColors(193, 194, 196, 1);
     [headView addSubview:line1];
-    listTabel.tableHeaderView = headView;
+//    listTabel.tableHeaderView = headView;
     [self.view addSubview:listTabel];
 }
 #pragma mark UITableViewDelegate

@@ -18,6 +18,8 @@
 @property (nonatomic,strong)id<DetailTableHeadViewDelegate>headerDelegate;
 
 //- (instancetype)initWithFrame:(CGRect)frame AndString:(NSString *)str;
+@property (nonatomic,strong)NSString * dingdanleixing;
+@property (nonatomic,strong)NSString * dindanzhuangtaidate;
 -(void)createUIWithArray:(NSArray *)array;
 
 @end

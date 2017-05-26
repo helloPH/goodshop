@@ -21,4 +21,6 @@
 @property(nonatomic,copy)NSString *dindanzhuangtaidate;//订单状态时间
 @property(nonatomic,copy)NSString *chajia;//差价
 @property(nonatomic,copy)NSString *zhifuleixing;//支付方式 0不显示 2在线支付 3余额支付
+
+@property(nonatomic,copy)NSString *dingdanleixing;//订单类型（0=店铺消费、1=联盟配送、2=商盟众包）
 @end

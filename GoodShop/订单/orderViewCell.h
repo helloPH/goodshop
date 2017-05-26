@@ -12,7 +12,12 @@
 @interface orderViewCell : UITableViewCell
 @property(nonatomic,retain)UILabel *timeLabel,*showLabel,*orderNum,*delivery,*goodNum,*money;//时间 显示对应文案 单号 已确认送达 数量 金额
 @property(nonatomic,retain)UIImageView *submitImage,*handleingImage,*sendingImage,*receiveImage;//提交订单 处理中 配送中 已收货
+@property(nonatomic,retain)UILabel *submitLabel,*handleingLabel,*sendingLabel,*receiveLabel;//提交订单 处理中 配送中 已收货
+
 @property(nonatomic,retain)UILabel *submitTime,*sendTime,*receiveTime;//订单时间 送货时间 收货时间
+@property(nonatomic,retain)UIView  *submitLine,*sendLine,*receiveLine;//订单时间 送货时间 收货时间
+
+
 @property(nonatomic,retain)UILabel *housekeeper,*telNumber;//管家 手机号
 @property(nonatomic,retain)UIButton *gotoeEvaluate,*telBtn;//去评价 打电话
 @property(nonatomic,retain)UIImageView *userheadImage;//用户头像

@@ -33,6 +33,8 @@
 #import "NearbyShopsViewController.h"
 #import "KaihuiView.h"
 #import "OpenAccountViewController.h"
+#import "SubLBXScanViewController.h"
+
 @interface CarFirstViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,MBProgressHUDDelegate,CAAnimationDelegate,UIWebViewDelegate,AccountLoginViewDelegate,updateTipDelegate,MakeMoneyViewControllerDelegate,BMKLocationServiceDelegate,BMKGeoCodeSearchDelegate,KaihuiViewDelegate>
 @end
 @implementation CarFirstViewController
@@ -123,7 +125,9 @@
     mainCollectionView.height=kDeviceHeight-self.tabBarController.tabBar.height;
     leftView.hidden = NO;
     rightView.hidden = NO;
+ 
     
+   
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
@@ -312,7 +316,7 @@
     UITapGestureRecognizer *rightViewTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(NaviViewTapClick:)];
     [rightView addGestureRecognizer:rightViewTap];
     
-    UIImageView *rightImage = [BaseCostomer imageViewWithFrame:CGRectMake(rightView.width-40*MCscale, 2*MCscale, 25*MCscale, 25*MCscale) backGroundColor:[UIColor clearColor] image:@"搜索"];
+    UIImageView *rightImage = [BaseCostomer imageViewWithFrame:CGRectMake(rightView.width-40*MCscale, 2*MCscale, 25*MCscale, 25*MCscale) backGroundColor:[UIColor clearColor] image:@"扫描"];
     [rightView addSubview:rightImage];
 }
 -(void)NaviViewTapClick:(UITapGestureRecognizer *)tap
@@ -332,14 +336,62 @@
     }
     else
     {
-        searchViewController *searchVC = [[searchViewController alloc]init];
-        searchVC.hidesBottomBarWhenPushed = YES;
-        searchVC.viewTag = 1;
-        searchVC.dianpuID = dianpuID;
+        //设置扫码区域参数设置
+        
+        //创建参数对象
+        LBXScanViewStyle *style = [[LBXScanViewStyle alloc]init];
+        
+        //矩形区域中心上移，默认中心点为屏幕中心点
+        style.centerUpOffset = 44;
+        
+        //扫码框周围4个角的类型,设置为外挂式
+        style.photoframeAngleStyle = LBXScanViewPhotoframeAngleStyle_Outer;
+        
+        //扫码框周围4个角绘制的线条宽度
+        style.photoframeLineW = 6;
+        
+        //扫码框周围4个角的宽度
+        style.photoframeAngleW = 24;
+        
+        //扫码框周围4个角的高度
+        style.photoframeAngleH = 24;
+        
+        //扫码框内 动画类型 --线条上下移动
+        style.anmiationStyle = LBXScanViewAnimationStyle_LineMove;
+        
+        //线条上下移动图片
+        style.animationImage = [UIImage imageNamed:@"CodeScan.bundle/qrcode_scan_light_green"];
+        
+        //SubLBXScanViewController继承自LBXScanViewController
+        //添加一些扫码或相册结果处理
+        SubLBXScanViewController *vc = [SubLBXScanViewController new];
+        vc.style = style;
+        vc.isQQSimulator = YES;
+        vc.isVideoZoom = YES;
+        vc.btnPhotoHiden = YES;
         UIBarButtonItem *bar=[[UIBarButtonItem alloc]init];
         bar.title=@"";
         self.navigationItem.backBarButtonItem=bar;
-        [self.navigationController pushViewController:searchVC animated:YES];
+        vc.hidesBottomBarWhenPushed=YES;
+        [self.navigationController pushViewController:vc animated:YES];
+        //    UIWindow *window = [[[UIApplication sharedApplication] windows] firstObject];
+        //    [window addSubview:vc.view];
+        
+        vc.block=^(NSString * Id){
+            set_isPeiSong(@"0");///  当扫码  进行 切换店铺时 把配送方式改为0
+            
+            [[NSUserDefaults standardUserDefaults]setValue:Id forKey:@"dianpuqiehuan"];
+            [[NSUserDefaults standardUserDefaults]setValue:@"2" forKey:@"isFirst"];
+            CustomTabBarViewController *main = (CustomTabBarViewController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+            [main setSelectedIndex:0];
+            main.buttonIndex = 0;
+            [self.navigationController popToRootViewControllerAnimated:YES];
+            NSNotification *qiehuandianpuNoti = [NSNotification notificationWithName:@"qiehuandianpuNoti" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotification:qiehuandianpuNoti];
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"qiehuandianpuNoti" object:nil];
+        
+        };
+
     }
 }
 -(void)shopDetailViewTapClick
@@ -365,15 +417,17 @@
 }
 -(void)rightItemClick
 {
+ 
     searchViewController *searchVC = [[searchViewController alloc]init];
     searchVC.hidesBottomBarWhenPushed = YES;
-    searchVC.viewTag = 3;
+    searchVC.viewTag = 1;
     searchVC.dianpuID = dianpuID;
     UIBarButtonItem *bar=[[UIBarButtonItem alloc]init];
     bar.title=@"";
     self.navigationItem.backBarButtonItem=bar;
     [self.navigationController pushViewController:searchVC animated:YES];
-}
+  
+      }
 -(void)delaysss
 {
     _codeSearch =[[BMKGeoCodeSearch alloc]init];
@@ -1193,6 +1247,8 @@
 #pragma mark -- 加入购物车数据
 -(void)addDataInCar:(NSInteger )index
 {
+    
+     
     ShangpinModel *shModel = shangpinArray[index];
     NSMutableDictionary *pram = [NSMutableDictionary dictionaryWithDictionary:@{@"shangpinid":shModel.shanpinid,@"userid":user_id,@"car.dianpuid":dianpuID}];
     [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"saveaddcarone.action" params:pram success:^(id json) {

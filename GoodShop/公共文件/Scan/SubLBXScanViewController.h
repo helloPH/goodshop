@@ -12,13 +12,13 @@
 
 //继承LBXScanViewController,在界面上绘制想要的按钮，提示语等
 @interface SubLBXScanViewController : LBXScanViewController
-
+@property (nonatomic,strong)void (^ block)(NSString * Id);
 
 
 #pragma mark -模仿qq界面
 
 @property (nonatomic, assign) BOOL isQQSimulator;
-
+@property (nonatomic, assign) BOOL btnPhotoHiden;
 /**
  @brief  扫码区域上方提示文字
  */

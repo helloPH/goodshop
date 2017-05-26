@@ -10,7 +10,9 @@
 #define LifeForMM_Header_h
 #endif
 
+#import "NSString+Helper.h"
 #import "UIViewExt.h"
+#import "Request.h"
 #import "HTTPTool.h"
 #import "UIImageView+WebCache.h"
 #import "SDWebImageManager.h"
@@ -72,25 +74,26 @@
 #define userLongitude [[NSUserDefaults standardUserDefaults]valueForKey:@"longitude"]
 #define userLatitude [[NSUserDefaults standardUserDefaults]valueForKey:@"latitude"]
 
+// 是否配送  主要针对扫码进行购买 扫码不进行配送 修改值为0  默认为1
+#define isPeiSong [[NSUserDefaults standardUserDefaults]valueForKey:@"isPeiSong"]
+#define set_isPeiSong(isPeiSong) [[NSUserDefaults standardUserDefaults]setValue:isPeiSong forKey:@"isPeiSong"]
+
 //#define location_city [[NSUserDefaults standardUserDefaults]valueForKey:@"locationShequCity"]
 #define stor_url @"https://itunes.apple.com/cn/app/miao-dian-jia/id1174739493?mt=8"
 
 //更改内外网请将此处三个网址全部更改,更改内外网的时候请将APP卸载之后重装(测试机或者模拟器)
-// http://192.168.1.99:8080/MshcShop/   //内网
-//http://www.shp360.com/MshcShop/     //外网
+
+ //外网
 #define HTTPHEADER @"http://www.shp360.com/MshcShop/"
-
-// http://192.168.1.250:8080/Backbone/   //内网
-//http://www.mshhch.com/Backbone/     //外网
 #define HTTPGugan @"http://www.mshhch.com/Backbone/"
-
-//http://192.168.1.99:8080/Store/
-//http://www.shp360.com/Store/
 #define HTTPWeb @"http://www.shp360.com/Store/"
-
-//http://192.168.1.99:8080/Mshc_Guanjia/
-//http://www.m1ao.com/Guanjia
 #define HTTPPush @"http://www.shp360.com/MshcShopGuanjia/"
+
+//内网
+//#define HTTPHEADER @"http://192.168.1.99:8080/MshcShop/"
+//#define HTTPGugan @"http://192.168.1.250:8080/Backbone/"
+//#define HTTPWeb @"http://192.168.1.99:8080/Store/"
+//#define HTTPPush @"http://192.168.1.99:8080/Mshc_Guanjia/"
 
 //字体大小
 #define MLwordFont_14 (IPHONE_5 ? 26 : 30)

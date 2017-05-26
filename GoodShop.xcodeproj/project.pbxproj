@@ -52,6 +52,7 @@
 		0A0883791DFA456500C19FE0 /* openssl_wrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0883691DFA456500C19FE0 /* openssl_wrapper.m */; };
 		0A08837A1DFA456500C19FE0 /* RSADataSigner.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A08836B1DFA456500C19FE0 /* RSADataSigner.m */; };
 		0A08837B1DFA456500C19FE0 /* RSADataVerifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A08836D1DFA456500C19FE0 /* RSADataVerifier.m */; };
+		0A1547D11EB99D2E00624A4E /* Request.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1547D01EB99D2E00624A4E /* Request.m */; };
 		0A1ED41F1E8E1D0A00F6F478 /* BusinessCooperationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1ED41E1E8E1D0A00F6F478 /* BusinessCooperationViewController.m */; };
 		0A1ED4231E8E27A600F6F478 /* NearbyShopsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1ED4221E8E27A600F6F478 /* NearbyShopsViewController.m */; };
 		0A1ED4261E8E2FE900F6F478 /* BaseCostomer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1ED4251E8E2FE900F6F478 /* BaseCostomer.m */; };
@@ -60,6 +61,7 @@
 		0A1ED4311E8E4D3500F6F478 /* ZWview.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1ED42F1E8E4D3500F6F478 /* ZWview.m */; };
 		0A22F3F11E24AD13004A2403 /* locationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A22F3F01E24AD13004A2403 /* locationViewController.m */; };
 		0A2474171E95DDB5001F88E6 /* MapLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A2474161E95DDB5001F88E6 /* MapLocationViewController.m */; };
+		0A25D7FD1ECAFD1500B9D269 /* NSString+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A25D7FC1ECAFD1500B9D269 /* NSString+Helper.m */; };
 		0A285A161E8F3936000D8157 /* PersonalCenterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A285A151E8F3936000D8157 /* PersonalCenterCell.m */; };
 		0A285A1A1E8F7259000D8157 /* QRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A285A191E8F7259000D8157 /* QRCodeViewController.m */; };
 		0A285A1E1E8F914F000D8157 /* KaihuiView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A285A1D1E8F914F000D8157 /* KaihuiView.m */; };
@@ -456,6 +458,7 @@
 		0AC8450F1DE6E36D008D0358 /* NewFunctionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8450C1DE6E36D008D0358 /* NewFunctionViewController.m */; };
 		0ACD46791DED6A2E00E9DD72 /* PopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACD46781DED6A2E00E9DD72 /* PopView.m */; };
 		0AE151691EA88DC700A904BF /* SuperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE151681EA88DC700A904BF /* SuperViewController.m */; };
+		0AE316601EBC127300AB960D /* DianCanOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE3165F1EBC127300AB960D /* DianCanOrderViewController.m */; };
 		0AE7EA141DE9766200FE684F /* userMessModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE7EA131DE9766200FE684F /* userMessModel.m */; };
 		0AE7EA171DE976E900FE684F /* redMoneyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE7EA161DE976E900FE684F /* redMoneyModel.m */; };
 		0AE7EA7C1DE97F3100FE684F /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AE7EA7B1DE97F3100FE684F /* MessageUI.framework */; };
@@ -683,6 +686,8 @@
 		0A08836B1DFA456500C19FE0 /* RSADataSigner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSADataSigner.m; sourceTree = "<group>"; };
 		0A08836C1DFA456500C19FE0 /* RSADataVerifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSADataVerifier.h; sourceTree = "<group>"; };
 		0A08836D1DFA456500C19FE0 /* RSADataVerifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSADataVerifier.m; sourceTree = "<group>"; };
+		0A1547CF1EB99D2E00624A4E /* Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Request.h; sourceTree = "<group>"; };
+		0A1547D01EB99D2E00624A4E /* Request.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Request.m; sourceTree = "<group>"; };
 		0A1ED41D1E8E1D0A00F6F478 /* BusinessCooperationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BusinessCooperationViewController.h; sourceTree = "<group>"; };
 		0A1ED41E1E8E1D0A00F6F478 /* BusinessCooperationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BusinessCooperationViewController.m; sourceTree = "<group>"; };
 		0A1ED4211E8E27A600F6F478 /* NearbyShopsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NearbyShopsViewController.h; sourceTree = "<group>"; };
@@ -699,6 +704,8 @@
 		0A22F3F01E24AD13004A2403 /* locationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = locationViewController.m; sourceTree = "<group>"; };
 		0A2474151E95DDB5001F88E6 /* MapLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapLocationViewController.h; sourceTree = "<group>"; };
 		0A2474161E95DDB5001F88E6 /* MapLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapLocationViewController.m; sourceTree = "<group>"; };
+		0A25D7FB1ECAFD1500B9D269 /* NSString+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Helper.h"; sourceTree = "<group>"; };
+		0A25D7FC1ECAFD1500B9D269 /* NSString+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Helper.m"; sourceTree = "<group>"; };
 		0A285A141E8F3936000D8157 /* PersonalCenterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonalCenterCell.h; sourceTree = "<group>"; };
 		0A285A151E8F3936000D8157 /* PersonalCenterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalCenterCell.m; sourceTree = "<group>"; };
 		0A285A181E8F7259000D8157 /* QRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeViewController.h; sourceTree = "<group>"; };
@@ -1504,6 +1511,8 @@
 		0ACD46781DED6A2E00E9DD72 /* PopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopView.m; sourceTree = "<group>"; };
 		0AE151671EA88DC700A904BF /* SuperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SuperViewController.h; sourceTree = "<group>"; };
 		0AE151681EA88DC700A904BF /* SuperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuperViewController.m; sourceTree = "<group>"; };
+		0AE3165E1EBC127300AB960D /* DianCanOrderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DianCanOrderViewController.h; sourceTree = "<group>"; };
+		0AE3165F1EBC127300AB960D /* DianCanOrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DianCanOrderViewController.m; sourceTree = "<group>"; };
 		0AE7EA121DE9766200FE684F /* userMessModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = userMessModel.h; sourceTree = "<group>"; };
 		0AE7EA131DE9766200FE684F /* userMessModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = userMessModel.m; sourceTree = "<group>"; };
 		0AE7EA151DE976E900FE684F /* redMoneyModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = redMoneyModel.h; sourceTree = "<group>"; };
@@ -2402,6 +2411,8 @@
 		0A892DF81DDECD9500421AC3 /* 公共文件 */ = {
 			isa = PBXGroup;
 			children = (
+				0A1547CF1EB99D2E00624A4E /* Request.h */,
+				0A1547D01EB99D2E00624A4E /* Request.m */,
 				0AE151631EA88D7300A904BF /* super */,
 				0A892DF91DDECDA100421AC3 /* Header.h */,
 				0A1ED4241E8E2FE900F6F478 /* BaseCostomer.h */,
@@ -3505,6 +3516,8 @@
 		0AE151631EA88D7300A904BF /* super */ = {
 			isa = PBXGroup;
 			children = (
+				0A25D7FB1ECAFD1500B9D269 /* NSString+Helper.h */,
+				0A25D7FC1ECAFD1500B9D269 /* NSString+Helper.m */,
 				0AE151671EA88DC700A904BF /* SuperViewController.h */,
 				0AE151681EA88DC700A904BF /* SuperViewController.m */,
 			);
@@ -3532,6 +3545,8 @@
 				0AED09321DED16E40076C169 /* orderMoney.h */,
 				0AED09331DED16E40076C169 /* orderMoney.m */,
 				0AED092A1DED14BC0076C169 /* View */,
+				0AE3165E1EBC127300AB960D /* DianCanOrderViewController.h */,
+				0AE3165F1EBC127300AB960D /* DianCanOrderViewController.m */,
 			);
 			path = "确认订单";
 			sourceTree = "<group>";
@@ -3879,6 +3894,7 @@
 				0AC844AD1DE6C46E008D0358 /* ZXEAN13Writer.m in Sources */,
 				0AC8448F1DE6C46E008D0358 /* ZXAI01AndOtherAIs.m in Sources */,
 				0AC844C01DE6C46E008D0358 /* ZXModulusPoly.m in Sources */,
+				0A1547D11EB99D2E00624A4E /* Request.m in Sources */,
 				0AC844231DE6C46E008D0358 /* ZXAztecWriter.m in Sources */,
 				0AC844161DE6C46E008D0358 /* ZXingWrapper.m in Sources */,
 				0AC844D31DE6C46E008D0358 /* ZXPDF417HighLevelEncoder.m in Sources */,
@@ -3886,6 +3902,7 @@
 				0AC844E71DE6C46E008D0358 /* ZXQRCodeFinderPatternInfo.m in Sources */,
 				0A2DC6ED1DF1526800A498B9 /* MASCompositeConstraint.m in Sources */,
 				0A892E1C1DDECE2A00421AC3 /* AFURLConnectionOperation.m in Sources */,
+				0AE316601EBC127300AB960D /* DianCanOrderViewController.m in Sources */,
 				0AC844851DE6C46E008D0358 /* ZXMaxiCodeReader.m in Sources */,
 				0AC844801DE6C46E008D0358 /* ZXDataMatrixReader.m in Sources */,
 				0AC844871DE6C46E008D0358 /* ZXGenericMultipleBarcodeReader.m in Sources */,
@@ -4006,6 +4023,7 @@
 				0A0883791DFA456500C19FE0 /* openssl_wrapper.m in Sources */,
 				0AC844131DE6C46E008D0358 /* LBXScanViewStyle.m in Sources */,
 				0A892E201DDECE2A00421AC3 /* MBProgressHUD.m in Sources */,
+				0A25D7FD1ECAFD1500B9D269 /* NSString+Helper.m in Sources */,
 				0A2DA96A1E1668DA0047FFC9 /* CouponsCell.m in Sources */,
 				0AC844B81DE6C46E008D0358 /* ZXUPCAWriter.m in Sources */,
 				0A59714D1DE4452200BF88F1 /* LoginViewController.m in Sources */,

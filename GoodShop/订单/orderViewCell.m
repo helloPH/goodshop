@@ -76,30 +76,39 @@
     
     UIView *line2 = [BaseCostomer viewWithFrame:CGRectMake(_submitTime.left, _submitTime.bottom, _submitTime.width, 1) backgroundColor:txtColors(193, 194, 196, 1)];
     [self.contentView addSubview:line2];
+    _submitLine=line2;
     //处理中img
     _handleingImage = [BaseCostomer imageViewWithFrame:CGRectMake(_submitTime.right+7, _submitImage.top, 26*MCscale, 26*MCscale) backGroundColor:[UIColor clearColor] image:@""];
     
+    
+    
     UILabel *handingLabel = [BaseCostomer labelWithFrame:CGRectMake(_handleingImage.left-10, _handleingImage.bottom+2, _handleingImage.width+20*MCscale, 15*MCscale) font: [UIFont systemFontOfSize:MLwordFont_9] textColor:textColors backgroundColor:[UIColor clearColor] textAlignment:1 numOfLines:1 text:@"处理中"];
     [self.contentView addSubview:handingLabel];
+    _handleingLabel=handingLabel;
     
     _sendTime = [BaseCostomer labelWithFrame:CGRectMake(_handleingImage.right+3, _handleingImage.top+6, 32*MCscale, 14*MCscale) font:[UIFont systemFontOfSize:MLwordFont_13] textColor:textColors backgroundColor:[UIColor clearColor] textAlignment:1 numOfLines:0 text:@""];
     
     UIView *line3 = [BaseCostomer viewWithFrame:CGRectMake(_sendTime.left, _sendTime.bottom, _sendTime.width, 1) backgroundColor:txtColors(193, 194, 196, 1)];
     [self.contentView addSubview:line3];
+    _sendLine=line3;
     
     //配送中img
     _sendingImage  = [BaseCostomer imageViewWithFrame:CGRectMake(_sendTime.right+7, _submitImage.top, 26*MCscale, 26*MCscale) backGroundColor:[UIColor clearColor] image:@""];
     
     UILabel *sendingLabel = [BaseCostomer labelWithFrame:CGRectMake(_sendingImage.left-10, _sendingImage.bottom+2, _sendingImage.width+20*MCscale, 15*MCscale) font:[UIFont systemFontOfSize:MLwordFont_9] textColor:textColors backgroundColor:[UIColor clearColor] textAlignment:1 numOfLines:1 text:@"配送中"];
     [self.contentView addSubview:sendingLabel];
+    _sendingLabel=sendingLabel;
+    
     _receiveTime = [BaseCostomer labelWithFrame:CGRectMake(_sendingImage.right+3, _sendingImage.top+6, 32*MCscale, 14*MCscale) font:[UIFont systemFontOfSize:MLwordFont_13] textColor:textColors backgroundColor:[UIColor clearColor] textAlignment:1 numOfLines:0 text:@""];
     
     UIView *line4 = [BaseCostomer viewWithFrame:CGRectMake(_receiveTime.left, _receiveTime.bottom+2, _receiveTime.width, 1) backgroundColor:txtColors(193, 194, 196, 1)];
     [self.contentView addSubview:line4];
+    _receiveLine=line4;
     //送达img
     _receiveImage = [BaseCostomer imageViewWithFrame:CGRectMake(_receiveTime.right+7, _submitImage.top, 26*MCscale, 26*MCscale) backGroundColor:[UIColor clearColor] image:@""];
     UILabel *receiveLabel = [BaseCostomer labelWithFrame:CGRectMake(_receiveImage.left-10, _receiveImage.bottom+2, _receiveImage.width+20*MCscale, 15*MCscale) font:[UIFont systemFontOfSize:MLwordFont_9] textColor:textColors backgroundColor:[UIColor clearColor] textAlignment:1 numOfLines:1 text:@"已收货"];
     [self.contentView addSubview:receiveLabel];
+    _receiveLabel=receiveLabel;
     
     UIView *line5 = [BaseCostomer viewWithFrame:CGRectMake(15*MCscale, _userheadImage.bottom+24*MCscale, kDeviceWidth-30, 0.5) backgroundColor:lineColor];
         line5.tag = 20011;
@@ -199,7 +208,12 @@
         _receiveTime.alpha = 1;
         _submitTime.text = tmAry[0];
         _sendTime.text = tmAry[1];
-        _receiveTime.text = tmAry[2];
+        if (tmAry.count==3) {
+             _receiveTime.text = tmAry[2];
+        }else{
+            _receiveTime.text=@"";
+        }
+      
         
     }
     else if ([[NSString stringWithFormat:@"%@",_model.dindanzhuangtai] isEqualToString:@"3"]){
@@ -263,12 +277,23 @@
         _cancelOrderBtn.alpha = 1;
         [_cancelOrderBtn setImage:[UIImage imageNamed:@"取消订单"] forState:UIControlStateNormal];
     }
-    CGSize showSize =[_showLabel.text boundingRectWithSize:CGSizeMake(150, 30*MCscale) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:13],NSFontAttributeName, nil] context:nil].size;
+    CGSize showSize =[_showLabel.text boundingRectWithSize:CGSizeMake(200, 30*MCscale) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:13],NSFontAttributeName, nil] context:nil].size;
     _showLabel.frame = CGRectMake(_timeLabel.right, _timeLabel.top, showSize.width, 30*MCscale);
     _orderNum.text = _model.danhao;
     _goodNum.text = _model.shuliang;
     _money.text = [NSString stringWithFormat:@"¥%.2f",[_model.yingfujine floatValue]];
-    if ([_model.guanjiantel integerValue]!=0) {
+    if ([_model.guanjiantel integerValue]==0 || [_model.dingdanleixing isEqualToString:@"0"]) {
+        UIView *line = [self viewWithTag:20011];
+        line.alpha = 0;
+        _housekeeper.text = @"";
+        _telNumber.text = @"";
+        _lineView.frame = CGRectMake(0,143*MCscale, kDeviceWidth, 2);
+        _guanjia.alpha = 0;
+        _tel.alpha = 0;
+        _telBtn.alpha = 0;
+
+    }
+    else{
         _housekeeper.text = _model.guanjia;
         _telNumber.text = [NSString stringWithFormat:@"%@",_model.guanjiantel];
         _lineView.frame = CGRectMake(0, _guanjia.bottom+3,kDeviceWidth , 2);
@@ -283,7 +308,56 @@
         _tel.alpha = 1;
         _telBtn.alpha = 1;
     }
-    else{
+
+    if ([_model.dingdanleixing isEqualToString:@"0"]) {
+        _sendTime.hidden=YES;
+        _sendLine.hidden=YES;
+        
+        _sendingLabel.hidden=YES;
+        _sendingImage.hidden=YES;
+        
+        
+        
+        
+        _handleingImage.centerX=(_receiveImage.centerX-_submitImage.centerX)/2 + _submitImage.centerX;
+        [_handleingLabel sizeToFit];
+        _handleingLabel.centerX=_handleingImage.centerX;
+        _handleingLabel.text=@"消费中";
+        
+        _submitTime.width=_handleingImage.left-_submitImage.right;
+        _submitLine.width=_submitTime.width;
+        _submitTime.left=_submitImage.right;
+        _submitLine.left=_submitTime.left;
+        
+        
+        _receiveLabel.text=@"已结束";
+        _receiveTime.width=_submitTime.width;
+        _receiveLine.width=_submitTime.width;
+        
+        _receiveTime.right=_receiveImage.left;
+        _receiveLine.right=_receiveTime.right;
+        
+        
+        
+        
+        if (tmAry.count==1) {//  消费中
+            _submitTime.text=tmAry[0];
+            _handleingImage.image=[UIImage imageNamed:@"处理中"];
+            _showLabel.text=@"感谢使用妙店佳，祝消费愉快。";
+            
+        }else if(tmAry.count==2){// 已收货
+            _submitTime.text=tmAry[0];
+            _handleingImage.image=[UIImage imageNamed:@"处理中"];
+            _receiveTime.text=tmAry[1];
+            _receiveImage.image=[UIImage imageNamed:@"已收货"];
+            _showLabel.text=@"感谢使用妙店佳，欢迎再次光临。";
+        }else{// 订单提交
+            _showLabel.text=@"感谢使用妙店佳，订单已提交。";
+        }
+//        [_showLabel sizeToFit];
+        _showLabel.centerY= _timeLabel.centerY;
+        
+        
         UIView *line = [self viewWithTag:20011];
         line.alpha = 0;
         _housekeeper.text = @"";
@@ -292,7 +366,39 @@
         _guanjia.alpha = 0;
         _tel.alpha = 0;
         _telBtn.alpha = 0;
+        
+        
+
+    }else{
+        _sendTime.hidden=NO;
+        _sendLine.hidden=NO;
+        
+        _sendingLabel.hidden=NO;
+        _sendingImage.hidden=NO;
+        
+        
+        _submitTime.frame=CGRectMake(_submitImage.right+3, _submitImage.top+6, 32*MCscale, 14*MCscale);
+        _submitLine.frame=CGRectMake(_submitTime.left, _submitTime.bottom, _submitTime.width, 1);
+        
+        _handleingImage.frame=CGRectMake(_submitTime.right+7, _submitImage.top, 26*MCscale, 26*MCscale);
+        _handleingLabel.frame=CGRectMake(_handleingImage.left-10, _handleingImage.bottom+2, _handleingImage.width+20*MCscale, 15*MCscale);
+        _handleingLabel.text=@"处理中";
+        
+        
+        _sendTime.frame=CGRectMake(_handleingImage.right+3, _handleingImage.top+6, 32*MCscale, 14*MCscale);
+        _sendLine.frame=CGRectMake(_sendTime.left, _sendTime.bottom, _sendTime.width, 1);
+        
+        
+        _sendingImage.frame=CGRectMake(_sendTime.right+7, _submitImage.top, 26*MCscale, 26*MCscale);
+        _sendingLabel.frame=CGRectMake(_sendingImage.left-10, _sendingImage.bottom+2, _sendingImage.width+20*MCscale, 15*MCscale);
+        
+        
+        _receiveTime.frame=CGRectMake(_sendingImage.right+3, _sendingImage.top+6, 32*MCscale, 14*MCscale);
+        _receiveLine.frame=CGRectMake(_receiveTime.left, _receiveTime.bottom+2, _receiveTime.width, 1);
+     
+    
     }
+    
 //    _gotoeEvaluate.alpha =1;
 }
 -(void)callGjAction

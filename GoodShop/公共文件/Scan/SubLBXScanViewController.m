@@ -31,6 +31,7 @@
     
     //设置扫码后需要扫码图像
     self.isNeedScanImage = YES;
+
 }
 
 
@@ -160,6 +161,16 @@
     [_btnPhoto setImage:[UIImage imageNamed:@"CodeScan.bundle/qrcode_scan_btn_photo_nor"] forState:UIControlStateNormal];
     [_btnPhoto setImage:[UIImage imageNamed:@"CodeScan.bundle/qrcode_scan_btn_photo_down"] forState:UIControlStateHighlighted];
     [_btnPhoto addTarget:self action:@selector(openPhoto) forControlEvents:UIControlEventTouchUpInside];
+   
+    
+    
+    
+    if (_btnPhotoHiden) {
+        _btnPhoto.hidden=_btnPhotoHiden;
+        _btnFlash.left=self.view.width/2-_btnFlash.width/2;
+    }
+
+    
     
     [_bottomItemsView addSubview:_btnFlash];
     [_bottomItemsView addSubview:_btnPhoto];
@@ -215,16 +226,22 @@
 
 - (void)showNextVCWithScanResult:(LBXScanResult*)strResult
 {
+//    BOOL isDianPu =YES;
+    
     NSString *resultStr = strResult.strScanned;
-    NSRange range = [resultStr rangeOfString:@"dianpuid"]; //匹配得到的下标
-    resultStr = [resultStr substringWithRange:NSMakeRange(range.location+range.length+1,resultStr.length-(range.location+range.length+1))];//截取范围类的字符串
-    [[NSUserDefaults standardUserDefaults] setValue:resultStr forKey:@"dianpuqiehuan"];
-  
-    [self.navigationController popViewControllerAnimated:YES];
-    NSDictionary *dict = @{@"dianpuid":resultStr};
-    NSNotification *getDianpurexianNoti = [NSNotification notificationWithName:@"getDianpurexianNoti" object:self userInfo:dict];
-    [[NSNotificationCenter defaultCenter]postNotification:getDianpurexianNoti];
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"getDianpurexianNoti" object:nil];
+    if ([resultStr containsString:@"z?z"]) {
+        NSRange range = [resultStr rangeOfString:@"z?z"]; //匹配得到的下标
+        resultStr = [resultStr substringWithRange:NSMakeRange(range.location+range.length+1,resultStr.length-(range.location+range.length+1))];//截取范围类的字符串
+        if (_block) {
+            _block(resultStr);
+        }
+    }else{
+        [MBProgressHUD promptWithString:@"无效二维码"];
+    }
+    
+    
+
+    
 }
 #pragma mark -底部功能项
 //打开相册

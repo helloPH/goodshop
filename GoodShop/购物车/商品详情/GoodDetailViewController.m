@@ -15,6 +15,8 @@
 #import "NewAddresPopView.h"
 #import "OrderPromptView.h"
 #import "userAddressModel.h"
+
+#import "DianCanOrderViewController.h"
 @interface GoodDetailViewController ()<MBProgressHUDDelegate,CAAnimationDelegate,UIScrollViewDelegate,UITextViewDelegate,UITextFieldDelegate,newAddresPopDelegate,OrderPromptViewDelegate>
 @end
 
@@ -36,6 +38,7 @@
     NSMutableArray *cellHeighAry;//关联商品image
     NSMutableArray *aryForHeadViews;//存放头视图中子视图
     NSString *yanse;//选择的颜色
+    NSString *seleMoney;
     NSString *xinghao;//型号
     NSMutableArray *dadangAry;//亲密搭档
     CGFloat tolMoney;//总价钱
@@ -58,6 +61,7 @@
     UIButton *addCarBtn;//加入购物车按钮
     UIView *selectedColorView;//选择颜色
     UIImageView *detailImage;//商品图片
+    UILabel *    newMoneyLabel;
     CGFloat mainHeight;//高度
     UIImageView *caozuotishiImage;
 }
@@ -85,6 +89,7 @@
     dadangAry = [[NSMutableArray alloc]init];
     yanse = @"0";
     xinghao = @"0";
+    seleMoney = @"0";
     self.view.backgroundColor = [UIColor whiteColor];
     //    __weak typeof (self) weakSelf = self;
     //    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
@@ -178,8 +183,10 @@
             [model setValuesForKeysWithDictionary:dic];
             [goodDataAry addObject:model];
             [self totlTabelCellCount];
+            seleMoney = model.xianjia;
         }
         NSArray *ary = [dic valueForKey:@"guanlianpic"];
+        
         if (ary.count>0) {
             for (int i =0; i<ary.count; i++) {
                 [dadangAry addObject:@"-1"];
@@ -355,6 +362,10 @@
     goodName.textColor = [UIColor blackColor];
     goodName.textAlignment = NSTextAlignmentLeft;
     [headView addSubview:goodName];
+    
+    
+    
+
     //价格
     UILabel *newMoney = [[UILabel alloc]initWithFrame:CGRectZero];
     NSString *wpric = [NSString stringWithFormat:@"¥%.2f",[model.xianjia floatValue]];
@@ -366,6 +377,8 @@
     newMoney.font = [UIFont systemFontOfSize:MLwordFont_11];
     newMoney.backgroundColor = [UIColor clearColor];
     [headView addSubview:newMoney];
+    newMoneyLabel = newMoney;
+    
     //原价
     TGCenterLineLabel *oldMoney = [[TGCenterLineLabel alloc]initWithFrame:CGRectZero];
     NSString *oldPric = [NSString stringWithFormat:@"原价%.2f",[model.yuanjia floatValue]];
@@ -415,13 +428,13 @@
     }
     [mainScrollView addSubview:headView];
     
-#pragma mark 可选颜色
+#pragma mark 可选
     selectedColorView = [[UIView alloc]initWithFrame:CGRectMake(20*MCscale, line1.bottom, kDeviceWidth - 40*MCscale, 40*MCscale)];
     selectedColorView.backgroundColor = [UIColor clearColor];
     
     UILabel *selectedLabel = [[UILabel alloc]initWithFrame:CGRectZero];
     selectedLabel.frame = CGRectMake(5*MCscale, 10*MCscale, 70, 20*MCscale);
-    selectedLabel.text = @"可选颜色:";
+    selectedLabel.text = @"可选:";
     selectedLabel.textAlignment = NSTextAlignmentLeft;
     selectedLabel.textColor = [UIColor blackColor];
     selectedLabel.font = [UIFont systemFontOfSize:MLwordFont_5];
@@ -871,6 +884,19 @@
         NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"dianpuid":_dianpuId,@"address.tel":user_id}];
         [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"findbyAddress.action" params:pram success:^(id json) {
             [Hud hide:YES];
+            
+            if ([isPeiSong isEqualToString:@"0"]) {
+                DianCanOrderViewController *dianCan = [[DianCanOrderViewController alloc]init];
+                dianCan.dianpuID = _dianpuId;
+                dianCan.hidesBottomBarWhenPushed = YES;
+                UIBarButtonItem *bar=[[UIBarButtonItem alloc]init];
+                bar.title=@"";
+                self.navigationItem.backBarButtonItem=bar;
+                [self.navigationController pushViewController:dianCan animated:YES];
+                return ;
+            }
+            
+            
             if (![[json valueForKey:@"address"]isEqual:[NSNull null]]) {
                 NSArray *ary = [json valueForKey:@"address"];
                 userAddressModel * addressModel = [[userAddressModel  alloc]init];
@@ -1029,12 +1055,15 @@
     lastChooseSize = btTag-1020;
     xinghao = model.xinghao[btTag - 1020];
 }
+#pragma mark -- 可选按钮
 //选中颜色
 -(void)chooseColor:(UITapGestureRecognizer *)tap
 {
     NSInteger tapTag = tap.view.tag;
     goodDeailModel *model = goodDataAry[0];
     if (tapTag -1000!= lastColor) {
+        
+        
         UIImageView *newImage = colorsArray[tapTag-1000];
         [detailImage sd_setImageWithURL:[NSURL URLWithString:model.kexuanyansepic[tapTag-1000]] placeholderImage:[UIImage imageNamed:@"yonghutouxiang"]];
         if (lastColor != -1) {
@@ -1042,9 +1071,16 @@
             oldImage.layer.borderWidth = 0;
         }
         newImage.layer.borderWidth = 2.0;
+        
+        
     }
     lastColor = tapTag-1000;
     yanse =[NSString stringWithFormat:@"%@",model.kexuanyanse[tapTag -1000]];
+    seleMoney = [NSString stringWithFormat:@"%@",model.kexuanmoney[tapTag -1000]];
+    newMoneyLabel.text=[NSString stringWithFormat:@"¥%.2f",[seleMoney floatValue]];
+    [newMoneyLabel sizeToFit];
+    
+    
 }
 
 //选择伴侣
@@ -1190,6 +1226,8 @@
     NSMutableArray *shangpinidAry = [[NSMutableArray alloc]init];
     //商品颜色  数组
     NSMutableArray *shangpinYansAry = [[NSMutableArray alloc]init];
+    //商品money 数组
+    NSMutableArray *shangpinMoneyAry = [[NSMutableArray alloc]init];
     //商品型号 数组
     NSMutableArray *shangpinXinghaoAry = [[NSMutableArray alloc]init];
     //商品数量 数组
@@ -1200,6 +1238,8 @@
     [shangpinidAry addObject:spid];
     //商品颜色
     [shangpinYansAry addObject:yanse];
+    // 商品money
+    [shangpinMoneyAry addObject:seleMoney];
     //商品型号
     [shangpinXinghaoAry addObject:xinghao];
     //商品数量
@@ -1213,17 +1253,20 @@
     for (int i = 0; i<shangpinidAry.count-1; i++) {
         [shangpinYansAry addObject:@"0"];
         [shangpinXinghaoAry addObject:@"0"];
+        [shangpinMoneyAry addObject:@"0"];
         [shangpinShuliangAry addObject:@"1"];
     }
     NSString *shangpinidStr; //id拼接字符串
     NSString *yanseStr; //颜色
     NSString *xinghaoStr; //型号
     NSString *shulingStr; //数量
+    NSString *shangpinMoneyStr;// 商品价格
+    
     shangpinidStr = [shangpinidAry componentsJoinedByString:@","];
     yanseStr = [shangpinYansAry componentsJoinedByString:@","];
     xinghaoStr = [shangpinXinghaoAry componentsJoinedByString:@","];
     shulingStr = [shangpinShuliangAry componentsJoinedByString:@","];
-    
+    shangpinMoneyStr = [shangpinMoneyAry componentsJoinedByString:@","];
     /**
      *  userid	    		//用户id
      car.dianpuid 	//店铺id
@@ -1234,7 +1277,7 @@
      （数组长度一致，用0补齐）
 
      */
-    NSMutableDictionary *pram = [NSMutableDictionary dictionaryWithDictionary:@{@"userid":user_id,@"car.dianpuid":_dianpuId, @"shangpins":shangpinidStr,@"car.xinghao":xinghaoStr, @"car.yanse":yanseStr,@"shuliangs":shulingStr} ];
+    NSMutableDictionary *pram = [NSMutableDictionary dictionaryWithDictionary:@{@"userid":user_id,@"car.dianpuid":_dianpuId, @"shangpins":shangpinidStr,@"car.xinghao":xinghaoStr, @"car.yanse":yanseStr,@"shuliangs":shulingStr,@"shopmoney":shangpinMoneyStr} ];
     [HTTPTool postWithUrlPath:HTTPHEADER AndUrl:@"saveaddcars.action" params:pram success:^(id json) {
         NSLog(@"加入购物车 %@",json);
         

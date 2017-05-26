@@ -13,6 +13,9 @@
 #import "UserOrderViewController.h"
 #import "NewAddresPopView.h"
 #import "OrderPromptView.h"
+#import "DianCanOrderViewController.h"
+
+
 @interface CarViewController ()<UIGestureRecognizerDelegate,UITableViewDataSource,UITableViewDelegate,carCellViewDelegate,MBProgressHUDDelegate,UITextViewDelegate,newAddresPopDelegate,UITextFieldDelegate,OrderPromptViewDelegate>
 {
     UILabel *coupon,*moneyLabel;//以优惠  总价钱
@@ -599,6 +602,20 @@
             
             [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"findbyAddress.action" params:pram success:^(id json) {
                 [allBub hide:YES];
+                if ([isPeiSong isEqualToString:@"0"]) {// 如果是 本地购买
+                    DianCanOrderViewController * dianCan = [[DianCanOrderViewController alloc]init];
+                    dianCan.dianpuID  = dianpuId;
+                    dianCan.hidesBottomBarWhenPushed = YES;
+                    UIBarButtonItem *bar=[[UIBarButtonItem alloc]init];
+                    bar.title=@"";
+                    self.navigationItem.backBarButtonItem=bar;
+                    [self.navigationController pushViewController:dianCan animated:YES];
+                    
+                    
+                    return ;
+                }
+                
+                
                 if (![[json valueForKey:@"address"]isEqual:[NSNull null]]) {
                     NSArray *ary = [json valueForKey:@"address"];
                     userAddressModel * addressModel = [[userAddressModel  alloc]init];
@@ -611,6 +628,8 @@
                         newAddressPop.alpha = 0;
                         [newAddressPop removeFromSuperview];
                     }];
+                    
+                    
                     
                     UserOrderViewController *orderVC = [[UserOrderViewController alloc]init];
                     orderVC.dianpuID  = dianpuId;

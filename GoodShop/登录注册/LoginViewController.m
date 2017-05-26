@@ -44,6 +44,7 @@
     [self initNavigation];
     [self initSubViews];
     [self slidingSelectionView];
+    set_isPeiSong(@"1");
 }
 
 //初始化导航栏

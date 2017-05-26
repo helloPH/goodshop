@@ -16,5 +16,6 @@
 @property(nonatomic,strong)NSString *xianjia;//现价
 @property(nonatomic,strong)NSString *yuanjia;//原价
 @property(nonatomic,strong)NSString *zhuangtai;//状态
+@property(nonatomic,strong)NSString *kexuanyanse;
 
 @end

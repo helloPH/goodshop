@@ -100,6 +100,7 @@
     [self tabelHeadView];
     [self tableFootView];
 }
+
 -(void)tabelHeadView
 {
     headView = [[DetailTableHeadView alloc]initWithFrame:CGRectZero];
@@ -131,20 +132,15 @@
 
 -(void)reloadData
 {
-    [moneyArray removeAllObjects];
-    MBProgressHUD *Hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    Hud.mode = MBProgressHUDModeIndeterminate;
-    Hud.delegate = self;
-    Hud.labelText = @"请稍等...";
-    [Hud show:YES];
-    NSMutableDictionary *pram = [NSMutableDictionary dictionaryWithDictionary:@{@"userid":user_id,@"dindan.danhao":_dingdanId}];
-    [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"finddingdanxiangqings.action" params:pram success:^(id json) {
-        [Hud hide:YES];
-        NSLog(@"订单详情%@",json);
+    
+    NSDictionary * pram = @{@"userid":user_id,@"dindan.danhao":_dingdanId};
+    [Request getOrderInfoWithDic:pram success:^(NSInteger message,id data) {
+        NSDictionary *dic = (NSDictionary*)data;
         
-        NSDictionary *dic = [json valueForKey:@"dingdanxp"];
+        
         model = [[orderDetailModel alloc]init];
         [model setValuesForKeysWithDictionary:dic];
+        
         NSString *zhuangt = [NSString stringWithFormat:@"%@",model.dindanzhuangtai];
         [orderMessageAry addObject:zhuangt];
         NSString *dingdanhao = model.dingdanhao; //订单号
@@ -185,6 +181,8 @@
         {
             headView.frame = CGRectMake(0, 0, kDeviceWidth, 310*MCscale);
         }
+        headView.dindanzhuangtaidate = model.dindanzhuangtaidate;
+        headView.dingdanleixing      = model.dingdanleixing;
         [headView createUIWithArray:orderMessageAry];
         
         //尾视图
@@ -233,13 +231,12 @@
         if ([[NSString stringWithFormat:@"%@",model.dindanzhuangtai] isEqualToString:@"1"]) {
             [self reloadDataWithFuli];
         }
+
     } failure:^(NSError *error) {
-        [Hud hide:YES];
-        MBProgressHUD *bud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        bud.mode = MBProgressHUDModeCustomView;
-        bud.labelText = @"网络连接错误1";
-        [bud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
+        
     }];
+    
+    
 }
 
 -(void)reloadDataWithFuli
@@ -249,7 +246,7 @@
     Hud.delegate = self;
     Hud.labelText = @"请稍等...";
     [Hud show:YES];
-    NSMutableDictionary *pram = [NSMutableDictionary dictionaryWithDictionary:@{@"dindan.danhao":_dingdanId}];
+    NSMutableDictionary *pram = [NSMutableDictionary dictionaryWithDictionary:@{@"dindan.danhao":[NSString stringWithFormat:@"%@",_dingdanId]}];
     [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"showFuli.action" params:pram success:^(id json) {
         [Hud hide:YES];
         if ([json integerForKey:@"message"] == 1) {
@@ -454,6 +451,9 @@
     detailViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil) {
         cell = [[detailViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        
+        
+        
     }
     [cell reloadDataWithIndexpath:indexPath AndArray:model.shoplist];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;

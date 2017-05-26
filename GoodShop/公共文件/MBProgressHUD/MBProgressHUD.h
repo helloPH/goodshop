@@ -109,7 +109,10 @@ typedef void (^MBProgressHUDCompletionBlock)();
  *  - If also the detailsLabelText property is set then another label is placed below the first label.
  */
 @interface MBProgressHUD : UIView
-
+#pragma mark -- 自定义的方法
++(void)start;
++(void)stop;
++(void)promptWithString:(NSString *)title;
 /**
  * Creates a new HUD, adds it to provided view and shows it. The counterpart to this method is hideHUDForView:animated:.
  *

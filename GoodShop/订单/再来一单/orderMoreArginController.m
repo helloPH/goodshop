@@ -1890,15 +1890,15 @@
             }
             else{
                 isRecharge = 0;
-                //                orderMoney *model = orderModleAry[orderModleAry.count-1];
-                //                NSString *money = [NSString stringWithFormat:@"%@",model.totalPrices];
-                //
-                //                NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
-                //                [formatter setDateFormat:@"yyMMddHHmmss"];
-                //                NSString *dateTime = [formatter stringFromDate:[NSDate date]];
-                //                NSString *orderid = [NSString stringWithFormat:@"%@%@",dianpuID,dateTime];
-                //                NSString *body = [NSString stringWithFormat:@"妙店佳+%@支付",orderid];
-                //                [self WXpayAction:money bodying:body];
+                orderMoney *model = orderModleAry[orderModleAry.count-1];
+                NSString *money = [NSString stringWithFormat:@"%@",model.totalPrices];
+                
+                NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+                [formatter setDateFormat:@"yyMMddHHmmss"];
+                NSString *dateTime = [formatter stringFromDate:[NSDate date]];
+                NSString *orderid = [NSString stringWithFormat:@"%@%@",dianpuID,dateTime];
+                NSString *body = [NSString stringWithFormat:@"妙店佳+%@支付",orderid];
+                [self WXpayAction:money bodying:body];
                 
             }
         }
@@ -2003,28 +2003,33 @@
     }
 }
 
-/*
+
  #pragma mark -- 微支付
  -(void)WXpayAction:(NSString *)money bodying:(NSString *)body
  {
  if (wxPaymessage.count == 0) {
- NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"total_fee":money,@"shequid":userShequ_id,@"body":body,@"userid":user_id}];
- [HTTPTool postWithUrl:@"weixingfangwen.action" params:pram success:^(id json) {
- NSLog(@"%@",json);
- [allBub hide:YES];
- [wxPaymessage setValue:[json valueForKey:@"dingdanhao"] forKey:@"dingdanhao"];
- [wxPaymessage setValue:[json valueForKey:@"noncestr"] forKey:@"noncestr"];
- [wxPaymessage setValue:[json valueForKey:@"package"] forKey:@"package"];
- [wxPaymessage setValue:[json valueForKey:@"partnerid"] forKey:@"partnerid"];
- [wxPaymessage setValue:[json valueForKey:@"prepayid"] forKey:@"prepayid"];
- [wxPaymessage setValue:[json valueForKey:@"sign"] forKey:@"sign"];
- [wxPaymessage setValue:[json valueForKey:@"timestamp"] forKey:@"timestamp"];
- NSLog(@"---%@",wxPaymessage);
- [self wzf:wxPaymessage];
- } failure:^(NSError *error) {
- NSLog(@"%@",error);
- [allBub hide:YES];
- }];
+ NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"total_fee":money,@"shequid":user_dianpuId,@"body":body,@"userid":user_id}];
+     [HTTPTool postWithUrlPath:HTTPHEADER AndUrl:@"weixingfangwen.action" params:pram success:^(id json) {
+         NSLog(@"%@",json);
+         [allBub hide:YES];
+         [wxPaymessage setValue:[json valueForKey:@"dingdanhao"] forKey:@"dingdanhao"];
+         [wxPaymessage setValue:[json valueForKey:@"noncestr"] forKey:@"noncestr"];
+         [wxPaymessage setValue:[json valueForKey:@"package"] forKey:@"package"];
+         [wxPaymessage setValue:[json valueForKey:@"partnerid"] forKey:@"partnerid"];
+         [wxPaymessage setValue:[json valueForKey:@"prepayid"] forKey:@"prepayid"];
+         [wxPaymessage setValue:[json valueForKey:@"sign"] forKey:@"sign"];
+         [wxPaymessage setValue:[json valueForKey:@"timestamp"] forKey:@"timestamp"];
+         NSLog(@"---%@",wxPaymessage);
+         [self wzf:wxPaymessage];
+
+     } failure:^(NSError *error) {
+         NSLog(@"%@",error);
+         [allBub hide:YES];
+     }];
+// [HTTPTool postWithUrl:@"weixingfangwen.action" params:pram success:^(id json) {
+//  } failure:^(NSError *error) {
+//
+// }];
  }
  else
  [self wzf:wxPaymessage];
@@ -2063,22 +2068,28 @@
  NSString *orderid = [wxPaymessage valueForKey:@"dingdanhao"];
  if (resp.errCode == WXSuccess) {
  [ppmdic setValue:orderid forKey:@"dindan.zhifufangshi"];
- [HTTPTool postWithUrl:@"saveagain.action" params:ppmdic success:^(id json) {
- NSLog(@"-- zhifu5 -- ");
- NSString *message =[NSString stringWithFormat:@"%@",[json valueForKey:@"massages"]];
- if ([message isEqualToString:@"1"]) {
- NSNotification *notification = [NSNotification notificationWithName:@"orderCreatSuccess" object:nil];
- [[NSNotificationCenter defaultCenter] postNotification:notification];
- [[NSNotificationCenter defaultCenter] removeObserver:self name:@"orderCreatSuccess" object:nil];
- [self chooseSeccJump];
- NSLog(@"-- zhifu4 -- ");
- }
- } failure:^(NSError *error) {
- MBProgressHUD *bud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
- bud.mode = MBProgressHUDModeCustomView;
- //                    bud.labelText = @"";
- [bud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
- }];
+     
+     [HTTPTool postWithUrlPath:HTTPHEADER AndUrl:@"saveagain.action" params:ppmdic success:^(id json) {
+         NSLog(@"-- zhifu5 -- ");
+         NSString *message =[NSString stringWithFormat:@"%@",[json valueForKey:@"massages"]];
+         if ([message isEqualToString:@"1"]) {
+             NSNotification *notification = [NSNotification notificationWithName:@"orderCreatSuccess" object:nil];
+             [[NSNotificationCenter defaultCenter] postNotification:notification];
+             [[NSNotificationCenter defaultCenter] removeObserver:self name:@"orderCreatSuccess" object:nil];
+             [self chooseSeccJump];
+             NSLog(@"-- zhifu4 -- ");
+         }
+
+     } failure:^(NSError *error) {
+         MBProgressHUD *bud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+         bud.mode = MBProgressHUDModeCustomView;
+         //                    bud.labelText = @"";
+         [bud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
+     }];
+// [HTTPTool postWithUrl:@"saveagain.action" params:ppmdic success:^(id json) {
+//  } failure:^(NSError *error) {
+//
+// }];
  }
  else{
  MBProgressHUD *bud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -2090,7 +2101,7 @@
  }
  [wxPaymessage removeAllObjects];
  }
- */
+
 
 #pragma mark -- OnLinePayViewDelegate
 -(void)PaymentPasswordViewWithDanhao:(NSString *)danhao AndLeimu:(NSString *)leimu AndMoney:(NSString *)money
@@ -2421,7 +2432,6 @@
             else{
                 lab.text = remainTextView.text;
                 orderbzhuStr = remainTextView.text;
-                
             }
             remainTextView.text = @"请输入特殊要求（50字符）";
             remainTextView.textColor = txtColors(194, 195, 196, 1);
@@ -2564,7 +2574,6 @@
     else if (tap.view.tag == 102){
         lb1.text = @"微信支付";
         isWx = 1;
-        [self  promptMessageWithString:@"该功能正在努力开发中"];
     }
     [UIView animateWithDuration:0.3 animations:^{
         mask.alpha = 0;

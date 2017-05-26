@@ -7,7 +7,7 @@
 //  Copyright (c) 2015年 时元尚品. All rights reserved.
 //
 
-#import "UserOrderViewController.h"
+#import "DianCanOrderViewController.h"
 #import "Header.h"
 #import "orderDetailViewController.h"
 #import "orderModel.h"
@@ -27,7 +27,7 @@
 #import "UserOrderSectionHeaderView.h"
 #import "ChangeAddressView.h"
 
-@interface UserOrderViewController ()<UIGestureRecognizerDelegate,UITableViewDataSource,UITableViewDelegate,UITextViewDelegate,UITextViewDelegate,MBProgressHUDDelegate,UIAlertViewDelegate,UITextFieldDelegate,newAddresPopDelegate,SetPaymentPasswordViewDelegate,LoginPasswordViewDelegate,SelectedTimeViewDelegate,PopViewDelegate,PaymentPasswordViewDelegate,ChangeAddressViewDelegate,OnLinePayViewDelegate>//,,WXApiDelegate,,
+@interface DianCanOrderViewController ()<UIGestureRecognizerDelegate,UITableViewDataSource,UITableViewDelegate,UITextViewDelegate,UITextViewDelegate,MBProgressHUDDelegate,UIAlertViewDelegate,UITextFieldDelegate,newAddresPopDelegate,SetPaymentPasswordViewDelegate,LoginPasswordViewDelegate,SelectedTimeViewDelegate,PopViewDelegate,PaymentPasswordViewDelegate,ChangeAddressViewDelegate,OnLinePayViewDelegate>//,,WXApiDelegate,,
 {
     UILabel *coupon,*moneyLabel;//已优惠  总价钱
     UITableView *orderTableView;
@@ -48,7 +48,7 @@
     NSMutableArray *shopIdArry;//存放店铺id
     NSMutableArray *dataArray;//存放所有数据
     NSMutableArray *cellCountAry;//存放每段cell个数
-    NSMutableArray *headViewsAry;//存放头部视图内控件
+//    NSMutableArray *headViewsAry;//存放头部视图内控件
     NSMutableArray *newAddViewsAry;//存放新地址
     NSMutableArray *orderModleAry;//存放价格 优惠 model
     NSInteger isYouhuiquan;
@@ -78,7 +78,7 @@
     NSString *userLibaoStr;
 }
 @end
-@implementation UserOrderViewController
+@implementation DianCanOrderViewController
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -87,7 +87,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(maskDisMiss) name:@"cancleBtnClick" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(RechargSuccess) name:@"RechargSuccess" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wxPayResult:) name:@"weixinzhifu" object:nil];
+    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wxPayResult:) name:@"weixinzhifu" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(PaymentFailure) name:@"PaymentFailure" object:nil];
     //    [self onlyLognUser];
     
@@ -107,7 +107,7 @@
     popViewTag = -1;
     isRecharge = 0;
     isWx = 0;
-    defaultdizId = @"0";
+    defaultdizId = @"A";
     userLibaoStr = @"0";
     yStr = @"暂无优惠券可用";
     choosePayArray = [[NSMutableArray alloc]initWithCapacity:2];
@@ -118,7 +118,7 @@
     shopIdArry = [[NSMutableArray alloc]init];
     dataArray = [[NSMutableArray alloc]init];
     cellCountAry = [[NSMutableArray alloc]init];
-    headViewsAry = [[NSMutableArray alloc]init];
+//    headViewsAry = [[NSMutableArray alloc]init];
     newAddViewsAry = [[NSMutableArray alloc]init];
     timeStrAry = [[NSMutableArray alloc]init];
     beizhuStrAry =[[NSMutableArray alloc]init];
@@ -130,13 +130,13 @@
     
     [self initNavigation];
     [self initTableView];
-    [self initDefaulAddressData];
+//    [self initDefaulAddressData];
     [self reloadData];
     [self initPopView];
 }
 -(void)initNavigation
 {
-    self.navigationItem.title = @"确认订单";
+    self.navigationItem.title = @"订单确认";
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],NSForegroundColorAttributeName,[UIFont boldSystemFontOfSize:MLwordFont_2],NSFontAttributeName,nil]];
 }
 #pragma mark -- 获取列表数据
@@ -147,7 +147,10 @@
     HUD.mode = MBProgressHUDModeIndeterminate;
     HUD.labelText = @"请稍等...";
     [HUD show:YES];
-    NSMutableDictionary *pram = [NSMutableDictionary dictionaryWithDictionary:@{@"userid":user_id,@"dianpuid":_dianpuID}];
+    NSMutableDictionary *pram = [NSMutableDictionary dictionaryWithDictionary:@{@"userid":user_id,
+                                                                                @"dianpuid":_dianpuID}];
+    
+    
     [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"finddingdanByUidshid.action" params:pram success:^(id json) {
         [HUD hide:YES];
         NSLog(@"-- 分店铺显示 --%@",json);
@@ -174,52 +177,54 @@
         [self promptMessageWithString:@"网络连接错误1"];
     }];
 }
-//获取默认地址
--(void)initDefaulAddressData
-{
-    UILabel *name = headViewsAry[0];
-    UILabel *dianh = headViewsAry[1];
-    UILabel *addres = headViewsAry[2];
-    NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"address.tel":user_id,@"dianpuid":_dianpuID}];
-    [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"findbyAddress.action" params:pram success:^(id json) {
-        if (![[json valueForKey:@"address"]isEqual:[NSNull null]]) {
-            NSArray *ary = [json valueForKey:@"address"];
-            NSDictionary *addDic = ary[0];
-            [addressModel setValuesForKeysWithDictionary:addDic];
-            addressModel.qiehuan = [json valueForKey:@"qiehuan"];
-            defaultdizId = addressModel.dizhiId;
-            if([addressModel.qiehuan integerValue] == 1){
-                isqiehuan = 0; //不可切换地址
-                changeBtn.alpha = 0;
-            }
-            else{
-                isqiehuan = 1; //可切换地址
-                changeBtn.alpha = 1;
-            }
-            if (addressModel.name) {
-                NSRange range = [addressModel.name rangeOfString:@"("];
-                if (range.location == NSNotFound) {
-                    name.text = addressModel.name;
-                }
-                else{
-                    NSString *pystr = [addressModel.name substringWithRange:NSMakeRange(0, range.location)];
-                    name.text = pystr;
-                }
-            }
-            if (addressModel.haoma) {
-                dianh.text = addressModel.haoma;
-            }
-            if (addressModel.address) {
-                addres.text = addressModel.address;
-            }
-        }
-    } failure:^(NSError *error) {
-        [self promptMessageWithString:@"网络连接错误2"];
-    }];
-}
+////获取默认地址
+//-(void)initDefaulAddressData
+//{
+////    UILabel *name = headViewsAry[0];
+////    UILabel *dianh = headViewsAry[1];
+////    UILabel *addres = headViewsAry[2];
+//    NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"address.tel":user_id,@"dianpuid":_dianpuID}];
+//    [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"findbyAddress.action" params:pram success:^(id json) {
+//        if (![[json valueForKey:@"address"]isEqual:[NSNull null]]) {
+//            NSArray *ary = [json valueForKey:@"address"];
+//            NSDictionary *addDic = ary[0];
+//            [addressModel setValuesForKeysWithDictionary:addDic];
+//            addressModel.qiehuan = [json valueForKey:@"qiehuan"];
+//            defaultdizId = addressModel.dizhiId;
+//            if([addressModel.qiehuan integerValue] == 1){
+//                isqiehuan = 0; //不可切换地址
+//                changeBtn.alpha = 0;
+//            }
+//            else{
+//                isqiehuan = 1; //可切换地址
+//                changeBtn.alpha = 1;
+//            }
+//            if (addressModel.name) {
+//                NSRange range = [addressModel.name rangeOfString:@"("];
+//                if (range.location == NSNotFound) {
+//                    name.text = addressModel.name;
+//                }
+//                else{
+//                    NSString *pystr = [addressModel.name substringWithRange:NSMakeRange(0, range.location)];
+//                    name.text = pystr;
+//                }
+//            }
+//            if (addressModel.haoma) {
+//                dianh.text = addressModel.haoma;
+//            }
+//            if (addressModel.address) {
+//                addres.text = addressModel.address;
+//            }
+//        }
+//    } failure:^(NSError *error) {
+//        [self promptMessageWithString:@"网络连接错误2"];
+//    }];
+//}
 //获取各种金额 优惠
 -(void)reloadMoneys
 {
+    
+    
     [HUD hide:YES];
     [orderModleAry removeAllObjects];
     NSMutableArray *dpuid = [[NSMutableArray alloc]init];
@@ -240,6 +245,7 @@
             youh = [NSString stringWithFormat:@"%@",mod.jine];
         }
     }
+    
     NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"userid":user_id,@"shdzid":defaultdizId,@"youhuijuan":youh,@"dianpuid":_dianpuID}];
     NSLog(@"%@",pram);
     [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"dingdantotalprice.action" params:pram success:^(id json) {
@@ -267,7 +273,7 @@
         } failure:^(NSError *error) {
             [self promptMessageWithString:@"网络连接错误14"];
         }];
-
+        
     } failure:^(NSError *error) {
         [self promptMessageWithString:@"网络连接错误4"];
     }];
@@ -316,8 +322,8 @@
         } failure:^(NSError *error) {
             [self promptMessageWithString:@"网络连接错误14"];
         }];
-
-
+        
+        
     } failure:^(NSError *error) {
         [self promptMessageWithString:@"网络连接错误5"];
     }];
@@ -379,7 +385,7 @@
                 dianpuId  =[NSString stringWithFormat:@"%@", model.dianpuid];
                 if (timeStrAry.count <dataArray.count) {
                     [shopIdArry addObject:dianpuId];
-                    NSString *message = @"立即配送";
+                    NSString *message = @"店铺消费";
                     for (int i = 0; i<array.count; i++) {
                         orderModel *modls = array[i];
                         NSString *st = [NSString stringWithFormat:@"%@",modls.yuyueshuoming];
@@ -410,67 +416,102 @@
     orderTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self initTableHeadView];
     [self.view addSubview:orderTableView];
+    
+//    UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(endEdit)];
+//    [orderTableView addGestureRecognizer:tap];
 }
+//-(void)endEdit{
+//    [self.view endEditing:YES];
+//}
 //表头
 -(void)initTableHeadView
 {
     UIView *headView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, kDeviceWidth, 100*MCscale)];
     headView.backgroundColor = [UIColor whiteColor];
-    UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(25, 15*MCscale, 60, 20*MCscale)];
-    name.textAlignment = NSTextAlignmentLeft;
-    name.textColor = [UIColor blackColor];
-    name.font = [UIFont systemFontOfSize:MLwordFont_7];
-    name.text = @"";
-    [headView addSubview:name];
-    [headViewsAry addObject:name];
-    //电话
-    UILabel *account = [[UILabel alloc]initWithFrame:CGRectMake(name.right+5, 15*MCscale, 110*MCscale, 20*MCscale)];
-    account.textAlignment = NSTextAlignmentLeft;
-    account.textColor = [UIColor blackColor];
-    account.backgroundColor = [UIColor clearColor];
-    account.font = [UIFont systemFontOfSize:MLwordFont_7];
-    account.text = @"";
-    [headView addSubview:account];
-    [headViewsAry addObject:account];
-    changeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    changeBtn.frame =CGRectMake(kDeviceWidth-80, 15*MCscale, 60, 30);
-    changeBtn.backgroundColor = [UIColor clearColor];
-    changeBtn.tag = 1002;
-    changeBtn.alpha = 0;
-    [changeBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [changeBtn setTitle:@"[更换]" forState:UIControlStateNormal];
-    changeBtn.titleLabel.font = [UIFont systemFontOfSize:MLwordFont_7];
-    [changeBtn addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
-    [headView addSubview:changeBtn];
     
-    UILabel *address = [[UILabel alloc]initWithFrame:CGRectMake(25, name.bottom+2, kDeviceWidth-40, 20*MCscale)];
-    address.textColor = [UIColor blackColor];
-    address.font = [UIFont systemFontOfSize:MLwordFont_7];
-    address.textAlignment = NSTextAlignmentLeft;
-    [headView addSubview:address];
-    address.text = @"";
-    [headViewsAry addObject:address];
-    UIView *line2 = [[UIView alloc]initWithFrame:CGRectMake(20, 60*MCscale, kDeviceWidth-40, 1)];
-    line2.backgroundColor = lineColor;
-    [headView addSubview:line2];
-    UIImageView *chooseAddress = [[UIImageView alloc]initWithFrame:CGRectMake(20, line2.bottom+5, 23*MCscale, 23*MCscale)];
-    chooseAddress.image = [UIImage imageNamed:@"选择"];
-    chooseAddress.backgroundColor = [UIColor clearColor];
-    chooseAddress.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(chooseAddressAction:)];
-    [chooseAddress addGestureRecognizer:tap];
-    [headView addSubview:chooseAddress];
+    for (int i = 0 ; i < 2; i ++) {
+        UITextField * textField = [[UITextField alloc]initWithFrame:CGRectMake(25, 40*MCscale*i, kDeviceWidth-50, 40*MCscale)];
+        [headView addSubview:textField];
+        textField.font=[UIFont systemFontOfSize:MLwordFont_3];
+        textField.textColor=textBlackColor;
+        textField.textAlignment=NSTextAlignmentCenter;
+        textField.tag=210+i;
+        textField.placeholder=i==0?@"请输入桌号/单间号 (必填)":@"姓名";
+            
+        if(i==1){
+            UIImageView * line = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, textField.width, 1)];
+            line.backgroundColor=lineColor;
+            [textField addSubview:line];
+        }else{
+            UILabel * labelBitian = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 10, 10)];
+            labelBitian.textColor=redTextColor;
+//            labelBitian.text=@"(必填)";
+            labelBitian.font=[UIFont systemFontOfSize:MLwordFont_3];
+            [labelBitian sizeToFit];
+            [textField addSubview:labelBitian];
+            labelBitian.top=textField.height/2-labelBitian.height/2;
+            labelBitian.right=textField.width;
+        }
+//        [headViewsAry addObject:textField];
+        
+    }
     
-    UILabel *newAddress = [[UILabel alloc]initWithFrame:CGRectMake(chooseAddress.right+5, line2.bottom+5, 80, 20*MCscale)];
-    newAddress.text = @"[用新地址]";
-    newAddress.textAlignment = NSTextAlignmentLeft;
-    newAddress.textColor = [UIColor blackColor];
-    newAddress.font = [UIFont systemFontOfSize:MLwordFont_7];
-    newAddress.userInteractionEnabled = YES;
-    UITapGestureRecognizer *labelTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(chooseAddressAction:)];
-    [newAddress addGestureRecognizer:labelTap];
-    [headView addSubview:newAddress];
     
+//    UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(25, 15*MCscale, 60, 20*MCscale)];
+//    name.textAlignment = NSTextAlignmentLeft;
+//    name.textColor = [UIColor blackColor];
+//    name.font = [UIFont systemFontOfSize:MLwordFont_7];
+//    name.text = @"";
+//    [headView addSubview:name];
+//    [headViewsAry addObject:name];
+//    //电话
+//    UILabel *account = [[UILabel alloc]initWithFrame:CGRectMake(name.right+5, 15*MCscale, 110*MCscale, 20*MCscale)];
+//    account.textAlignment = NSTextAlignmentLeft;
+//    account.textColor = [UIColor blackColor];
+//    account.backgroundColor = [UIColor clearColor];
+//    account.font = [UIFont systemFontOfSize:MLwordFont_7];
+//    account.text = @"";
+//    [headView addSubview:account];
+//    [headViewsAry addObject:account];
+//    changeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    changeBtn.frame =CGRectMake(kDeviceWidth-80, 15*MCscale, 60, 30);
+//    changeBtn.backgroundColor = [UIColor clearColor];
+//    changeBtn.tag = 1002;
+//    changeBtn.alpha = 0;
+//    [changeBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//    [changeBtn setTitle:@"[更换]" forState:UIControlStateNormal];
+//    changeBtn.titleLabel.font = [UIFont systemFontOfSize:MLwordFont_7];
+//    [changeBtn addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
+//    [headView addSubview:changeBtn];
+//    
+//    UILabel *address = [[UILabel alloc]initWithFrame:CGRectMake(25, name.bottom+2, kDeviceWidth-40, 20*MCscale)];
+//    address.textColor = [UIColor blackColor];
+//    address.font = [UIFont systemFontOfSize:MLwordFont_7];
+//    address.textAlignment = NSTextAlignmentLeft;
+//    [headView addSubview:address];
+//    address.text = @"";
+//    [headViewsAry addObject:address];
+//    UIView *line2 = [[UIView alloc]initWithFrame:CGRectMake(20, 60*MCscale, kDeviceWidth-40, 1)];
+//    line2.backgroundColor = lineColor;
+//    [headView addSubview:line2];
+//    UIImageView *chooseAddress = [[UIImageView alloc]initWithFrame:CGRectMake(20, line2.bottom+5, 23*MCscale, 23*MCscale)];
+//    chooseAddress.image = [UIImage imageNamed:@"选择"];
+//    chooseAddress.backgroundColor = [UIColor clearColor];
+//    chooseAddress.userInteractionEnabled = YES;
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(chooseAddressAction:)];
+//    [chooseAddress addGestureRecognizer:tap];
+//    [headView addSubview:chooseAddress];
+//    
+//    UILabel *newAddress = [[UILabel alloc]initWithFrame:CGRectMake(chooseAddress.right+5, line2.bottom+5, 80, 20*MCscale)];
+//    newAddress.text = @"[用新地址]";
+//    newAddress.textAlignment = NSTextAlignmentLeft;
+//    newAddress.textColor = [UIColor blackColor];
+//    newAddress.font = [UIFont systemFontOfSize:MLwordFont_7];
+//    newAddress.userInteractionEnabled = YES;
+//    UITapGestureRecognizer *labelTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(chooseAddressAction:)];
+//    [newAddress addGestureRecognizer:labelTap];
+//    [headView addSubview:newAddress];
+//    
     UIView *line4 = [[UIView alloc]initWithFrame:CGRectMake(0, 95*MCscale, kDeviceWidth, 5)];
     line4.backgroundColor = txtColors(231, 232, 234, 0.8);
     [headView addSubview:line4];
@@ -516,7 +557,7 @@
         }];
         changeBtn.alpha = 1;
         isqiehuan = 0;
-        [self initDefaulAddressData];
+//        [self initDefaulAddressData];
     }
     else if (index == 3 || index == 4)
     {
@@ -576,42 +617,42 @@
     scrolv.contentSize = CGSizeMake(moneyPop.width, 56*youhuidataAry.count);
 }
 
-#pragma mark ChangeAddressViewDelegate(改变地址)
--(void)changeAddressSuccessWithModel:(userAddressModel *)model AndArrayCount:(NSInteger)count
-{
-    [UIView animateWithDuration:0.3 animations:^{
-        maskView.alpha = 0;
-        [maskView removeFromSuperview];
-        [self.view endEditing:YES];
-        changeAddressPopView.alpha =0;
-        [changeAddressPopView removeFromSuperview];
-    }];
-    
-    if (count != 1) {
-//        NSString *shouhuodz = [NSString stringWithFormat:@"%@",model.dizhiId];
-        UILabel *name = headViewsAry[0];
-        UILabel *tel = headViewsAry[1];
-        UILabel *adres = headViewsAry[2];
-        NSString *sexName = [NSString stringWithFormat:@"%@",model.name];
-        NSRange range = [sexName rangeOfString:@"("];
-        if (range.location == NSNotFound) {
-            name.text = sexName;
-        }
-        else{
-            NSString *nameStr = [sexName substringWithRange:NSMakeRange(0, range.location)];
-            name.text = nameStr;
-        }
-        tel.text = model.haoma;
-        adres.text = model.address;
-        defaultdizId = [NSString stringWithFormat:@"%@",model.dizhiId];
-    }
-    else
-    {
-        [self initDefaulAddressData];
-    }
-    
-    [self changeRelodMoey:defaultdizId];
-}
+//#pragma mark ChangeAddressViewDelegate(改变地址)
+//-(void)changeAddressSuccessWithModel:(userAddressModel *)model AndArrayCount:(NSInteger)count
+//{
+//    [UIView animateWithDuration:0.3 animations:^{
+//        maskView.alpha = 0;
+//        [maskView removeFromSuperview];
+//        [self.view endEditing:YES];
+//        changeAddressPopView.alpha =0;
+//        [changeAddressPopView removeFromSuperview];
+//    }];
+//    
+//    if (count != 1) {
+//        //        NSString *shouhuodz = [NSString stringWithFormat:@"%@",model.dizhiId];
+//        UILabel *name = headViewsAry[0];
+//        UILabel *tel = headViewsAry[1];
+//        UILabel *adres = headViewsAry[2];
+//        NSString *sexName = [NSString stringWithFormat:@"%@",model.name];
+//        NSRange range = [sexName rangeOfString:@"("];
+//        if (range.location == NSNotFound) {
+//            name.text = sexName;
+//        }
+//        else{
+//            NSString *nameStr = [sexName substringWithRange:NSMakeRange(0, range.location)];
+//            name.text = nameStr;
+//        }
+//        tel.text = model.haoma;
+//        adres.text = model.address;
+//        defaultdizId = [NSString stringWithFormat:@"%@",model.dizhiId];
+//    }
+//    else
+//    {
+//        [self initDefaulAddressData];
+//    }
+//    
+//    [self changeRelodMoey:defaultdizId];
+//}
 
 #pragma mark -- OnLinePayViewDelegate
 -(void)PaymentPasswordViewWithDanhao:(NSString *)danhao AndLeimu:(NSString *)leimu AndMoney:(NSString *)money
@@ -760,13 +801,13 @@
             }
             else
             {
-            NSMutableDictionary *pramDic = [[NSMutableDictionary alloc]initWithDictionary:@{@"userid":user_id}];
-            [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"savezhangdan.action" params:pramDic success:^(id json) {
-            } failure:^(NSError *error) {
-                if (error.code == NSURLErrorTimedOut) {
-                    [self promptMessageWithString:@"请求超时!请稍后尝试"];
-                }
-            }];
+                NSMutableDictionary *pramDic = [[NSMutableDictionary alloc]initWithDictionary:@{@"userid":user_id}];
+                [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"savezhangdan.action" params:pramDic success:^(id json) {
+                } failure:^(NSError *error) {
+                    if (error.code == NSURLErrorTimedOut) {
+                        [self promptMessageWithString:@"请求超时!请稍后尝试"];
+                    }
+                }];
             }
             [self jumpOrderDetail];
         }
@@ -965,7 +1006,7 @@
         }
         else
         {
-        return 5;
+            return 5;
         }
     }
     else{
@@ -981,6 +1022,7 @@
         if ([modl.fapiao integerValue] == 1) {
             cnum = 3;
         }
+    
         return ary.count+cnum;
     }
 }
@@ -1018,13 +1060,13 @@
     }
     NSArray *titleArray;
     if ([userLibaoStr integerValue] == 0) {
-        titleArray = @[@"使用优惠",@"货到付款",@"在线付款",@"余额支付"];
+        titleArray = @[@"使用优惠",@"现金付款",@"在线支付",@"余额支付"];
     }
     else
     {
-        titleArray = @[@"使用优惠",@"货到付款",@"在线付款",@"余额支付",@"礼包支付"];
+        titleArray = @[@"使用优惠",@"现金付款",@"在线支付",@"余额支付",@"消费礼包"];
     }
-    NSArray *ary = @[@"送达时间",@"订单备注",@"需要发票"];
+    NSArray *ary = @[@"预约时间",@"订单备注",@"需要发票"];
     if (indexPath.section == 0) {
         if ([userLibaoStr integerValue]== 0) {
             if (indexPath.row == 0) {
@@ -1154,147 +1196,147 @@
         }
         else
         {
-        if (indexPath.row == 0) {
-            UILabel *title = (UILabel *)[cell viewWithTag:1001];
-            title.frame = CGRectMake(30*MCscale, 18*MCscale, 80*MCscale, 20*MCscale);
-            title.alpha = 1;
-            title.text = titleArray[indexPath.row];
-            title.textColor = [UIColor blackColor];
-            title.textAlignment = NSTextAlignmentLeft;
-            title.font = [UIFont systemFontOfSize:MLwordFont_4];
-            UIImageView *tanhao = (UIImageView *)[cell viewWithTag:1005];
-            if (isYouhuiquan == 0) {
-                tanhao.alpha = 1;
-            }
-            else
-                tanhao.alpha = 0;
-            tanhao.frame =CGRectMake(kDeviceWidth-180*MCscale, 20*MCscale, 18*MCscale, 18*MCscale);
-            tanhao.image= [UIImage imageNamed:@"叹号"];
-            tanhao.backgroundColor = [UIColor clearColor];
-            [maskImageArray addObject:tanhao];
-            UILabel *couponLabel = (UILabel *)[cell viewWithTag:1002];
-            couponLabel.alpha = 1;
-            couponLabel.frame = CGRectMake(tanhao.right, 18*MCscale, 115*MCscale, 20*MCscale);
-            couponLabel.textAlignment = NSTextAlignmentRight;
-            couponLabel.textColor = redTextColor;
-            if (isChooseYh) {
-                youhuiModel *mod = youhuidataAry[lastChoose-10];
-                couponLabel.text = [NSString stringWithFormat:@"%@元",mod.jine];
-                tanhao.alpha = 0;
-            }
-            else
-                couponLabel.text = yStr;
-            couponLabel.font = [UIFont systemFontOfSize:MLwordFont_7];
-            couponLabel.userInteractionEnabled = YES;
-            [maskImageArray addObject:couponLabel];
-            UIImageView *direction =(UIImageView *)[cell viewWithTag:1006];
-            direction.alpha = 1;;
-            direction.userInteractionEnabled = YES;
-            direction.frame = CGRectMake(kDeviceWidth-45*MCscale, 20*MCscale, 17*MCscale, 17*MCscale);
-            direction.image = [UIImage imageNamed:@"下拉键"];
-            direction.backgroundColor = [UIColor clearColor];
-            UIView *line = (UIView *)[cell viewWithTag:1007];
-            line.alpha = 1;
-            line.frame = CGRectMake(0, 54*MCscale, kDeviceWidth, 0.5);
-            line.backgroundColor = lineColor;
-        }
-        if(indexPath.row>0 && indexPath.row <5){
-            UILabel *title = (UILabel *)[cell viewWithTag:1001];
-            title.frame = CGRectMake(30*MCscale, 18*MCscale, 80*MCscale, 20*MCscale);
-            title.alpha = 1;
-            title.text = titleArray[indexPath.row];
-            title.textColor = [UIColor blackColor];
-            title.textAlignment = NSTextAlignmentLeft;
-            title.font = [UIFont systemFontOfSize:MLwordFont_4];
-            UIImageView *chooseImage = (UIImageView *)[cell viewWithTag:1006];
-            chooseImage.alpha = 1;
-            chooseImage.frame = CGRectMake(kDeviceWidth-50*MCscale, 16*MCscale, 22*MCscale, 22*MCscale);
-            chooseImage.userInteractionEnabled = YES;
-            if (indexPath.row == lastChoosePay) {
-                chooseImage.image = [UIImage imageNamed:@"选中"];
-            }
-            else{
-                chooseImage.image = [UIImage imageNamed:@"选择"];
-            }
-            chooseImage.backgroundColor = [UIColor clearColor];
-            chooseImage.tag = indexPath.row;
-            if (chooseImage !=nil) {
-                [choosePayArray addObject:chooseImage];
-            }
-            if (indexPath.row == 1) {
-                UIView *line = (UIView *)[cell viewWithTag:1007];
-                line.alpha = 1;
-                line.frame = CGRectMake(20, 54*MCscale, kDeviceWidth-40, 0.5);
-                line.backgroundColor = lineColor;
-            }
-            else if (indexPath.row == 2){
-                UIView *line = (UIView *)[cell viewWithTag:1007];
-                line.alpha = 1;
-                line.frame = CGRectMake(20, 54*MCscale, kDeviceWidth-40, 0.5);
-                line.backgroundColor = lineColor;
+            if (indexPath.row == 0) {
+                UILabel *title = (UILabel *)[cell viewWithTag:1001];
+                title.frame = CGRectMake(30*MCscale, 18*MCscale, 80*MCscale, 20*MCscale);
+                title.alpha = 1;
+                title.text = titleArray[indexPath.row];
+                title.textColor = [UIColor blackColor];
+                title.textAlignment = NSTextAlignmentLeft;
+                title.font = [UIFont systemFontOfSize:MLwordFont_4];
+                UIImageView *tanhao = (UIImageView *)[cell viewWithTag:1005];
+                if (isYouhuiquan == 0) {
+                    tanhao.alpha = 1;
+                }
+                else
+                    tanhao.alpha = 0;
+                tanhao.frame =CGRectMake(kDeviceWidth-180*MCscale, 20*MCscale, 18*MCscale, 18*MCscale);
+                tanhao.image= [UIImage imageNamed:@"叹号"];
+                tanhao.backgroundColor = [UIColor clearColor];
+                [maskImageArray addObject:tanhao];
                 UILabel *couponLabel = (UILabel *)[cell viewWithTag:1002];
-                couponLabel.alpha = 0;
-                couponLabel.userInteractionEnabled = YES;
-                couponLabel.frame = CGRectMake(title.right+30*MCscale, title.top+2, 80*MCscale, 20*MCscale);
-                couponLabel.text = @"支付宝";
+                couponLabel.alpha = 1;
+                couponLabel.frame = CGRectMake(tanhao.right, 18*MCscale, 115*MCscale, 20*MCscale);
                 couponLabel.textAlignment = NSTextAlignmentRight;
-                couponLabel.textColor = txtColors(248, 53, 74, 1);
-                couponLabel.font = [UIFont systemFontOfSize:MLwordFont_5];
-                UITapGestureRecognizer *tp = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(morewayTapAction)];
-                [couponLabel addGestureRecognizer:tp];
-                
-                UIImageView *jhImg = (UIImageView *)[cell viewWithTag:1005];
-                jhImg.frame = CGRectMake(couponLabel.right+5*MCscale, title.top+4*MCscale, 18*MCscale, 15*MCscale);
-                jhImg.alpha = 0;
-                jhImg.userInteractionEnabled = YES;
-                jhImg.image = [UIImage imageNamed:@"红色下拉键"];
-                jhImg.backgroundColor = [UIColor clearColor];
-                UITapGestureRecognizer *tpm = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(morewayTapAction)];
-                [jhImg addGestureRecognizer:tpm];
-            }
-            else if (indexPath.row == 3) {
-                UILabel *subLabel = (UILabel *)[cell viewWithTag:1002];
-                subLabel.alpha = 1;
-                subLabel.backgroundColor = redTextColor;
-                subLabel.text = [NSString stringWithFormat:@"可用余额%.2f",[zhangdanyue floatValue]];
-                CGSize size = [subLabel.text boundingRectWithSize:CGSizeMake(150*MCscale, 15*MCscale) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:MLwordFont_9],NSFontAttributeName,nil] context:nil].size;
-                subLabel.frame = CGRectMake(title.right, title.top+2, size.width, 15*MCscale);
-                subLabel.textColor = [UIColor whiteColor];
-                subLabel.font = [UIFont systemFontOfSize:MLwordFont_9];
-                subLabel.textAlignment = NSTextAlignmentCenter;
-                
-                UILabel *ssubl = (UILabel *)[cell viewWithTag:1003];
-                ssubl.frame = CGRectMake(subLabel.right+15*MCscale, subLabel.top, 100*MCscale, 15*MCscale);
-                ssubl.alpha = 0;
-                ssubl.text = @"余额不足,去充值";
-                ssubl.textColor = txtColors(248, 53, 74, 1);
-                ssubl.textAlignment = NSTextAlignmentRight;
-                ssubl.backgroundColor = [UIColor clearColor];
-                ssubl.font = [UIFont systemFontOfSize:MLwordFont_9];
-                
+                couponLabel.textColor = redTextColor;
+                if (isChooseYh) {
+                    youhuiModel *mod = youhuidataAry[lastChoose-10];
+                    couponLabel.text = [NSString stringWithFormat:@"%@元",mod.jine];
+                    tanhao.alpha = 0;
+                }
+                else
+                    couponLabel.text = yStr;
+                couponLabel.font = [UIFont systemFontOfSize:MLwordFont_7];
+                couponLabel.userInteractionEnabled = YES;
+                [maskImageArray addObject:couponLabel];
+                UIImageView *direction =(UIImageView *)[cell viewWithTag:1006];
+                direction.alpha = 1;;
+                direction.userInteractionEnabled = YES;
+                direction.frame = CGRectMake(kDeviceWidth-45*MCscale, 20*MCscale, 17*MCscale, 17*MCscale);
+                direction.image = [UIImage imageNamed:@"下拉键"];
+                direction.backgroundColor = [UIColor clearColor];
                 UIView *line = (UIView *)[cell viewWithTag:1007];
                 line.alpha = 1;
-                line.frame = CGRectMake(20,cell.height - 1*MCscale, kDeviceWidth-40, 0.5);
-                line.backgroundColor = txtColors(231, 232, 234, 0.8);
+                line.frame = CGRectMake(0, 54*MCscale, kDeviceWidth, 0.5);
+                line.backgroundColor = lineColor;
             }
-            else if (indexPath.row == 4 )
-            {
-                UILabel *subLabel = (UILabel *)[cell viewWithTag:1002];
-                subLabel.alpha = 1;
-                subLabel.backgroundColor = redTextColor;
-                subLabel.text = [NSString stringWithFormat:@"可用余额%.2f",[userLibaoStr floatValue]];
-                CGSize size = [subLabel.text boundingRectWithSize:CGSizeMake(150*MCscale, 15*MCscale) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:MLwordFont_9],NSFontAttributeName,nil] context:nil].size;
-                subLabel.frame = CGRectMake(title.right, title.top+2, size.width, 15*MCscale);
-                subLabel.textColor = [UIColor whiteColor];
-                subLabel.font = [UIFont systemFontOfSize:MLwordFont_9];
-                subLabel.textAlignment = NSTextAlignmentCenter;
-                
-//                UIView *line = (UIView *)[cell viewWithTag:1007];
-//                line.alpha = 1;
-//                line.frame = CGRectMake(0, cell.height - 1*MCscale, kDeviceWidth,1*MCscale);
-//                line.backgroundColor = txtColors(231, 232, 234, 0.8);
+            if(indexPath.row>0 && indexPath.row <5){
+                UILabel *title = (UILabel *)[cell viewWithTag:1001];
+                title.frame = CGRectMake(30*MCscale, 18*MCscale, 80*MCscale, 20*MCscale);
+                title.alpha = 1;
+                title.text = titleArray[indexPath.row];
+                title.textColor = [UIColor blackColor];
+                title.textAlignment = NSTextAlignmentLeft;
+                title.font = [UIFont systemFontOfSize:MLwordFont_4];
+                UIImageView *chooseImage = (UIImageView *)[cell viewWithTag:1006];
+                chooseImage.alpha = 1;
+                chooseImage.frame = CGRectMake(kDeviceWidth-50*MCscale, 16*MCscale, 22*MCscale, 22*MCscale);
+                chooseImage.userInteractionEnabled = YES;
+                if (indexPath.row == lastChoosePay) {
+                    chooseImage.image = [UIImage imageNamed:@"选中"];
+                }
+                else{
+                    chooseImage.image = [UIImage imageNamed:@"选择"];
+                }
+                chooseImage.backgroundColor = [UIColor clearColor];
+                chooseImage.tag = indexPath.row;
+                if (chooseImage !=nil) {
+                    [choosePayArray addObject:chooseImage];
+                }
+                if (indexPath.row == 1) {
+                    UIView *line = (UIView *)[cell viewWithTag:1007];
+                    line.alpha = 1;
+                    line.frame = CGRectMake(20, 54*MCscale, kDeviceWidth-40, 0.5);
+                    line.backgroundColor = lineColor;
+                }
+                else if (indexPath.row == 2){
+                    UIView *line = (UIView *)[cell viewWithTag:1007];
+                    line.alpha = 1;
+                    line.frame = CGRectMake(20, 54*MCscale, kDeviceWidth-40, 0.5);
+                    line.backgroundColor = lineColor;
+                    UILabel *couponLabel = (UILabel *)[cell viewWithTag:1002];
+                    couponLabel.alpha = 0;
+                    couponLabel.userInteractionEnabled = YES;
+                    couponLabel.frame = CGRectMake(title.right+30*MCscale, title.top+2, 80*MCscale, 20*MCscale);
+                    couponLabel.text = @"支付宝";
+                    couponLabel.textAlignment = NSTextAlignmentRight;
+                    couponLabel.textColor = txtColors(248, 53, 74, 1);
+                    couponLabel.font = [UIFont systemFontOfSize:MLwordFont_5];
+                    UITapGestureRecognizer *tp = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(morewayTapAction)];
+                    [couponLabel addGestureRecognizer:tp];
+                    
+                    UIImageView *jhImg = (UIImageView *)[cell viewWithTag:1005];
+                    jhImg.frame = CGRectMake(couponLabel.right+5*MCscale, title.top+4*MCscale, 18*MCscale, 15*MCscale);
+                    jhImg.alpha = 0;
+                    jhImg.userInteractionEnabled = YES;
+                    jhImg.image = [UIImage imageNamed:@"红色下拉键"];
+                    jhImg.backgroundColor = [UIColor clearColor];
+                    UITapGestureRecognizer *tpm = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(morewayTapAction)];
+                    [jhImg addGestureRecognizer:tpm];
+                }
+                else if (indexPath.row == 3) {
+                    UILabel *subLabel = (UILabel *)[cell viewWithTag:1002];
+                    subLabel.alpha = 1;
+                    subLabel.backgroundColor = redTextColor;
+                    subLabel.text = [NSString stringWithFormat:@"可用余额%.2f",[zhangdanyue floatValue]];
+                    CGSize size = [subLabel.text boundingRectWithSize:CGSizeMake(150*MCscale, 15*MCscale) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:MLwordFont_9],NSFontAttributeName,nil] context:nil].size;
+                    subLabel.frame = CGRectMake(title.right, title.top+2, size.width, 15*MCscale);
+                    subLabel.textColor = [UIColor whiteColor];
+                    subLabel.font = [UIFont systemFontOfSize:MLwordFont_9];
+                    subLabel.textAlignment = NSTextAlignmentCenter;
+                    
+                    UILabel *ssubl = (UILabel *)[cell viewWithTag:1003];
+                    ssubl.frame = CGRectMake(subLabel.right+15*MCscale, subLabel.top, 100*MCscale, 15*MCscale);
+                    ssubl.alpha = 0;
+                    ssubl.text = @"余额不足,去充值";
+                    ssubl.textColor = txtColors(248, 53, 74, 1);
+                    ssubl.textAlignment = NSTextAlignmentRight;
+                    ssubl.backgroundColor = [UIColor clearColor];
+                    ssubl.font = [UIFont systemFontOfSize:MLwordFont_9];
+                    
+                    UIView *line = (UIView *)[cell viewWithTag:1007];
+                    line.alpha = 1;
+                    line.frame = CGRectMake(20,cell.height - 1*MCscale, kDeviceWidth-40, 0.5);
+                    line.backgroundColor = txtColors(231, 232, 234, 0.8);
+                }
+                else if (indexPath.row == 4 )
+                {
+                    UILabel *subLabel = (UILabel *)[cell viewWithTag:1002];
+                    subLabel.alpha = 1;
+                    subLabel.backgroundColor = redTextColor;
+                    subLabel.text = [NSString stringWithFormat:@"可用余额%.2f",[userLibaoStr floatValue]];
+                    CGSize size = [subLabel.text boundingRectWithSize:CGSizeMake(150*MCscale, 15*MCscale) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:MLwordFont_9],NSFontAttributeName,nil] context:nil].size;
+                    subLabel.frame = CGRectMake(title.right, title.top+2, size.width, 15*MCscale);
+                    subLabel.textColor = [UIColor whiteColor];
+                    subLabel.font = [UIFont systemFontOfSize:MLwordFont_9];
+                    subLabel.textAlignment = NSTextAlignmentCenter;
+                    
+                    //                UIView *line = (UIView *)[cell viewWithTag:1007];
+                    //                line.alpha = 1;
+                    //                line.frame = CGRectMake(0, cell.height - 1*MCscale, kDeviceWidth,1*MCscale);
+                    //                line.backgroundColor = txtColors(231, 232, 234, 0.8);
+                }
             }
-        }
         }
     }
     else{
@@ -1310,6 +1352,8 @@
         if ([modl.fapiao integerValue]==1) {
             scnum = 3;
         }
+        
+        
         if (indexPath.row < scnum) {
             UILabel *title = (UILabel *)[cell viewWithTag:1001];
             title.alpha = 1;
@@ -1333,7 +1377,7 @@
                     [subTimeAry addObject:subtitlle];
                 }
                 subtitlle.text = timeStrAry[indexPath.section-1];
-                if ([subtitlle.text isEqualToString:@"立即配送"]) {
+                if ([subtitlle.text isEqualToString:@"店铺消费"]) {
                     subtitlle.textColor = textColors;
                 }
                 else{
@@ -1472,17 +1516,17 @@
                 [self choosePayAction:indexPath.row];
             }
         }
-       else
-       {
-           if(indexPath.row == 0){
-               if (youhuidataAry.count >0) {
-                   [self chooseCouponAction];
-               }
-           }
-           else if(indexPath.row>0 && indexPath.row<5){
-               [self choosePayAction:indexPath.row];
-           }
-       }
+        else
+        {
+            if(indexPath.row == 0){
+                if (youhuidataAry.count >0) {
+                    [self chooseCouponAction];
+                }
+            }
+            else if(indexPath.row>0 && indexPath.row<5){
+                [self choosePayAction:indexPath.row];
+            }
+        }
     }
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1556,7 +1600,7 @@
         UILabel *sendMoney = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, 80*MCscale, 20*MCscale)];
         if ([mModel.peisongmoney floatValue]>0) {
             sendMoney.text = [NSString stringWithFormat:@"配送费:%@",mModel.peisongmoney];
-            sendMoney.alpha = 1;
+            sendMoney.alpha = 0;
         }
         else
             sendMoney.alpha =0;
@@ -1740,22 +1784,29 @@
 -(void)goToCheck
 {
     //-------->>>>>>>> 缺少优惠券 <<<<<<<<
-    allBub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    allBub.mode = MBProgressHUDModeIndeterminate;
-    allBub.delegate = self;
-    allBub.labelText = @"请稍等...";
-    [allBub show:YES];
-    UILabel *nameL =  headViewsAry[0]; //收货人
-    UILabel *telL =   headViewsAry[1]; //电话
-    UILabel *adresL = headViewsAry[2]; //地址
-    if ([nameL.text isEqualToString:@""] || [telL.text isEqualToString:@""] || [adresL.text isEqualToString:@""]) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"错误提示" message:@"地址为空请完先善送货地址" preferredStyle:1];
+//    UILabel *nameL =  headViewsAry[0]; //收货人
+////    UILabel *telL =   headViewsAry[1]; //电话
+//    UILabel *adresL = headViewsAry[2]; //地址
+    UITextField * adresL = [orderTableView.tableHeaderView viewWithTag:210];
+    UITextField * nameL = [orderTableView.tableHeaderView viewWithTag:211];
+    
+    
+    if ([adresL.text isEmptyString]) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"错误提示" message:@"桌号/订单号为空请先完善" preferredStyle:1];
         UIAlertAction *suerAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         }];
         [alert addAction:suerAction];
         [self presentViewController:alert animated:YES completion:nil];
+        return;
     }
     else{
+        allBub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        allBub.mode = MBProgressHUDModeIndeterminate;
+        allBub.delegate = self;
+        allBub.labelText = @"请稍等...";
+        [allBub show:YES];
+        
+        
         NSMutableArray *youhuiAry = [[NSMutableArray alloc]init]; //优惠
         NSMutableArray *yingfujineAry = [[NSMutableArray alloc]init]; //应付金额
         NSMutableArray *fujiafeiAry = [[NSMutableArray alloc]init]; //附加费
@@ -1816,7 +1867,9 @@
             }
             [shuliangAry addObject:[NSString stringWithFormat:@"%ld",(long)shul]];
         }
-        NSString *fufeiFas = [NSString stringWithFormat:@"%ld",(long)lastChoosePay];
+        
+        
+        NSString *fufeiFas = [NSString stringWithFormat:@"%ld",(long)lastChoosePay==1?7:(long)lastChoosePay];
         shuliangStr = [shuliangAry componentsJoinedByString:@","]; //数量拼接字符串
         NSString *youHuimoney;
         if (youhuidataAry.count >0) {
@@ -1834,7 +1887,24 @@
         }
         else
             youHuimoney = @"0";
-        ppmdic = [NSMutableDictionary dictionaryWithDictionary:@{@"userid":user_id,@"shequid":@"8",@"dipuids":dianpuidStr,@"dindan.shouhuoren":nameL.text,@"dindan.tel":telL.text,@"dindan.shouhuodizhi":adresL.text,@"dindan.zhifufangshi":fufeiFas,@"youhuis":youhuiStr,@"yingfujines":xiaojiStr,@"dindan.yuyuesongdadate":dingdanTimeStr,@"fudongfeis":fujiafeiStr,@"dindan.dindanbeizhu":beizhuStr,@"dindan.fapiaotaitou":fapiaotouStr,@"dindan.shuliang":shuliangStr,@"dindan.youhuijuan":youHuimoney,@"peisongfeis":peisongfeiStr,@"shdzid":addressModel.dizhiId,@"caigous":caiGoMoneyStr}];
+        ppmdic = [NSMutableDictionary dictionaryWithDictionary:@{@"userid":user_id,
+                                                                 @"shequid":@"8",
+                                                                 @"dipuids":dianpuidStr,
+                                                                 @"dindan.shouhuoren":nameL.text,
+                                                                @"dindan.tel":user_tel,
+                                                                 @"dindan.shouhuodizhi":adresL.text,
+                                                                 @"dindan.zhifufangshi":fufeiFas,
+                                                                 @"youhuis":youhuiStr,
+                                                                 @"yingfujines":xiaojiStr,
+                                                                 @"dindan.yuyuesongdadate":dingdanTimeStr,
+                                                                 @"fudongfeis":fujiafeiStr,
+                                                                 @"dindan.dindanbeizhu":beizhuStr,
+                                                                 @"dindan.fapiaotaitou":fapiaotouStr,
+                                                                 @"dindan.shuliang":shuliangStr,
+                                                                 @"dindan.youhuijuan":youHuimoney,
+                                                                 @"peisongfeis":peisongfeiStr,
+                                                                 @"shdzid":@"A",
+                                                                 @"caigous":caiGoMoneyStr}];
         if (lastChoosePay == 3||lastChoosePay == 4) {
             if ([zhifumima isEqualToString:@"2"]) {
                 popViewTag = 105;
@@ -1852,11 +1922,14 @@
             }
         }
         else if (lastChoosePay == 1) {
+            [MBProgressHUD promptWithString:@"现金付款"];
             [self daofuAction];
+            
         }
         else if (lastChoosePay == 2){
             [allBub hide:YES];
             if (!isWx) {
+                [MBProgressHUD promptWithString:@"支付宝支付"];
                 [self zhifubaoAction];
             }
             else{
@@ -1869,7 +1942,7 @@
                 NSString *dateTime = [formatter stringFromDate:[NSDate date]];
                 NSString *orderid = [NSString stringWithFormat:@"%@%@",_dianpuID,dateTime];
                 NSString *body = [NSString stringWithFormat:@"妙店佳+%@支付",orderid];
-               [self WXpayAction:money bodying:body];
+                [self WXpayAction:money bodying:body];
             }
         }
     }
@@ -1885,6 +1958,7 @@
             NSNotification *notification = [NSNotification notificationWithName:@"orderCreatSuccess" object:nil];
             [[NSNotificationCenter defaultCenter] postNotification:notification];
             [[NSNotificationCenter defaultCenter] removeObserver:self name:@"orderCreatSuccess" object:nil];
+  
             [self jumpOrderDetail];
         }
         else{
@@ -1901,7 +1975,7 @@
 //支付宝
 -(void)zhifubaoAction
 {
-//    NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"shequid":@"8"}];
+    //    NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"shequid":@"8"}];
     NSMutableDictionary *privateDic = [[NSMutableDictionary alloc]init];
     [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"zhifu.action" params:nil success:^(id json) {
         if(json){
@@ -1939,12 +2013,12 @@
     [formatter setDateFormat:@"yyMMddHHmmss"];
     NSString *dateTime = [formatter stringFromDate:[NSDate date]];
     NSString *orderid = [NSString stringWithFormat:@"%@%@",_dianpuID,dateTime];
-    UILabel *telL =   headViewsAry[1]; //电话
+//    UILabel *telL =   headViewsAry[1]; //电话
     NSString *body;
     NSString *sbid = [NSString stringWithFormat:@"%@",userSheBei_id];
     NSString *usid = [NSString stringWithFormat:@"%@",user_id];
     if ([sbid isEqualToString:usid]){
-        body = telL.text;
+//        body = telL.text;
     }
     else
         body = [NSString stringWithFormat:@"%@",user_id];
@@ -1982,6 +2056,7 @@
                         [[NSNotificationCenter defaultCenter] postNotification:notification];
                         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"orderCreatSuccess" object:nil];
                         [self jumpOrderDetail];
+                       
                     }
                 } failure:^(NSError *error) {
                     MBProgressHUD *bud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -2004,13 +2079,9 @@
  -(void)WXpayAction:(NSString *)money bodying:(NSString *)body
  {
  if (wxPaymessage.count == 0) {
-     
  NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"total_fee":money,@"shequid":user_dianpuId,@"body":body,@"userid":user_id}];
      
-     [MBProgressHUD start];
      [HTTPTool postWithUrlPath:HTTPHEADER AndUrl:@"weixingfangwen.action" params:pram success:^(id json) {
-         [MBProgressHUD stop];
-         
          NSLog(@"%@",json);
          [allBub hide:YES];
          [wxPaymessage setValue:[json valueForKey:@"dingdanhao"] forKey:@"dingdanhao"];
@@ -2021,16 +2092,14 @@
          [wxPaymessage setValue:[json valueForKey:@"sign"] forKey:@"sign"];
          [wxPaymessage setValue:[json valueForKey:@"timestamp"] forKey:@"timestamp"];
          [self wzf:wxPaymessage];
-
      } failure:^(NSError *error) {
-         [MBProgressHUD stop];
          NSLog(@"%@",error);
          [allBub hide:YES];
+
      }];
 // [HTTPTool postWithUrl:@"weixingfangwen.action" params:pram success:^(id json) {
-// 
-// } failure:^(NSError *error) {
 //
+// } failure:^(NSError *error) {
 // }];
  }
  else
@@ -2071,25 +2140,25 @@
  if (resp.errCode == WXSuccess) {
  [ppmdic setValue:orderid forKey:@"dindan.zhifufangshi"];
      
- [HTTPTool  postWithUrlPath:HTTPHEADER AndUrl:@"dingdansave.action" params:ppmdic success:^(id json) {
-     NSString *message =[NSString stringWithFormat:@"%@",[json valueForKey:@"massages"]];
-     if ([message isEqualToString:@"1"]) {
-         NSNotification *notification = [NSNotification notificationWithName:@"orderCreatSuccess" object:nil];
-         [[NSNotificationCenter defaultCenter] postNotification:notification];
-         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"orderCreatSuccess" object:nil];
-         NSLog(@"-- 支付成功 -- ");
-         [self jumpOrderDetail];
-     }
- } failure:^(NSError *error) {
-     MBProgressHUD *bud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-     bud.mode = MBProgressHUDModeCustomView;
-     //                    bud.labelText = @"网络连接错误";
-     [bud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
- }];
+     [HTTPTool postWithUrlPath:HTTPHEADER AndUrl:@"dingdansave.action" params:ppmdic success:^(id json) {
+         NSString *message =[NSString stringWithFormat:@"%@",[json valueForKey:@"massages"]];
+         if ([message isEqualToString:@"1"]) {
+             NSNotification *notification = [NSNotification notificationWithName:@"orderCreatSuccess" object:nil];
+             [[NSNotificationCenter defaultCenter] postNotification:notification];
+             [[NSNotificationCenter defaultCenter] removeObserver:self name:@"orderCreatSuccess" object:nil];
+             NSLog(@"-- 支付成功 -- ");
+             [self jumpOrderDetail];
+         }
+     } failure:^(NSError *error) {
+         MBProgressHUD *bud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+         bud.mode = MBProgressHUDModeCustomView;
+         //                    bud.labelText = @"网络连接错误";
+         [bud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
+     }];
 // [HTTPTool postWithUrl:@"dingdansave.action" params:ppmdic success:^(id json) {
 // 
 // 
-// 
+//
 // } failure:^(NSError *error) {
 //
 // }];
@@ -2108,6 +2177,7 @@
 #pragma mark -- 成功跳转到订单详情页
 -(void)jumpOrderDetail
 {
+    set_isPeiSong(@"1");
     NSNotification *userLoginNotification = [NSNotification notificationWithName:@"changeGoodsAnying" object:nil];
     [[NSNotificationCenter defaultCenter]postNotification:userLoginNotification];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"changeGoodsAnying" object:nil];
@@ -2276,7 +2346,7 @@
         } failure:^(NSError *error) {
             [self promptMessageWithString:@"网络连接错误14"];
         }];
-
+        
     } failure:^(NSError *error) {
         [self promptMessageWithString:@"网络连接错误14"];
     }];
@@ -2285,7 +2355,7 @@
 #pragma mark -- PopViewDelegate
 -(void)popBtnAction:(PopView *)pop atIndex:(NSInteger)index btnTag:(NSInteger)btag
 {
-
+    
     if (index !=108) {
         [UIView animateWithDuration:0.3 animations:^{
             maskView.alpha = 0;
@@ -2384,16 +2454,16 @@
         popViewTag = 109;
     }];
     
-//    if (index == 108){
-//        [self messageNetxAction];
-//    }
-//    [UIView animateWithDuration:0.3 animations:^{
-//        popViewTag = 109;
-//        newPayPas.alpha = 0;
-//        [newPayPas removeFromSuperview];
-//        nextPayPas.alpha = 0.95;
-//        [self.view addSubview:nextPayPas];
-//    }];
+    //    if (index == 108){
+    //        [self messageNetxAction];
+    //    }
+    //    [UIView animateWithDuration:0.3 animations:^{
+    //        popViewTag = 109;
+    //        newPayPas.alpha = 0;
+    //        [newPayPas removeFromSuperview];
+    //        nextPayPas.alpha = 0.95;
+    //        [self.view addSubview:nextPayPas];
+    //    }];
 }
 
 #pragma mark SetPaymentPasswordViewDelegate
@@ -2456,7 +2526,7 @@
     else if (tap.view.tag == 102){
         lb1.text = @"微信支付";
         isWx = 1;
-      
+        [self  promptMessageWithString:@"该功能正在努力开发中"];
     }
     [UIView animateWithDuration:0.3 animations:^{
         maskView.alpha = 0;
@@ -2521,4 +2591,9 @@
     fram.origin.y = 120*MCscale;
     pop.frame = fram;
 }
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    [self.view endEditing:YES];
+}
+
+
 @end

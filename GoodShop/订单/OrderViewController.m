@@ -117,6 +117,7 @@
         [caozuotishiImage addGestureRecognizer:imageTap];
         [self.view addSubview:caozuotishiImage];
     }
+    
 }
 -(void)imageHidden
 {
@@ -190,6 +191,8 @@
     NSMutableDictionary *pram = [NSMutableDictionary dictionaryWithDictionary:@{@"userid":user_id,@"pageNum":[NSString stringWithFormat:@"%d",pageNum]}];
     [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"findjinqidingdans.action" params:pram success:^(id json) {
         NSLog(@"订单数据%@",json);
+        
+        
         [Hud hide:YES];
         if (isRefresh) {
             [self endRefresh:loadType];
@@ -198,6 +201,8 @@
             [recentDataAry removeAllObjects];
         }
         lastPage = pageNum;
+        
+        
         
         NSArray *ary = [json valueForKey:@"diangdanlist"];
         if (ary.count >0) {
@@ -382,7 +387,11 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (btBool == 0) {
-        return recentDataAry.count;
+        if (recentDataAry) {
+            return recentDataAry.count;
+        }
+        return 0;
+        
     }
     return oldDataAry.count;
 }
@@ -395,8 +404,14 @@
             cell = [[orderViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier1];
         }
         if (recentDataAry.count>0) {
+
             cell.model = recentDataAry[indexPath.row];
+          
+
         }
+        
+        NSLog(@"%@",cell.model.danhao);
+        
         cell.gotoeEvaluate.tag = indexPath.row + 100;
         cell.cancelOrderBtn.tag = indexPath.row + 1000;
         cell.payBtn.tag = indexPath.row + 2000;
@@ -449,9 +464,13 @@
         return 88*MCscale;
     }
     else{
+        
         recentOrderModel *model = recentDataAry[indexPath.row];
         NSString *guaj = [NSString stringWithFormat:@"%@",model.guanjia];
         if ([guaj isEqualToString:@"0"]) {
+            return 144*MCscale;
+        }
+        if ([model.dingdanleixing isEqualToString:@"0"]) {
             return 144*MCscale;
         }
         return 174*MCscale;

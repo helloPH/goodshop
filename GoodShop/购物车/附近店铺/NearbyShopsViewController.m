@@ -260,6 +260,9 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     shopListModel *model = self.fujinDianpuArray[indexPath.row];
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    
+    
+    set_isPeiSong(@"1"); /// 到正常切换店铺时 把配送方式改为1
     if (self.viewTag == 2) {
         [[NSUserDefaults standardUserDefaults]setValue:model.dianpuid forKey:@"dianpuqiehuan"];
         [[NSUserDefaults standardUserDefaults]setValue:@"2" forKey:@"isFirst"];

@@ -115,8 +115,27 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 
 #pragma mark - Class methods
 
+#pragma mark --  自定义的方法
++(void)start{
+    [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].delegate.window animated:YES];
+}
++(void)stop{
+    [MBProgressHUD hideHUDForView:[UIApplication sharedApplication].delegate.window animated:YES];
+}
++(void)promptWithString:(NSString *)title{
+    [MBProgressHUD stop];
+    MBProgressHUD *mHud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].delegate.window animated:YES];
+    mHud.labelText = title;
+    mHud.mode = MBProgressHUDModeText;
+    [mHud showWhileExecuting:@selector(myTask) onTarget:mHud withObject:nil animated:YES];
+}
+-(void)myTask
+{
+    sleep(1.5);
+}
 + (MB_INSTANCETYPE)showHUDAddedTo:(UIView *)view animated:(BOOL)animated {
 	MBProgressHUD *hud = [[self alloc] initWithView:view];
+    hud.labelText=@"请稍等...";
 	hud.removeFromSuperViewOnHide = YES;
 	[view addSubview:hud];
 	[hud show:animated];

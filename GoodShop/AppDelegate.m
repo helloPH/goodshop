@@ -53,8 +53,14 @@
     if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstShopCar"]){
         [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstShopCar"];
     }
+ 
+    set_isPeiSong(@"1");
+    
+   
+    
     /*微支付*/
     [WXApi registerApp:@"wx86cfff8ea79fa7c8" withDescription:@"妙店佳"];
+    
     /*******----分享----*******/
     [ShareSDK registerApp:@"1948047241dba"];//appkey
     //微信

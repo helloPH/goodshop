@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @interface orderDetailModel : NSObject
+@property(nonatomic,copy)NSString *dingdanleixing;  //订单类型（0=店铺消费、1=联盟配送、2=商盟众包）
+@property(nonatomic,copy)NSString *dindanzhuangtaidate;//订单时间
+
 @property(nonatomic,copy)NSString *dianpuid; //店铺id
 @property(nonatomic,copy)NSString *dianpustate;//店铺状态
 @property(nonatomic,copy)NSString *dinapuname; //店铺名字

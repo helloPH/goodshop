@@ -133,13 +133,48 @@
     else if([array[0] isEqualToString:@"7"]){
         image.image = [UIImage imageNamed:@"选中"];
         receive.text = @"未接超时";
-        label.text = @"给您带来的不便,敬请谅解";
+        label.text = @"感谢使用妙店佳，带来不便敬请谅解。";
     }
     else{
         image.image = [UIImage imageNamed:@"选中"];
         receive.text = @"订单已取消";
-        label.text = @"给您带来的不便,敬请谅解";
+        label.text = @"感谢使用妙店佳，带来不便敬请谅解。";
     }
+    
+    
+    
+    if (([array[0] isEqualToString:@"1"] || // 订单已提交
+         [array[0] isEqualToString:@"2"] || // 处理
+         [array[0] isEqualToString:@"3"] || // 配送中
+         [array[0] isEqualToString:@"4"] || // 已送达
+         [array[0] isEqualToString:@"6"])   // 已收货
+        && [self.dingdanleixing isEqualToString:@"0"]) {   // 店铺消费 点餐
+        
+        NSString * dindanzhuangtaidate = [NSString stringWithFormat:@"%@",self.dindanzhuangtaidate];
+        
+        dindanzhuangtaidate = [dindanzhuangtaidate isEmptyString]?@"":dindanzhuangtaidate;
+        NSArray * tmArr = [dindanzhuangtaidate componentsSeparatedByString:@","];
+        if ([dindanzhuangtaidate isEmptyString]) {
+            tmArr = @[];
+        }
+        if (tmArr.count == 1) { /// 消费中：感谢使用妙店佳，祝消费愉快。
+            image.image = [UIImage imageNamed:@"处理中-绿"];
+            receive.text = @"消费中";
+            label.text = @"感谢使用妙店佳，祝消费愉快";
+            
+        }else if (tmArr.count == 2){ // 已结束：;感谢使用妙店佳，欢迎再次光临。
+            image.image = [UIImage imageNamed:@"选中"];
+            receive.text = @"已结束";
+            label.text = @"感谢使用妙店佳，欢迎再次光临";
+        }else{//  订单提交：感谢使用妙店佳，订单已提交。
+            receive.text = @"已提交";
+            image.image = [UIImage imageNamed:@"订单提交-绿"];
+            label.text = @"感谢使用妙店佳，订单已提交";
+        }
+    }
+    
+
+    
     
     for (int i = 0; i<7; i++) {
         UILabel *title = [self viewWithTag:100+i];
@@ -159,7 +194,8 @@
     }
     lineView.frame = CGRectMake(0, self.height - 40*MCscale, self.width , 5*MCscale);
     shopBackView.frame = CGRectMake(0, lineView.bottom, self.width, 35*MCscale);
-    CGSize size = [array[8] boundingRectWithSize:CGSizeMake(250, 20) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:MLwordFont_5],NSFontAttributeName, nil] context:nil].size;
+    NSString * stringgggg = [NSString stringWithFormat:@"%@",array[8]];
+    CGSize size = [stringgggg boundingRectWithSize:CGSizeMake(250, 20) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:MLwordFont_5],NSFontAttributeName, nil] context:nil].size;
     shopTitle.frame = CGRectMake(shopImage.right+5, 5*MCscale, size.width, 25*MCscale);
     shopTitle.text = array[8];
     line.frame = CGRectMake(0, self.height - 1, self.width,1);

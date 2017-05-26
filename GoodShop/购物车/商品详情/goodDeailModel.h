@@ -16,6 +16,8 @@
 @property(nonatomic,copy)NSString *shangpinid;//商品id
 @property(nonatomic,retain)NSArray *kexuanyanse;//可选颜色
 @property(nonatomic,retain)NSArray *kexuanyansepic;//可选颜色图片
+@property(nonatomic,strong)NSArray *kexuanmoney;//可选价格
+
 @property(nonatomic,copy)NSString *shangpinname;//商品名
 @property(nonatomic,copy)NSString *xianjia;//现价
 @property(nonatomic,copy)NSString *yuanjia;//原价
