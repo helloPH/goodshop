@@ -62,6 +62,7 @@
     }
     [self initNavigation];
     [self getHeadImageUrl];
+    [self getFujinDianpuData];
 }
 
 -(void)judgeTheFirst
@@ -92,21 +93,21 @@
 -(NSString *)longitude
 {
     if (!_longitude) {
-        _longitude = @"";
+        _longitude = @"116.583822";
     }
     return _longitude;
 }
 -(NSString *)latitude
 {
     if (!_latitude) {
-        _latitude = @"";
+        _latitude = @"39.909449";
     }
     return _latitude;
 }
 -(NSString *)city
 {
     if (!_city) {
-        _city = @"";
+        _city = @"北京市";
     }
     return _city;
 }

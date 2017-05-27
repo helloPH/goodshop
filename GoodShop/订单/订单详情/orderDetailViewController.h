@@ -11,4 +11,5 @@
 @interface orderDetailViewController : UIViewController
 @property(nonatomic,copy)NSString *dingdanId;
 @property(nonatomic,assign)BOOL isOrderAgn;
+@property(nonatomic,assign)BOOL isFromList;
 @end

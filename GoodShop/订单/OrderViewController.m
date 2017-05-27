@@ -440,6 +440,7 @@
         orderDetailViewController *detailVc = [[orderDetailViewController alloc]init];
         detailVc.dingdanId = model.danhao;
         detailVc.isOrderAgn = 1;
+        detailVc.isFromList=YES;
         detailVc.hidesBottomBarWhenPushed = YES;
         UIBarButtonItem *bar=[[UIBarButtonItem alloc]init];
         bar.title=@"";
@@ -451,6 +452,7 @@
         orderDetailViewController *detailVc = [[orderDetailViewController alloc]init];
         detailVc.dingdanId = model.danhao;
         detailVc.isOrderAgn = 1;
+        detailVc.isFromList=YES;
         detailVc.hidesBottomBarWhenPushed = YES;
         UIBarButtonItem *bar=[[UIBarButtonItem alloc]init];
         bar.title=@"";

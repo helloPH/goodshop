@@ -145,10 +145,15 @@
         [orderMessageAry addObject:zhuangt];
         NSString *dingdanhao = model.dingdanhao; //订单号
         [orderMessageAry addObject:dingdanhao];
-        NSString *shouhuoren = model.shouhuoren;//收货人
+        NSString *shouhuoren = model.shouhuoren;
         [orderMessageAry addObject:shouhuoren];
+        //收货人
+     
+        
         NSString *tel = model.tel; //电话
         [orderMessageAry addObject:tel];
+   
+      
         NSString *address = model.shouhuodizhi; //收货地址
         [orderMessageAry addObject:address];
         NSString *zhifustyle;
@@ -188,6 +193,7 @@
         //尾视图
         NSString *fujiafeiName = model.fujiafeiname;
         [moneyArray addObject:fujiafeiName]; //附加费name
+        
         NSString *fujiafei = model.fujiafei;
         [moneyArray addObject:fujiafei]; //附加费
         NSString *peisongfei = model.peisongshishou;
@@ -197,11 +203,14 @@
         NSString *dingdanbeizhu = model.dindanbeizhu;
         [moneyArray addObject:dingdanbeizhu]; //订单备注
         
+//        [moneyArray addObject:@""];// 福利
+        
         CGSize size = [dingdanbeizhu boundingRectWithSize:CGSizeMake(kDeviceWidth-50*MCscale, 140*MCscale) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:MLwordFont_5],NSFontAttributeName, nil] context:nil].size;
         CGFloat footViewHeight = 120*MCscale;
         if (![dingdanbeizhu isEqualToString:@""] && ![dingdanbeizhu isEqualToString:@"0"]) {
             footViewHeight = footViewHeight +size.height;
         }
+        
         footView.frame = CGRectMake(0,detailTableView.height - footViewHeight, kDeviceWidth,footViewHeight);
         [footView createUIWithArray:moneyArray];
         
@@ -308,6 +317,12 @@
     else if(index == 1)
     {
         [self promptMessageWithString:@"领取成功"];
+//        [self reloadData];
+//        self
+//        FuliModel * fulimodel =  fuliAry[index];
+        
+        
+        
     }
     else
     {
@@ -394,11 +409,17 @@
     }
     else
     {
+    
+        
         [[NSUserDefaults standardUserDefaults]setValue:@"2" forKey:@"isFirst"];
         CustomTabBarViewController *main = (CustomTabBarViewController *)self.tabBarController;
         [main setSelectedIndex:1];
         main.buttonIndex = 1;
         [self.navigationController popToRootViewControllerAnimated:YES];
+        if (!_isFromList) {
+            main.buttonIndex = 0;
+            
+        }
     }
 }
 -(void)tapRedPack

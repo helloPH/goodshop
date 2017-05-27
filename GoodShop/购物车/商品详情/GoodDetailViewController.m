@@ -38,6 +38,7 @@
     NSMutableArray *cellHeighAry;//关联商品image
     NSMutableArray *aryForHeadViews;//存放头视图中子视图
     NSString *yanse;//选择的颜色
+    NSString *seleimgUrl;
     NSString *seleMoney;
     NSString *xinghao;//型号
     NSMutableArray *dadangAry;//亲密搭档
@@ -88,6 +89,7 @@
     aryForHeadViews = [[NSMutableArray alloc]init];
     dadangAry = [[NSMutableArray alloc]init];
     yanse = @"0";
+    seleimgUrl= @"0";
     xinghao = @"0";
     seleMoney = @"0";
     self.view.backgroundColor = [UIColor whiteColor];
@@ -177,7 +179,10 @@
     [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"findbyshops.action" params:pram success:^(id json) {
         [Hud hide:YES];
         NSLog(@"-- 商品详情%@",json);
+        
+
         NSDictionary *dic = [json valueForKey:@"shpxiangping"];
+        seleimgUrl = [NSString stringWithFormat:@"%@",[dic valueForKey:@"canpinpic"]];
         if (dic.count !=0) {
             goodDeailModel *model = [[goodDeailModel alloc]init];
             [model setValuesForKeysWithDictionary:dic];
@@ -444,7 +449,7 @@
     for (int i=0; i<model.kexuanyansepic.count; i++) {
         UIImageView *selectedColorImage = [[UIImageView alloc]initWithFrame:CGRectZero];;
         selectedColorImage.frame = CGRectMake(selectedLabel.right+4+40*i*MCscale, 1, 38*MCscale, 38*MCscale);
-        [selectedColorImage sd_setImageWithURL:[NSURL URLWithString:model.kexuanyansepic[i]] placeholderImage:[UIImage imageNamed:@"yonghutouxiang"]];
+//        [selectedColorImage sd_setImageWithURL:[NSURL URLWithString:model.kexuanyansepic[i]] placeholderImage:[UIImage imageNamed:@"yonghutouxiang"]];
         selectedColorImage.backgroundColor = [UIColor clearColor];
         selectedColorImage.layer.borderColor =txtColors(25, 182, 133, 1).CGColor;
         selectedColorImage.layer.masksToBounds = YES;
@@ -455,6 +460,14 @@
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(chooseColor:)];
         [selectedColorImage addGestureRecognizer:tap];
         [colorsArray addObject:selectedColorImage];
+        
+        
+        UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(1, 1, selectedColorImage.width-2, selectedColorImage.height-2)];
+        [selectedColorImage addSubview:label];
+        label.numberOfLines=0;
+        label.font=[UIFont systemFontOfSize:MLwordFont_7];
+        label.textColor=textBlackColor;
+        label.text=model.kexuanyanse[i];
     }
     UIView *line2 = [[UIView alloc]initWithFrame:CGRectMake(0,selectedColorView.height - 1, selectedColorView.width, 1)];
     line2.backgroundColor = lineColor;
@@ -605,6 +618,9 @@
         goodImage.backgroundColor = [UIColor clearColor];
         goodImage.contentMode = UIViewContentModeScaleAspectFit;
         [goodImage sd_setImageWithURL:[NSURL URLWithString:model.guanlianpic[k]] placeholderImage:[UIImage imageNamed:@"yonghutouxiang"]];
+        //
+
+        
         goodImage.tag = 1050+k;
         goodImage.userInteractionEnabled = YES;
         [partnerView addSubview:goodImage];
@@ -1076,6 +1092,7 @@
     }
     lastColor = tapTag-1000;
     yanse =[NSString stringWithFormat:@"%@",model.kexuanyanse[tapTag -1000]];
+    seleimgUrl = [NSString stringWithFormat:@"%@",model.kexuanyansepic[tapTag -1000]];
     seleMoney = [NSString stringWithFormat:@"%@",model.kexuanmoney[tapTag -1000]];
     newMoneyLabel.text=[NSString stringWithFormat:@"¥%.2f",[seleMoney floatValue]];
     [newMoneyLabel sizeToFit];
@@ -1224,6 +1241,8 @@
     NSString *shuli = [NSString stringWithFormat:@"%ld",(long)num]; //商品数量
     //商品id 数组
     NSMutableArray *shangpinidAry = [[NSMutableArray alloc]init];
+    //商品图片链接
+    NSMutableArray *shangpinImgAry = [[NSMutableArray alloc]init];
     //商品颜色  数组
     NSMutableArray *shangpinYansAry = [[NSMutableArray alloc]init];
     //商品money 数组
@@ -1236,6 +1255,12 @@
     //商品id
     NSString *spid = [NSString stringWithFormat:@"%@",model.shangpinid];
     [shangpinidAry addObject:spid];
+    //商品图片链接
+    
+    NSRange  range = [seleimgUrl rangeOfString:@"shangpin/"];
+    NSString * seleurl = [seleimgUrl substringWithRange:NSMakeRange(range.location+range.length, seleimgUrl.length-range.location-range.length)];
+    [shangpinImgAry addObject:seleurl];
+    
     //商品颜色
     [shangpinYansAry addObject:yanse];
     // 商品money
@@ -1255,18 +1280,22 @@
         [shangpinXinghaoAry addObject:@"0"];
         [shangpinMoneyAry addObject:@"0"];
         [shangpinShuliangAry addObject:@"1"];
+        [shangpinImgAry addObject:@"0"];
     }
     NSString *shangpinidStr; //id拼接字符串
+    NSString *shangpinimgstr;
     NSString *yanseStr; //颜色
     NSString *xinghaoStr; //型号
     NSString *shulingStr; //数量
     NSString *shangpinMoneyStr;// 商品价格
     
     shangpinidStr = [shangpinidAry componentsJoinedByString:@","];
+    shangpinimgstr = [shangpinImgAry componentsJoinedByString:@","];
     yanseStr = [shangpinYansAry componentsJoinedByString:@","];
     xinghaoStr = [shangpinXinghaoAry componentsJoinedByString:@","];
     shulingStr = [shangpinShuliangAry componentsJoinedByString:@","];
     shangpinMoneyStr = [shangpinMoneyAry componentsJoinedByString:@","];
+    
     /**
      *  userid	    		//用户id
      car.dianpuid 	//店铺id
@@ -1277,7 +1306,7 @@
      （数组长度一致，用0补齐）
 
      */
-    NSMutableDictionary *pram = [NSMutableDictionary dictionaryWithDictionary:@{@"userid":user_id,@"car.dianpuid":_dianpuId, @"shangpins":shangpinidStr,@"car.xinghao":xinghaoStr, @"car.yanse":yanseStr,@"shuliangs":shulingStr,@"shopmoney":shangpinMoneyStr} ];
+    NSMutableDictionary *pram = [NSMutableDictionary dictionaryWithDictionary:@{@"userid":user_id,@"car.dianpuid":_dianpuId, @"shangpins":shangpinidStr,@"car.xinghao":xinghaoStr, @"car.yanse":yanseStr,@"shuliangs":shulingStr,@"shopmoney":shangpinMoneyStr,@"shopimaes":shangpinimgstr} ];
     [HTTPTool postWithUrlPath:HTTPHEADER AndUrl:@"saveaddcars.action" params:pram success:^(id json) {
         NSLog(@"加入购物车 %@",json);
         
