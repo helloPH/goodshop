@@ -1870,6 +1870,10 @@
         
         
         NSString *fufeiFas = [NSString stringWithFormat:@"%ld",(long)lastChoosePay==1?7:(long)lastChoosePay];
+        if (lastChoosePay==4) {
+            fufeiFas = @"8";
+        }
+        
         shuliangStr = [shuliangAry componentsJoinedByString:@","]; //数量拼接字符串
         NSString *youHuimoney;
         if (youhuidataAry.count >0) {

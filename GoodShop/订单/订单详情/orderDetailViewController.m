@@ -156,15 +156,39 @@
       
         NSString *address = model.shouhuodizhi; //收货地址
         [orderMessageAry addObject:address];
-        NSString *zhifustyle;
-        if ([model.zhifufangshi isEqualToString:@"1"]) {
-            zhifustyle = @"货到付款";
+        NSString *zhifustyle=@"";
+//        if ([model.zhifufangshi isEqualToString:@"1"]) {
+//            zhifustyle = @"货到付款";
+//        }
+//        else if ([model.zhifufangshi isEqualToString:@"2"]){
+//            zhifustyle = @"在线支付";
+//        }
+//        else if ([model.zhifufangshi isEqualToString:@"8"]) {
+//            
+//        }
+//        else
+//            zhifustyle = @"余额支付";
+        
+        switch ([model.zhifufangshi integerValue]) {
+            case 1:
+                zhifustyle = @"货到付款" ;
+                break;
+            case 2:
+                zhifustyle = @"在线支付";
+                break;
+            case 3:
+                zhifustyle = @"余额支付";
+                break;
+            case 8://4改成8
+                zhifustyle = @"礼包支付";
+                break;
+            case 7:
+                zhifustyle = @"现金支付";
+                break;
         }
-        else if ([model.zhifufangshi isEqualToString:@"2"]){
-            zhifustyle = @"在线支付";
-        }
-        else
-            zhifustyle = @"余额支付";
+        
+        
+        
         [orderMessageAry addObject:zhifustyle];
         NSString *xiadanTime = model.yuyuesongda; //下单时间
         if([xiadanTime isEqualToString:@"0"]){

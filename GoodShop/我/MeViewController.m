@@ -658,10 +658,14 @@
     [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"fenxiangFriends.action" params:pram success:^(id json) {
         NSLog(@"分享 %@",json);
         NSDictionary *mesDic = (NSDictionary *)json;
+//        NSString * message = [NSString stringWithFormat:@"%@",[json valueForKey:@"message"]];
+        
+        
         if (mesDic.count>0) {
             [self share:mesDic];
         }
         else{
+            
             [self promptMessageWithString:@"获取分享信息失败"];
         }
     } failure:^(NSError *error) {
@@ -683,26 +687,45 @@
                                                   url:shareUrl
                                           description:shareCont
                                             mediaType:SSPublishContentMediaTypeNews];
-    //创建弹出菜单容器
-    id<ISSContainer> container = [ShareSDK container];
-    [container setIPadContainerWithView:personTabelView arrowDirect:UIPopoverArrowDirectionUp];
     
-    //弹出分享菜单
-    [ShareSDK showShareActionSheet:container
-                         shareList:nil
-                           content:publishContent
-                     statusBarTips:YES
-                       authOptions:nil
-                      shareOptions:nil
-                            result:^(ShareType type, SSResponseState state, id<ISSPlatformShareInfo> statusInfo, id<ICMErrorInfo> error, BOOL end) {
-                                
-                                if (state == SSResponseStateSuccess){
-                                    [self promptSuccessWithString:@"分享成功"];
-                                }
-                                else if (state == SSResponseStateFail){
-                                    [self promptMessageWithString:@"分享失败"];
-                                }
-                            }];
+    [ShareSDK shareContent:publishContent type:ShareTypeWeixiTimeline authOptions:nil shareOptions:nil statusBarTips:YES result:^(ShareType type, SSResponseState state, id<ISSPlatformShareInfo> statusInfo, id<ICMErrorInfo> error, BOOL end) {
+        switch (state) {
+            case SSResponseStateSuccess:
+                [self promptMessageWithString:@"分享成功"];
+                break;
+            case SSResponseStateFail:
+                [self promptMessageWithString:@"分享失败"];
+
+                break;
+            case SSResponseStateCancel:
+                [self promptMessageWithString:@"分享被取消"];
+
+                break;
+            default:
+                break;
+        }
+    }];
+//    
+//    //创建弹出菜单容器
+//    id<ISSContainer> container = [ShareSDK container];
+//    [container setIPadContainerWithView:personTabelView arrowDirect:UIPopoverArrowDirectionUp];
+//
+//    //弹出分享菜单
+//    [ShareSDK showShareActionSheet:container
+//                         shareList:nil
+//                           content:publishContent
+//                     statusBarTips:YES
+//                       authOptions:nil
+//                      shareOptions:nil
+//                            result:^(ShareType type, SSResponseState state, id<ISSPlatformShareInfo> statusInfo, id<ICMErrorInfo> error, BOOL end) {
+//                                
+//                                if (state == SSResponseStateSuccess){
+//                                    [self promptSuccessWithString:@"分享成功"];
+//                                }
+//                                else if (state == SSResponseStateFail){
+//                                    [self promptMessageWithString:@"分享失败"];
+//                                }
+//                            }];
 }
 -(void)loginVC
 {

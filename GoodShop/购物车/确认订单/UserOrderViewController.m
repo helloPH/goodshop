@@ -1816,7 +1816,14 @@
             }
             [shuliangAry addObject:[NSString stringWithFormat:@"%ld",(long)shul]];
         }
+        
+        
+        
         NSString *fufeiFas = [NSString stringWithFormat:@"%ld",(long)lastChoosePay];
+        if (lastChoosePay==4) {
+            fufeiFas = @"8";
+        }
+        
         shuliangStr = [shuliangAry componentsJoinedByString:@","]; //数量拼接字符串
         NSString *youHuimoney;
         if (youhuidataAry.count >0) {
@@ -1834,6 +1841,9 @@
         }
         else
             youHuimoney = @"0";
+        
+        
+        
         ppmdic = [NSMutableDictionary dictionaryWithDictionary:@{@"userid":user_id,@"shequid":@"8",@"dipuids":dianpuidStr,@"dindan.shouhuoren":nameL.text,@"dindan.tel":telL.text,@"dindan.shouhuodizhi":adresL.text,@"dindan.zhifufangshi":fufeiFas,@"youhuis":youhuiStr,@"yingfujines":xiaojiStr,@"dindan.yuyuesongdadate":dingdanTimeStr,@"fudongfeis":fujiafeiStr,@"dindan.dindanbeizhu":beizhuStr,@"dindan.fapiaotaitou":fapiaotouStr,@"dindan.shuliang":shuliangStr,@"dindan.youhuijuan":youHuimoney,@"peisongfeis":peisongfeiStr,@"shdzid":addressModel.dizhiId,@"caigous":caiGoMoneyStr}];
         if (lastChoosePay == 3||lastChoosePay == 4) {
             if ([zhifumima isEqualToString:@"2"]) {

@@ -735,7 +735,7 @@
     orderMoney *model = orderModleAry[orderModleAry.count-1];
     //底部视图
     UIView *footView = [[UIView alloc]initWithFrame:CGRectMake(0, kDeviceHeight-49, kDeviceWidth, 49)];
-    footView.backgroundColor = txtColors(25, 182, 133, 0.8);
+    footView.backgroundColor = naviBarTintColor;
     
     //金额
     moneyLabel = [[UILabel alloc]initWithFrame:CGRectZero];
@@ -1857,7 +1857,14 @@
             youHuimoney = @"0";
         orderMoney *mMod = orderModleAry[0];
         NSString *jl = [NSString stringWithFormat:@"%@",mMod.juli];
-        ppmdic = [NSMutableDictionary dictionaryWithDictionary:@{@"userid":user_id,@"dipuids":dianpuidStr,@"dindan.shouhuoren":nameL.text,@"dindan.tel":telL.text,@"dindan.shouhuodizhi":adresL.text,@"dindan.zhifufangshi":[NSString stringWithFormat:@"%ld",(long)lastChoosePay],@"dindan.youhui":youhuiStr,@"dindan.yingfujine":xiaojiStr,@"dindan.yuyuesongdadate":dingdanTimeStr,@"dindan.fudongfei":fujiafeiStr,@"dindan.dindanbeizhu":beizhuStr, @"dindan.fapiaotaitou":fapiaotouStr,@"dindan.shuliang":shuliangStr,@"dindan.youhuijuan":youHuimoney,@"dindan.peisongfei":peisongfeiStr,@"dindan.danhao":_danhao,@"shdzid":jl,@"dindan.caigouchengben":caiGouMoneyStr}];
+        
+    
+        NSString * fufeifas = [NSString stringWithFormat:@"%ld",(long)lastChoosePay];
+        if (lastChoosePay == 4) {
+           fufeifas = @"8";
+        }
+        
+        ppmdic = [NSMutableDictionary dictionaryWithDictionary:@{@"userid":user_id,@"dipuids":dianpuidStr,@"dindan.shouhuoren":nameL.text,@"dindan.tel":telL.text,@"dindan.shouhuodizhi":adresL.text,@"dindan.zhifufangshi":fufeifas,@"dindan.youhui":youhuiStr,@"dindan.yingfujine":xiaojiStr,@"dindan.yuyuesongdadate":dingdanTimeStr,@"dindan.fudongfei":fujiafeiStr,@"dindan.dindanbeizhu":beizhuStr, @"dindan.fapiaotaitou":fapiaotouStr,@"dindan.shuliang":shuliangStr,@"dindan.youhuijuan":youHuimoney,@"dindan.peisongfei":peisongfeiStr,@"dindan.danhao":_danhao,@"shdzid":jl,@"dindan.caigouchengben":caiGouMoneyStr}];
         
         NSLog(@"%@",ppmdic);
         

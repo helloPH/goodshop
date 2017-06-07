@@ -66,26 +66,26 @@
     //微信
     [ShareSDK connectWeChatWithAppId:@"wx86cfff8ea79fa7c8" appSecret:@"6d5f230db781d1fb19ebaca27f1792f3" wechatCls:[WXApi class]];
     //qq
-    [ShareSDK connectQQWithQZoneAppKey:@"1105225280"
-                     qqApiInterfaceCls:[QQApiInterface class]
-                       tencentOAuthCls:[TencentOAuth class]];
+//    [ShareSDK connectQQWithQZoneAppKey:@"1105225280"
+//                     qqApiInterfaceCls:[QQApiInterface class]
+//                       tencentOAuthCls:[TencentOAuth class]];
     //qq空间
-    [ShareSDK connectQZoneWithAppKey:@"1105225280"
-                           appSecret:@"Kb6BIHVDTXIChuNX"
-                   qqApiInterfaceCls:[QQApiInterface class]
-                     tencentOAuthCls:[TencentOAuth class]];
+//    [ShareSDK connectQZoneWithAppKey:@"1105225280"
+//                           appSecret:@"Kb6BIHVDTXIChuNX"
+//                   qqApiInterfaceCls:[QQApiInterface class]
+//                     tencentOAuthCls:[TencentOAuth class]];
     //新浪微博
-    [ShareSDK connectSinaWeiboWithAppKey:@"3291648112"
-                               appSecret:@"2f5c7ece45b07a68790072d2b5224596"
-                             redirectUri:@"http://www.m1ao.com/Mshc/gonggao/yonghuxieyi.jsp"
-                             weiboSDKCls:[WeiboSDK class]];
+//    [ShareSDK connectSinaWeiboWithAppKey:@"3291648112"
+//                               appSecret:@"2f5c7ece45b07a68790072d2b5224596"
+//                             redirectUri:@"http://www.m1ao.com/Mshc/gonggao/yonghuxieyi.jsp"
+//                             weiboSDKCls:[WeiboSDK class]];
     //腾讯微博
-    [ShareSDK connectTencentWeiboWithAppKey:@"1105225280"
-                                  appSecret:@"2f5c7ece45b07a68790072d2b5224596"
-                                redirectUri:@"http://www.m1ao.com/Mshc/gonggao/yonghuxieyi.jsp"];
-    [ShareSDK connectTencentWeiboWithAppKey:@"801307650"
-                                  appSecret:@"ae36f4ee3946e1cbb98d6965b0b2ff5c"
-                                redirectUri:@"http://www.sharesdk.cn"];
+//    [ShareSDK connectTencentWeiboWithAppKey:@"1105225280"
+//                                  appSecret:@"2f5c7ece45b07a68790072d2b5224596"
+//                                redirectUri:@"http://www.m1ao.com/Mshc/gonggao/yonghuxieyi.jsp"];
+//    [ShareSDK connectTencentWeiboWithAppKey:@"801307650"
+//                                  appSecret:@"ae36f4ee3946e1cbb98d6965b0b2ff5c"
+//                                redirectUri:@"http://www.sharesdk.cn"];
     //人人网
 //    [ShareSDK connectRenRenWithAppId:@"226427"
 //                              appKey:@"fc5b8aed373c4c27a05b712acba0f8c3"
@@ -96,12 +96,12 @@
 //                            appSecret:@"da32179d859c016169f66d90b6db2a23"
 //                          redirectUri:@"http://www.sharesdk.cn/"];
     //易信好友
-    [ShareSDK importYiXinClass:[YXApi class]];
-    [ShareSDK connectYiXinSessionWithAppId:@"yx76ccc4c786924b0393cff76a77e90800"
-                                  yixinCls:[YiXinConnection class]];
+//    [ShareSDK importYiXinClass:[YXApi class]];
+//    [ShareSDK connectYiXinSessionWithAppId:@"yx76ccc4c786924b0393cff76a77e90800"
+//                                  yixinCls:[YiXinConnection class]];
     
-    [ShareSDK connectSMS];
-    [ShareSDK connectMail];
+//    [ShareSDK connectSMS];
+//    [ShareSDK connectMail];
     
     //定位
     locationManager = [[CLLocationManager alloc]init];

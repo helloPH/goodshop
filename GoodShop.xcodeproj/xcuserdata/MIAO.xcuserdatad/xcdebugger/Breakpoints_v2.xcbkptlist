@@ -36,11 +36,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoodShop/&#x8ba2;&#x5355;/&#x8ba2;&#x5355;&#x8be6;&#x60c5;/orderDetailViewController.m"
-            timestampString = "517565805.03399"
+            timestampString = "518504691.466041"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "329"
-            endingLineNumber = "329"
+            startingLineNumber = "353"
+            endingLineNumber = "353"
             landmarkName = "-reloadDataWithIndex:"
             landmarkType = "7">
          </BreakpointContent>
@@ -52,12 +52,44 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoodShop/&#x8ba2;&#x5355;/&#x8ba2;&#x5355;&#x8be6;&#x60c5;/orderDetailViewController.m"
-            timestampString = "517566559.446908"
+            timestampString = "518504691.466041"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "323"
-            endingLineNumber = "323"
+            startingLineNumber = "347"
+            endingLineNumber = "347"
             landmarkName = "-reloadDataWithIndex:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GoodShop/&#x6211;/MeViewController.m"
+            timestampString = "518421543.53323"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "677"
+            endingLineNumber = "677"
+            landmarkName = "-share:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GoodShop/&#x8ba2;&#x5355;/&#x518d;&#x6765;&#x4e00;&#x5355;/orderMoreArginController.m"
+            timestampString = "518505254.831269"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1871"
+            endingLineNumber = "1871"
+            landmarkName = "-goToCheck"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
