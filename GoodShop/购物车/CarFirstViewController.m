@@ -36,7 +36,10 @@
 #import "SubLBXScanViewController.h"
 
 @interface CarFirstViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,MBProgressHUDDelegate,CAAnimationDelegate,UIWebViewDelegate,AccountLoginViewDelegate,updateTipDelegate,MakeMoneyViewControllerDelegate,BMKLocationServiceDelegate,BMKGeoCodeSearchDelegate,KaihuiViewDelegate>
+
+@property(nonatomic,strong)NSDictionary * gongGaoDic;
 @end
+
 @implementation CarFirstViewController
 {
     UIView *headView;
@@ -65,6 +68,7 @@
     int pageNum;
     int lastPage;
     UILabel *nameLabel;
+    UIImageView *nameRight;
     PaomaView *paomaview;
     UIImageView *labaImage;
     UIImageView *gonggaoImage;
@@ -87,7 +91,10 @@
     BMKGeoCodeSearch *_codeSearch;
     BMKReverseGeoCodeOption *reverseGeoCodeSearchOption;
     
-    UIImageView *caozuotishiImage;
+//    UIImageView *caozuotishiImage;
+}
+-(void)initData{
+    _gongGaoDic = [NSDictionary new];
 }
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -99,17 +106,20 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(qiehuandianpuNotiClick:) name:@"qiehuandianpuNoti" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(daohanglanHiddenClick) name:@"daohanglanHidden" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(kaihuPanduanNotiClick) name:@"kaihuPanduanNoti" object:nil];
+    
+    NSString * leftTitle=@"请点击定位";
     if (userLastAddress){
-        leftLabel.text = [NSString stringWithFormat:@"%@",userLastAddress];
-        NSString *xingStr =[NSString stringWithFormat:@"%@",leftLabel.text];
-        CGSize xinSzie = [xingStr boundingRectWithSize:CGSizeMake(150*MCscale, 30*MCscale) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:MLwordFont_5],NSFontAttributeName, nil] context:nil].size;
-        leftLabel.frame = CGRectMake(33*MCscale, 0, xinSzie.width+6*MCscale, 30*MCscale);
-        leftView.frame = CGRectMake(15*MCscale,25*MCscale, leftLabel.width + 40*MCscale, 30*MCscale);
+        leftTitle = userLastAddress;
     }
-    nameLabel.text = user_dianpuName;
+    leftLabel.text = [NSString stringWithFormat:@"%@",leftTitle];
+    NSString *xingStr =[NSString stringWithFormat:@"%@",leftLabel.text];
+    CGSize xinSzie = [xingStr boundingRectWithSize:CGSizeMake(150*MCscale, 30*MCscale) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:MLwordFont_5],NSFontAttributeName, nil] context:nil].size;
+    leftLabel.frame = CGRectMake(33*MCscale, 0, xinSzie.width+6*MCscale, 30*MCscale);
+    leftView.frame = CGRectMake(15*MCscale,25*MCscale, leftLabel.width + 40*MCscale, 30*MCscale);
+//    nameLabel.text = user_dianpuName;
+    [self fuzhiNameAddRightImg];
     
-    
-    
+
     
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     mainCollectionView.top=0;
@@ -126,8 +136,6 @@
     leftView.hidden = NO;
     rightView.hidden = NO;
  
-    
-   
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
@@ -142,7 +150,7 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self initData];
     
 
     mainHeight = 275*MCscale;
@@ -194,19 +202,17 @@
 //获取后台版本(版本更新有关)
 -(void)getUpdateData
 {
-    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-    NSString *appCurVersionNum = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-    NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"banbenhao":appCurVersionNum,@"xitong":@"2"}];
-    [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"banbenNew.action" params:pram success:^(id json) {
-        NSLog(@"-- message %@",json);
-        NSString *message = [NSString stringWithFormat:@"%@",[json valueForKey:@"message"]];
-        if ([message isEqualToString:@"3"]){
-            sysLevel = [NSString stringWithFormat:@"%@",[json valueForKey:@"jibie"]];
-            descripton = [NSString stringWithFormat:@"%@",[json valueForKey:@"shuoming"]];
+    [Request getBanBenInfoSuccess:^(NSInteger message, id data) {
+
+        if (message == 3) {
+            sysLevel = [NSString stringWithFormat:@"%@",[data valueForKey:@"jibie"]];
+            descripton = [NSString stringWithFormat:@"%@",[data valueForKey:@"shuoming"]];
             [self initUpdateTipView];
         }
     } failure:^(NSError *error) {
+        
     }];
+    
 }
 #pragma mark -- tipView
 -(void)initUpdateTipView
@@ -267,12 +273,26 @@
 {
     UIView *shopDetailView = [BaseCostomer viewWithFrame:CGRectMake(0, 0, 200*MCscale, 30*MCscale) backgroundColor:[UIColor clearColor]];
     
-    nameLabel = [BaseCostomer labelWithFrame:CGRectMake(0, 5*MCscale,200*MCscale, 20*MCscale) font:[UIFont systemFontOfSize:MLwordFont_4] textColor:[UIColor whiteColor] backgroundColor:[UIColor clearColor] textAlignment:1 numOfLines:1 text:@""];
-    [shopDetailView addSubview:nameLabel];
-    
     UITapGestureRecognizer *shopTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(shopDetailViewTapClick)];
     [shopDetailView addGestureRecognizer:shopTap];
     self.navigationItem.titleView = shopDetailView;
+    
+    
+    
+    nameLabel = [BaseCostomer labelWithFrame:CGRectMake(0, 5*MCscale,200*MCscale, 20*MCscale) font:[UIFont systemFontOfSize:MLwordFont_4] textColor:[UIColor whiteColor] backgroundColor:[UIColor clearColor] textAlignment:1 numOfLines:1 text:@""];
+    [shopDetailView addSubview:nameLabel];
+    
+
+    
+    nameRight = [[UIImageView alloc]initWithFrame:CGRectMake(nameLabel.right, nameLabel.top, nameLabel.height, nameLabel.height)];
+//    nameRight.backgroundColor=[UIColor redColor];
+    [shopDetailView addSubview:nameRight];
+    nameRight.contentMode=UIViewContentModeScaleAspectFit;
+
+    
+    
+    
+
     
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithTitle:@"分类" style:UIBarButtonItemStyleDone target:self action:@selector(leftItemClick)];
     self.navigationItem.leftBarButtonItem = leftItem;
@@ -322,6 +342,27 @@
 -(void)NaviViewTapClick:(UITapGestureRecognizer *)tap
 {
     if (tap.view == leftView) {
+    
+        if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted){
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"检测到您未开启定位,请前往开启" preferredStyle:1];
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+       
+            }];
+            UIAlertAction *suerAction = [UIAlertAction actionWithTitle:@"去设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self.navigationController popViewControllerAnimated:YES];
+                NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                    [[UIApplication sharedApplication] openURL:url];
+                }   [[UIApplication sharedApplication] openURL:url];
+            }];
+            [alert addAction:suerAction];
+            [alert addAction:cancelAction];
+            [self presentViewController:alert animated:YES completion:nil];
+            return;
+        }
+        
+        
+        
         locationViewController *locaVC = [[locationViewController alloc]init];
         [UIView  beginAnimations:nil context:NULL];
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
@@ -396,6 +437,37 @@
 }
 -(void)shopDetailViewTapClick
 {
+    NSString * img = [NSString stringWithFormat:@"%@",_gongGaoDic[@"renzheng"]];
+    if (![img hasSuffix:@"renzheng.png"]) {
+        
+        
+        NSString * message = @"商铺还未进行认证，无法查看店铺信息。";
+        
+        UIAlertController * alertC =[UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+        
+
+        
+        UIAlertAction * action  =[UIAlertAction actionWithTitle:@"我知道了" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        }];
+        
+        
+        NSMutableAttributedString * mes = [[NSMutableAttributedString alloc]initWithString:message];
+        [mes addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:18] range:NSMakeRange(0, [[mes string] length])];
+        [mes addAttribute:NSForegroundColorAttributeName value:textBlackColor range:NSMakeRange(0, [[mes string] length])];
+        [alertC setValue:mes forKey:@"attributedMessage"];
+        
+        
+        
+        [alertC addAction:action];
+        [self presentViewController:alertC animated:YES completion:^{
+        }];
+        
+//        UIAlertView * alert = [[UIAlertView alloc]initWithTitle: message:@"" delegate:nil cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+//        [alert show];
+        return;
+    }
+    
+    
     ShopDetailViewController *shopVC = [[ShopDetailViewController alloc]init];
     shopVC.dianpuId = dianpuID;
     shopVC.hidesBottomBarWhenPushed = YES;
@@ -482,8 +554,12 @@
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSMutableDictionary *pram = [NSMutableDictionary dictionaryWithDictionary:@{@"dianpuid":dianpuID}];
+        
+//        _gongGaoDic=@{};
         [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"dianpuYingyong.action" params:pram success:^(id json) {
             NSLog(@"应用%@",json);
+            _gongGaoDic = [NSDictionary dictionaryWithDictionary:(NSDictionary *)json];
+            
             if ([json[@"gonggao"]integerValue] != 1 ) {
                 [paomaview removeFromSuperview];
                 paomaview = [[PaomaView alloc]initWithFrame:CGRectMake(kDeviceWidth/4.0 + 25*MCscale, 20*MCscale, 180*MCscale, 20*MCscale) AndText:json[@"gonggao"]];
@@ -510,10 +586,14 @@
             lineViewTop = mainHeight-35*MCscale;
             
             NSString *imagesStr = [NSString stringWithFormat:@"%@",json[@"lianmeng"]];
-            if (![imagesStr isEqualToString:@"0"]) {
+            
+            imagesStr = @"http://www.shp360.com/Store/images/lianmeng.png";
+ //          if (![imagesStr isEqualToString:@"0"]) {
                 [gonggaoImage removeFromSuperview];
                 gonggaoImage = [[UIImageView alloc]initWithFrame:CGRectMake(0,lineViewTop, kDeviceWidth, 50*MCscale)];
-                [gonggaoImage sd_setImageWithURL:[NSURL URLWithString:imagesStr] placeholderImage:[UIImage imageNamed:@"查看更多1"]];
+                [gonggaoImage sd_setImageWithURL:[NSURL URLWithString:imagesStr] placeholderImage:[UIImage imageNamed:@"查看更多1"] options:SDWebImageRefreshCached];
+            
+            
                 gonggaoImage.userInteractionEnabled = YES;
                 [headView addSubview:gonggaoImage];
                 
@@ -521,11 +601,12 @@
                 [gonggaoImage addGestureRecognizer:gonggaoTap];
                 mainHeight = mainHeight +50*MCscale;
                 lineViewTop = mainHeight - 35*MCscale;
-            }
+  //            }
             [self getRexiaoData];
             dispatch_async(dispatch_get_main_queue(), ^{
                 flowlayout.headerReferenceSize=CGSizeMake(kDeviceWidth,mainHeight); //设置collectionView头视图的大小
                 [mainCollectionView reloadData];
+                [self fuzhiNameAddRightImg];
             });
         } failure:^(NSError *error) {
             [self promptMessageWithString:@"网络连接错误1"];
@@ -542,6 +623,8 @@
                 if (![yingyongArray[j] isEqualToString:@""]) {
                     UIImageView *image = [BaseCostomer imageViewWithFrame:CGRectMake(imageWidth*j,huImageView.bottom , imageWidth, 50*MCscale) backGroundColor:[UIColor clearColor] cornerRadius:0 userInteractionEnabled:YES image:yingyongArray[j]];
                     [image sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",yingyongArray[j]]] placeholderImage:[UIImage imageNamed:@"yonghutouxiang"]];
+                    
+                    NSLog(@"%@",yingyongArray[j]);
                     image.tag = 100+j;
                     UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageTapClick:)];
                     [image addGestureRecognizer:imageTap];
@@ -1004,7 +1087,8 @@
         }else
         {
             //向上滑动显示导航栏
-            nameLabel.text = user_dianpuName;
+//            nameLabel.text = user_dianpuName;
+            [self fuzhiNameAddRightImg];
             [self judgeTheFirst];
 
             self.navigationController.navigationBar.frame=CGRectMake(0, 0, kDeviceWidth, 64) ;
@@ -1020,21 +1104,22 @@
 }
 -(void)judgeTheFirst
 {
-    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstShouye"] integerValue] == 1) {
-        NSString *url = @"images/caozuotishi/shouye.png";
-        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
-        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
-        caozuotishiImage.userInteractionEnabled = YES;
-        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
-        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
-        [caozuotishiImage addGestureRecognizer:imageTap];
-        [self.view addSubview:caozuotishiImage];
-    }
-}
--(void)imageHidden
-{
-    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstShouye"];
-    [caozuotishiImage removeFromSuperview];
+    [self showGuideImageWithUrl:@"images/caozuotishi/shouye.png"];
+//    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstShouye"] integerValue] == 1) {
+//        NSString *url = @"images/caozuotishi/shouye.png";
+//        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
+//        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
+//        caozuotishiImage.userInteractionEnabled = YES;
+//        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
+//        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
+//        [caozuotishiImage addGestureRecognizer:imageTap];
+//        [self.view addSubview:caozuotishiImage];
+//    }
+//}
+//-(void)imageHidden
+//{
+//    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstShouye"];
+//    [caozuotishiImage removeFromSuperview];
 }
 #pragma mark 获取轮播图片
 -(void)reloadScrollViewData
@@ -1530,11 +1615,23 @@
     [self.navigationController.navigationBar setHidden:NO];
     
     mainCollectionView.frame = CGRectMake(0,64, kDeviceWidth, kDeviceHeight - 49*MCscale-64);
-    nameLabel.text = user_dianpuName;
+    [self fuzhiNameAddRightImg];
     leftView.hidden = YES;
     rightView.hidden = YES;
 }
-
+-(void)fuzhiNameAddRightImg{
+    nameLabel.text = user_dianpuName;
+  
+    if ([user_dianpuName length]>7) {
+        nameLabel.text=[user_dianpuName substringWithRange:NSMakeRange(0, 7)];
+       nameLabel.text= [nameLabel.text stringByAppendingString:@"."];
+        nameLabel.width=MLwordFont_4*7+MLwordFont_4;
+    }
+    [nameLabel sizeToFit];
+    nameLabel.centerX=nameLabel.superview.width/2;
+    nameRight.left=nameLabel.right;
+    [nameRight sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",_gongGaoDic[@"renzheng"]]]];
+}
 #pragma mark 判断开户状态
 -(void)kaihuPanduanNotiClick
 {
@@ -1593,11 +1690,19 @@
         }];
     }
 }
-
+-(void)xiala{
+    double delayInSeconds = 0.3;
+    __block CarFirstViewController* bself = self;
+     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+         dispatch_after(popTime, dispatch_get_main_queue(), ^{
+    });
+}
 -(void)refresh
 {
     //下拉刷新
     [mainCollectionView addHeaderWithTarget:self action:@selector(headReFreshing)];
+    
+    
     //上拉加载
     [mainCollectionView addFooterWithTarget:self action:@selector(footRefreshing)];
     mainCollectionView.headerPullToRefreshText = @"下拉刷新数据";
@@ -1609,6 +1714,7 @@
 }
 -(void)headReFreshing
 {
+    
     isRefresh = 1;
     loadType = 0;
     lastPage = 1;
@@ -1627,6 +1733,7 @@
     [leftView removeFromSuperview];
     [rightView removeFromSuperview];
     
+
     [self createCollectionView];
     [self addContent];
     [self relodCarData];
@@ -1635,13 +1742,20 @@
     [self getAllShangpin];
     [self refresh];
     [self setNavigationItem];
+
+    
+
+    
+    
+    NSString * leftTitle=@"请点击定位";
     if (userLastAddress) {
-        leftLabel.text = [NSString stringWithFormat:@"%@",userLastAddress];
-        NSString *xingStr =[NSString stringWithFormat:@"%@",leftLabel.text];
-        CGSize xinSzie = [xingStr boundingRectWithSize:CGSizeMake(150*MCscale, 30*MCscale) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:MLwordFont_5],NSFontAttributeName, nil] context:nil].size;
-        leftLabel.frame = CGRectMake(33*MCscale, 0, xinSzie.width+6*MCscale, 30*MCscale);
-        leftView.frame = CGRectMake(15*MCscale,25*MCscale, leftLabel.width + 40*MCscale, 30*MCscale);
+        leftTitle = userLastAddress;
     }
+    leftLabel.text = [NSString stringWithFormat:@"%@",leftTitle];
+    NSString *xingStr =[NSString stringWithFormat:@"%@",leftLabel.text];
+    CGSize xinSzie = [xingStr boundingRectWithSize:CGSizeMake(150*MCscale, 30*MCscale) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:MLwordFont_5],NSFontAttributeName, nil] context:nil].size;
+    leftLabel.frame = CGRectMake(33*MCscale, 0, xinSzie.width+6*MCscale, 30*MCscale);
+    leftView.frame = CGRectMake(15*MCscale,25*MCscale, leftLabel.width + 40*MCscale, 30*MCscale);
 }
 -(void)footRefreshing
 {

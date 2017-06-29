@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface findPasViewController : UIViewController
-
+@property (nonatomic,strong)void (^backPhone)(NSString * tel);
+@property (nonatomic,strong)NSString * beforeTel;
 @end

@@ -64,7 +64,7 @@
     UIImageView *detailImage;//商品图片
     UILabel *    newMoneyLabel;
     CGFloat mainHeight;//高度
-    UIImageView *caozuotishiImage;
+//    UIImageView *caozuotishiImage;
 }
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -109,22 +109,23 @@
 }
 -(void)judgeTheFirst
 {
-    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstShangpinxiangqing"] integerValue] == 1) {
-        NSString *url = @"images/caozuotishi/shangpinxiangqing.png";
-        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
-        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
-        caozuotishiImage.userInteractionEnabled = YES;
-        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
-        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
-        [caozuotishiImage addGestureRecognizer:imageTap];
-        [self.view addSubview:caozuotishiImage];
-        [caozuotishiImage bringSubviewToFront:self.view];
-    }
-}
--(void)imageHidden
-{
-    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstShangpinxiangqing"];
-    [caozuotishiImage removeFromSuperview];
+    [self showGuideImageWithUrl:@"images/caozuotishi/shangpinxiangqing.png"];
+//    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstShangpinxiangqing"] integerValue] == 1) {
+//        NSString *url = @"images/caozuotishi/shangpinxiangqing.png";
+//        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
+//        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
+//        caozuotishiImage.userInteractionEnabled = YES;
+//        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
+//        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
+//        [caozuotishiImage addGestureRecognizer:imageTap];
+//        [self.view addSubview:caozuotishiImage];
+//        [caozuotishiImage bringSubviewToFront:self.view];
+//    }
+//}
+//-(void)imageHidden
+//{
+//    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstShangpinxiangqing"];
+//    [caozuotishiImage removeFromSuperview];
 }
 #pragma mark 导航栏
 -(void)initNavigation

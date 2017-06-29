@@ -35,6 +35,11 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+     self.navigationController.navigationBar.hidden=YES;
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.navigationController.navigationBar.hidden=NO;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -43,24 +48,53 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self initNavigation];
     [self initSubViews];
-    [self slidingSelectionView];
+//    [self slidingSelectionView];
     set_isPeiSong(@"1");
 }
 
 //初始化导航栏
 -(void)initNavigation
 {
-    [self.navigationItem setTitle:@"登录"];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],NSForegroundColorAttributeName,[UIFont boldSystemFontOfSize:MLwordFont_2],NSFontAttributeName,nil]];
-    self.navigationController.navigationBar.barTintColor=mainColor;
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithTitle:@"注册" style:UIBarButtonItemStyleDone target:self action:@selector(tightItemClick)];
-    self.navigationItem.rightBarButtonItem = rightItem;
-    UIButton *leftbutton = [UIButton buttonWithType:UIButtonTypeCustom];
-    leftbutton.frame = CGRectMake(0, 0, NVbtnWight, NVbtnWight);
-    [leftbutton setBackgroundImage:[UIImage imageNamed:@"返回按钮"] forState:UIControlStateNormal];
-    [leftbutton addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *leftbarBtn = [[UIBarButtonItem alloc]initWithCustomView:leftbutton];
-    self.navigationItem.leftBarButtonItem =leftbarBtn;
+  
+//    [self.navigationItem setTitle:@""];
+//    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],NSForegroundColorAttributeName,[UIFont boldSystemFontOfSize:MLwordFont_2],NSFontAttributeName,nil]];
+//    self.navigationController.navigationBar.barTintColor=[UIColor whiteColor];
+//    self.navigationController.navigationBar.hidden=YES;
+//    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithTitle:@"注册" style:UIBarButtonItemStyleDone target:self action:@selector(tightItemClick)];
+//    self.navigationItem.rightBarButtonItem = rightItem;
+////       self.navigationItem.rightBarButtonItem.=[UIColor redColor];
+//    UIButton *leftbutton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    leftbutton.frame = CGRectMake(0, 0, NVbtnWight, NVbtnWight);
+//    [leftbutton setBackgroundImage:[UIImage imageNamed:@"返回按钮黑"] forState:UIControlStateNormal];
+//    [leftbutton addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
+//    UIBarButtonItem *leftbarBtn = [[UIBarButtonItem alloc]initWithCustomView:leftbutton];
+//    self.navigationItem.leftBarButtonItem =leftbarBtn;
+    
+    
+    
+    UIView * navi = [[UIView alloc]initWithFrame:CGRectMake(0, 0, kDeviceWidth, 64)];
+    [self.view addSubview:navi];
+    navi.tag=150;
+
+    
+    UIButton * leftbtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 25, 25)];
+    [navi addSubview:leftbtn];
+    [leftbtn setImage:[UIImage imageNamed:@"返回按钮黑"] forState:UIControlStateNormal];
+    leftbtn.titleLabel.font=[UIFont systemFontOfSize:MLwordFont_4];
+    leftbtn.left=20*MCscale;
+    leftbtn.bottom=navi.height-10*MCscale;
+    [leftbtn addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    UIButton * rightbtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 40, 20)];
+    [navi addSubview:rightbtn];
+    [rightbtn setTitleColor:textBlackColor forState:UIControlStateNormal];
+    rightbtn.titleLabel.font=[UIFont systemFontOfSize:MLwordFont_4];
+    rightbtn.right=kDeviceWidth-20*MCscale;
+    rightbtn.bottom=navi.height-10*MCscale;
+    [rightbtn setTitle:@"注册" forState:UIControlStateNormal];
+    [rightbtn addTarget:self action:@selector(tightItemClick) forControlEvents:UIControlEventTouchUpInside];
+    
 }
 -(void)btnAction:(UIButton *)btn
 {
@@ -118,51 +152,55 @@
 //初始化表格
 -(void)initSubViews
 {
-    btnView = [[UIView alloc]initWithFrame:CGRectMake(0, 64, kDeviceWidth, 40)];
-    btnView.backgroundColor = [UIColor whiteColor];
-    lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 38*MCscale, kDeviceWidth/2.0, 2)];
-    lineView.backgroundColor = mainColor;
-    [btnView addSubview:lineView];
+//    btnView = [[UIView alloc]initWithFrame:CGRectMake(0, 64, kDeviceWidth, 40)];
+//    btnView.backgroundColor = [UIColor whiteColor];
+//    lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 38*MCscale, kDeviceWidth/2.0, 2)];
+//    lineView.backgroundColor = mainColor;
+//    [btnView addSubview:lineView];
+//    
+//    accountBtn  = [UIButton buttonWithType:UIButtonTypeCustom];
+//    accountBtn.frame = CGRectMake(0, 0, kDeviceWidth/2.0, 38*MCscale);
+//    accountBtn.backgroundColor = [UIColor clearColor];
+//    accountBtn.titleLabel.textAlignment = NSTextAlignmentCenter;
+//    [accountBtn setTitle:@"账户登录" forState:UIControlStateNormal];
+//    [accountBtn setTitleColor:textBlackColor forState:UIControlStateNormal];
+//    [accountBtn  setTitleColor:mainColor forState:UIControlStateSelected];
+//    [accountBtn addTarget:self action:@selector(accountBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+//    accountBtn.titleLabel.font = [UIFont systemFontOfSize:MLwordFont_3];
+//    [btnView addSubview:accountBtn];
+//    accountBtn.selected=YES;
+//    
+//    
+//    
+//    MessageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    MessageBtn.frame = CGRectMake(kDeviceWidth/2.0, 0, kDeviceWidth/2.0, 38*MCscale);
+//    MessageBtn.backgroundColor = [UIColor clearColor];
+//    [MessageBtn setTitle:@"短信登录" forState:UIControlStateNormal];
+//    MessageBtn.titleLabel.textAlignment = NSTextAlignmentCenter;
+//    
+//    [MessageBtn setTitleColor:textBlackColor forState:UIControlStateNormal];
+//    [MessageBtn setTitleColor:mainColor forState:UIControlStateSelected];
+//    [MessageBtn addTarget:self action:@selector(accountBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+//    MessageBtn.titleLabel.font = [UIFont systemFontOfSize:MLwordFont_3];
+//    [btnView addSubview:MessageBtn];
+//    MessageBtn.selected=NO;
+//    
+//    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 39*MCscale, kDeviceWidth, 1)];
+//    line.backgroundColor = lineColor;
+//    [btnView addSubview:line];
+//    [self.view addSubview:btnView];
     
-    accountBtn  = [UIButton buttonWithType:UIButtonTypeCustom];
-    accountBtn.frame = CGRectMake(0, 0, kDeviceWidth/2.0, 38*MCscale);
-    accountBtn.backgroundColor = [UIColor clearColor];
-    accountBtn.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [accountBtn setTitle:@"账户登录" forState:UIControlStateNormal];
-    [accountBtn setTitleColor:textBlackColor forState:UIControlStateNormal];
-    [accountBtn  setTitleColor:mainColor forState:UIControlStateSelected];
-    [accountBtn addTarget:self action:@selector(accountBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    accountBtn.titleLabel.font = [UIFont systemFontOfSize:MLwordFont_3];
-    [btnView addSubview:accountBtn];
-    accountBtn.selected=YES;
     
-    
-    
-    MessageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    MessageBtn.frame = CGRectMake(kDeviceWidth/2.0, 0, kDeviceWidth/2.0, 38*MCscale);
-    MessageBtn.backgroundColor = [UIColor clearColor];
-    [MessageBtn setTitle:@"短信登录" forState:UIControlStateNormal];
-    MessageBtn.titleLabel.textAlignment = NSTextAlignmentCenter;
-    
-    [MessageBtn setTitleColor:textBlackColor forState:UIControlStateNormal];
-    [MessageBtn setTitleColor:mainColor forState:UIControlStateSelected];
-    [MessageBtn addTarget:self action:@selector(accountBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    MessageBtn.titleLabel.font = [UIFont systemFontOfSize:MLwordFont_3];
-    [btnView addSubview:MessageBtn];
-    MessageBtn.selected=NO;
-    
-    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 39*MCscale, kDeviceWidth, 1)];
-    line.backgroundColor = lineColor;
-    [btnView addSubview:line];
-    [self.view addSubview:btnView];
-    
-    
-    accountView= [[AccountView alloc]initWithFrame:CGRectMake(0, 104,kDeviceWidth, kDeviceHeight - 64)];
+    accountView= [[AccountView alloc]initWithFrame:CGRectMake(0, 0,kDeviceWidth, kDeviceHeight )];
+    accountView.controller=self;
     accountView.loginDelegate = self;
     [self.view addSubview:accountView];
     
-    messView = [[MessagesView alloc]initWithFrame:CGRectMake(0, 104, kDeviceWidth, kDeviceHeight - 64)];
-    messView.codeloginDelegate = self;
+    UIView * navi = [self.view viewWithTag:150];
+    [self.view bringSubviewToFront:navi];
+    
+//    messView = [[MessagesView alloc]initWithFrame:CGRectMake(0, 104, kDeviceWidth, kDeviceHeight - 64)];
+//    messView.codeloginDelegate = self;
 }
 
 -(void)accountBtnClick:(UIButton *)button
@@ -194,16 +232,16 @@
 }
 
 #pragma mark 滑动选择发布或接收页面
--(void)slidingSelectionView
-{
-    UISwipeGestureRecognizer *leftSwip = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipClick:)];
-    [leftSwip setDirection:UISwipeGestureRecognizerDirectionLeft];
-    [self.view addGestureRecognizer:leftSwip];
-    
-    UISwipeGestureRecognizer *rightSwip = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipClick:)];
-    [rightSwip setDirection:UISwipeGestureRecognizerDirectionRight];
-    [self.view addGestureRecognizer:rightSwip];
-}
+//-(void)slidingSelectionView
+//{
+//    UISwipeGestureRecognizer *leftSwip = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipClick:)];
+//    [leftSwip setDirection:UISwipeGestureRecognizerDirectionLeft];
+//    [self.view addGestureRecognizer:leftSwip];
+//    
+//    UISwipeGestureRecognizer *rightSwip = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipClick:)];
+//    [rightSwip setDirection:UISwipeGestureRecognizerDirectionRight];
+//    [self.view addGestureRecognizer:rightSwip];
+//}
 
 -(void)swipClick:(UISwipeGestureRecognizer *)swip
 {
@@ -301,6 +339,11 @@
     else
     {
         findPasViewController *findPasVC = [[findPasViewController alloc]init];
+        findPasVC.beforeTel = accountView.tleTextFile.text;
+        findPasVC.backPhone=^(NSString * tel){
+            accountView.tleTextFile.text=tel;
+        };
+        
         findPasVC.hidesBottomBarWhenPushed = YES;
         UIBarButtonItem *bar=[[UIBarButtonItem alloc]init];
         bar.title=@"";
@@ -457,6 +500,25 @@
     [self.navigationController pushViewController:vc animated:YES];
     //    UIWindow *window = [[[UIApplication sharedApplication] windows] firstObject];
     //    [window addSubview:vc.view];
+}
+// 刷新 是不是最新版本
+-(void)reshBanbenBlockIsAfter:(void(^)(BOOL isAfter))block{
+    if (banben_IsAfter) {
+        block(YES);
+        return;
+    }
+    [Request getBanBenInfo1Success:^(NSInteger message, id data) {
+        if (message == 0 || message == 1) {
+            set_Banben_IsAfter(YES);
+            block(YES);
+            return ;
+        }
+        set_Banben_IsAfter(NO);
+        block(NO);
+    } failure:^(NSError *error) {
+        set_Banben_IsAfter(NO);
+        block(NO);
+    }];
 }
 
 @end

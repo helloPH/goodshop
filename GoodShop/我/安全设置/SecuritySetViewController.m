@@ -14,6 +14,9 @@
 #import "BindMailboxView.h"
 #import "Header.h"
 #import "PopView.h"
+#import "PHWeiXin.h"
+#import "SetPassWordAtLoginView.h"
+
 @interface SecuritySetViewController ()<MBProgressHUDDelegate,SetPaymentPasswordViewDelegate,LoginPasswordViewDelegate,ChangePhoneNumberDelegate,TrueNameViewDelegate,BindMailboxViewDelegate,PopViewDelegate,UIGestureRecognizerDelegate>
 
 @end
@@ -57,9 +60,13 @@
 
 -(void)initSubViews
 {
+    
+    CGFloat setY=84*MCscale;
+    
     NSArray *nameArray = @[@"已绑定手机号",@"登录密码",@"支付密码",@"绑定邮箱"];
     for (int i= 0; i<nameArray.count; i++) {
-        UIView *backView = [[UIView alloc]initWithFrame:CGRectMake(0, 50*MCscale*i+84*MCscale, kDeviceWidth, 50*MCscale)];
+        UIView *backView = [[UIView alloc]initWithFrame:CGRectMake(0,setY, kDeviceWidth, 50*MCscale)];
+        setY=backView.bottom;
         backView.backgroundColor = [UIColor clearColor];
         backView.tag = 100+i;
         [self.view addSubview:backView];
@@ -199,6 +206,57 @@
     line2.backgroundColor = lineColor;
     [yirenzhengView addSubview:line2];
     
+    
+    
+    
+    
+    
+    UIView *wxbackView = [[UIView alloc]initWithFrame:CGRectMake(0, setY+100*MCscale, kDeviceWidth, 50*MCscale)];
+    wxbackView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:wxbackView];
+    
+    UITapGestureRecognizer *wxbackViewTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(weixinlogin)];
+    [wxbackView addGestureRecognizer:wxbackViewTap];
+
+    
+    UILabel *wxtitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 140*MCscale, 30*MCscale)];
+    wxtitleLabel.tag=1000;
+    wxtitleLabel.center = CGPointMake(85*MCscale, wxbackView.height/2.0);
+    wxtitleLabel.text = @"授权微信登录";
+    wxtitleLabel.font = [UIFont systemFontOfSize:MLwordFont_4];
+    wxtitleLabel.textAlignment = NSTextAlignmentLeft;
+    wxtitleLabel.textColor = textColors;
+    wxtitleLabel.backgroundColor = [UIColor clearColor];
+    [wxbackView addSubview:wxtitleLabel];
+    
+    UIImageView *wxrightImgaeView = [[UIImageView alloc]initWithFrame:CGRectMake(wxbackView.width-25*MCscale, wxtitleLabel.top+5*MCscale, 15*MCscale, 20*MCscale)];
+    wxrightImgaeView.image = [UIImage imageNamed:@"下拉键"];
+    [wxbackView addSubview:wxrightImgaeView];
+    
+    UILabel *wxstateLabel = [[UILabel alloc]initWithFrame:CGRectMake(wxbackView.width - 70*MCscale, wxtitleLabel.top, 45*MCscale, 30*MCscale)];
+    wxstateLabel.text=@"绑定";
+    wxstateLabel.tag = 1200;
+    wxstateLabel.font = [UIFont systemFontOfSize:MLwordFont_4];
+    wxstateLabel.textAlignment = NSTextAlignmentCenter;
+    wxstateLabel.textColor = textColors;
+    wxstateLabel.backgroundColor = [UIColor clearColor];
+    [wxbackView addSubview:wxstateLabel];
+    
+
+    UILabel *wxnumLabel = [[UILabel alloc]initWithFrame:CGRectMake(wxtitleLabel.right +10*MCscale, wxtitleLabel.top+5*MCscale, 140*MCscale, 20*MCscale)];
+    wxnumLabel.tag = 1300;
+    wxnumLabel.font = [UIFont systemFontOfSize:MLwordFont_6];
+    wxnumLabel.textAlignment = NSTextAlignmentRight;
+    wxnumLabel.textColor = txtColors(213, 213, 213, 1);
+    wxnumLabel.backgroundColor = [UIColor clearColor];
+    [wxbackView addSubview:wxnumLabel];
+    
+    
+    UIView *wxlineView = [[UIView alloc]initWithFrame:CGRectMake(10*MCscale, wxbackView.height - 1,wxbackView.width - 20*MCscale, 1)];
+    wxlineView.backgroundColor = lineColor;
+    [wxbackView addSubview:wxlineView];
+//
+    
 #pragma mark 退出登录
     outLoginBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     outLoginBtn.frame = CGRectMake(10*MCscale, kDeviceHeight-80*MCscale, kDeviceWidth-20*MCscale, 50*MCscale);
@@ -286,6 +344,27 @@
     UILabel *phoneNumLabel =  (UILabel *)[self.view viewWithTag:300];
     UILabel *emailNumLabel =  (UILabel *)[self.view viewWithTag:303];
     
+    
+    UILabel * wxTitle = (UILabel *)[self.view viewWithTag:1000];
+    UILabel * wxState = (UILabel *)[self.view viewWithTag:1200];
+    
+    
+    
+    NSString * weixin = [NSString stringWithFormat:@"%@",dict[@"weixin"]];
+    BOOL isWX;
+    if ([weixin isEmptyString]) {
+        isWX = NO;
+    }else{
+        isWX = ![weixin isEqualToString:@"0"];
+    }
+    
+
+    wxTitle.text=isWX?@"已授权微信登录":@"授权微信登录";
+    wxState.text=isWX?@"切换":@"绑定";
+    
+    
+    
+    
     telStateLabel.text = @"更换";
     phoneNumLabel.text = [user_tel stringByReplacingCharactersInRange:NSMakeRange(3, 5) withString:@"*****"];
     //登录密码
@@ -328,6 +407,8 @@
     {
         renzhengView.frame = CGRectMake(0, 284*MCscale, kDeviceWidth, 50*MCscale);
     }
+    wxTitle.superview.top=renzhengView.bottom;
+    
     rzImageView.frame = CGRectMake(0,0, 28*MCscale, 28*MCscale);
     rzImageView.center = CGPointMake(39*MCscale, renzhengView.height /2.0);
     rzTitleLabel.frame =  CGRectMake(rzImageView.right +10*MCscale, rzImageView.top, 120*MCscale, 30*MCscale);
@@ -370,13 +451,32 @@
             
         case 101:
         {
-            [UIView animateWithDuration:0.6 animations:^{
-                maskView.alpha = 1;
-                [self.view addSubview:maskView];
-                newPayPas.alpha = 0.95;
-                newPayPas.indexPath = index;
-                [self.view addSubview:newPayPas];
-            }];
+           
+            LoginPasswordView * loginPass = [LoginPasswordView new];
+            __block LoginPasswordView * weakloginPass = loginPass;
+            [loginPass appear];
+            loginPass.block=^(){
+                SetPassWordAtLoginView * setpass = [SetPassWordAtLoginView new];
+                setpass.tel=user_tel;
+                setpass.Id=user_id;
+                [setpass appear];
+                __block SetPassWordAtLoginView * weakSet = setpass;
+                setpass.block=^(NSString * pass){
+                     [MBProgressHUD promptWithString:@"密码设置成功"];
+        
+                    [weakSet disAppear];
+                };
+                [weakloginPass disAppear];
+            };
+            
+            
+//            [UIView animateWithDuration:0.6 animations:^{
+//                maskView.alpha = 1;
+//                [self.view addSubview:maskView];
+//                newPayPas.alpha = 0.95;
+//                newPayPas.indexPath = index;
+//                [self.view addSubview:newPayPas];
+//            }];
         }
             break;
             
@@ -485,34 +585,37 @@
 #pragma mark 退出登录
 -(void)goOutLogin
 {
-    MBProgressHUD *Hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    Hud.mode = MBProgressHUDModeIndeterminate;
-    Hud.delegate = self;
-    Hud.labelText = @"请稍等...";
-    [Hud show:YES];
-    //    NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"tel":user_id}];
-    [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"userOut.action" params:nil success:^(id json) {
-        [Hud hide:YES];
-        NSLog(@"退出登录%@",json);
-        if ([[json valueForKey:@"massage"] integerValue] == 0) {
-            [self promptMessageWithString:@"退出成功"];
-            NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
-            [def setValue:@"0" forKey:@"isLogin"];
-            [def setValue:@"0" forKey:@"kaihu"];
-            [def setValue:userSheBei_id forKey:@"userId"];
-            [[NSUserDefaults standardUserDefaults]setValue:@"2" forKey:@"isFirst"];
-            CustomTabBarViewController *main = (CustomTabBarViewController *)self.tabBarController;
-            [main setSelectedIndex:0];
-            main.buttonIndex = 0;
-            [self.navigationController popToRootViewControllerAnimated:YES];
-            NSNotification *kaihuPanduanNoti = [NSNotification notificationWithName:@"kaihuPanduanNoti" object:nil];
-            [[NSNotificationCenter defaultCenter]postNotification:kaihuPanduanNoti];
-            [[NSNotificationCenter defaultCenter]removeObserver:self];
-        }
-    } failure:^(NSError *error) {
-        [Hud hide:YES];
-        [self promptMessageWithString:@"网络连接错误3"];
-    }];
+    [self promptMessageWithString:@"退出成功"];
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    [def setValue:@"0" forKey:@"isLogin"];
+    [def setValue:@"0" forKey:@"kaihu"];
+    [def setValue:userSheBei_id forKey:@"userId"];
+    [[NSUserDefaults standardUserDefaults]setValue:@"2" forKey:@"isFirst"];
+    CustomTabBarViewController *main = (CustomTabBarViewController *)self.tabBarController;
+    [main setSelectedIndex:0];
+    main.buttonIndex = 0;
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    NSNotification *kaihuPanduanNoti = [NSNotification notificationWithName:@"kaihuPanduanNoti" object:nil];
+    [[NSNotificationCenter defaultCenter]postNotification:kaihuPanduanNoti];
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+    
+    
+//    MBProgressHUD *Hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    Hud.mode = MBProgressHUDModeIndeterminate;
+//    Hud.delegate = self;
+//    Hud.labelText = @"请稍等...";
+//    [Hud show:YES];
+//    //    NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"tel":user_id}];
+//    [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"userOut.action" params:nil success:^(id json) {
+//        [Hud hide:YES];
+//        NSLog(@"退出登录%@",json);
+//        if ([[json valueForKey:@"massage"] integerValue] == 0) {
+//
+//        }
+//    } failure:^(NSError *error) {
+//        [Hud hide:YES];
+//        [self promptMessageWithString:@"网络连接错误3"];
+//    }];
 }
 #pragma mark LoginPasswordViewDelegate(登录密码验证)
 -(void)LoginPasswordViewSuccessWithIndex:(NSInteger)index;
@@ -589,6 +692,41 @@
         [self promptMessageWithString:@"网络连接错误4"];
     }];
 }
+-(void)weixinlogin{
+
+    LoginPasswordView * loginPass = [LoginPasswordView new];
+    __block LoginPasswordView * weakLogin = loginPass;
+    
+    [loginPass appear];
+    loginPass.block=^(){
+        [weakLogin disAppear];
+        
+        [shareWX loginBlock:^(BOOL isSuccess) {
+            if (!isSuccess) {
+                [MBProgressHUD promptWithString:@"未检测到微信,请前去安装"];
+            }
+        }];
+        shareWX.block=^(id data){
+            NSDictionary * pram = @{@"userid":user_id,
+                                    @"code":[NSString stringWithFormat:@"%@",[data valueForKey:@"openid"]]};
+            [Request bangDingWXWithDic:pram success:^(NSInteger message, id data) {
+                if (message == 1) {
+                    [MBProgressHUD promptWithString:@"绑定成功"];
+                    [self initData];
+                }else{
+                    [MBProgressHUD promptWithString:@"绑定失败"];
+                }
+            } failure:^(NSError *error) {
+                
+            }];
+            
+            [PHWeiXin attempDealloc];
+        };
+
+    };
+ 
+}
+
 #pragma mark ChangePhoneNumberDelegate(更换手机号)
 -(void)ChangePhoneNumberWithString:(NSString *)string AndIndex:(NSInteger)index
 {

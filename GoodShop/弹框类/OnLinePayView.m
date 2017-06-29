@@ -124,7 +124,7 @@
     self.danhao = danhao;
     self.payMoney = money;
     self.body = body;
-    self.titleName.text = [NSString stringWithFormat:@"%@管家%@元",leimu,self.payMoney];
+    self.titleName.text = [NSString stringWithFormat:@"%@%@元",leimu,self.payMoney];
     leimuName = leimu;
 }
 #pragma mark  验证

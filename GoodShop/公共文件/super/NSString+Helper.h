@@ -146,5 +146,5 @@
 -(BOOL)isValidateMoneying;
 #pragma mark - 判断是否为金额格式
 -(BOOL)isValidateMoneyed;
-
++(NSInteger)compareWith:(NSString *)number1 andNumber2:(NSString *)number2;
 @end

@@ -22,6 +22,15 @@
 }
 -(void)SubViews
 {
+    self.contentView.layer.borderWidth=5;
+    self.contentView.layer.cornerRadius=3;
+    self.contentView.layer.borderColor=[UIColor clearColor].CGColor;
+//    self.contentView.layer.masksToBounds=YES;
+//    self.contentView.layer.
+    self.contentView.layer.shadowColor=lineColor.CGColor;
+    self.contentView.layer.shadowOffset=CGSizeMake(3, 3);
+//    self.contentView.layer.shadowOffset
+    
     _validity =[[UILabel alloc]initWithFrame:CGRectMake(20, 10, 140*MCscale, 20*MCscale)];
     _validity.textAlignment = NSTextAlignmentLeft;
     _validity.textColor = txtColors(25, 182, 133, 1);
@@ -87,7 +96,7 @@
     UILabel *xianz = [[UILabel alloc]initWithFrame:CGRectMake(_titImage.right+30, _telephoneLabel.bottom, 180*MCscale, 35*MCscale)];
     xianz.textColor = textBlackColor;
     xianz.numberOfLines = 0;
-    xianz.text = @"限制:不限购物金额和支付方式;可与活动同事使用";
+    xianz.text = @"说明：不限支付方式，最终解释权归本店。";
     xianz.textAlignment = NSTextAlignmentLeft;
     xianz.font = [UIFont systemFontOfSize:MLwordFont_7];
     xianz.backgroundColor = [UIColor clearColor];

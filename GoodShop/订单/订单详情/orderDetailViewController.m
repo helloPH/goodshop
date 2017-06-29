@@ -146,16 +146,24 @@
         NSString *dingdanhao = model.dingdanhao; //订单号
         [orderMessageAry addObject:dingdanhao];
         NSString *shouhuoren = model.shouhuoren;
+     
         [orderMessageAry addObject:shouhuoren];
+   
+        
+      
         //收货人
      
         
         NSString *tel = model.tel; //电话
         [orderMessageAry addObject:tel];
+
+    
    
       
         NSString *address = model.shouhuodizhi; //收货地址
         [orderMessageAry addObject:address];
+        
+     
         NSString *zhifustyle=@"";
 //        if ([model.zhifufangshi isEqualToString:@"1"]) {
 //            zhifustyle = @"货到付款";
@@ -217,15 +225,23 @@
         //尾视图
         NSString *fujiafeiName = model.fujiafeiname;
         [moneyArray addObject:fujiafeiName]; //附加费name
-        
-        NSString *fujiafei = model.fujiafei;
+       
+        NSString *fujiafei = [NSString stringWithFormat:@"%@",model.fujiafei];
         [moneyArray addObject:fujiafei]; //附加费
-        NSString *peisongfei = model.peisongshishou;
+        
+  
+        NSString *peisongfei = [NSString stringWithFormat:@"%@",model.peisongshishou];
         [moneyArray addObject:peisongfei]; //配送费
-        NSString *yingfujine = model.yingfujines;
+        
+        
+        NSString *yingfujine = [NSString stringWithFormat:@"%@",model.yingfujines];
         [moneyArray addObject:yingfujine]; //应付金额
+        
+  
         NSString *dingdanbeizhu = model.dindanbeizhu;
         [moneyArray addObject:dingdanbeizhu]; //订单备注
+        
+
         
 //        [moneyArray addObject:@""];// 福利
         

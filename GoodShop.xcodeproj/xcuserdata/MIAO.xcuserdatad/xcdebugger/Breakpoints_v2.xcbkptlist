@@ -16,16 +16,96 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GoodShop/&#x8d2d;&#x7269;&#x8f66;/CarFirstViewController.m"
+            timestampString = "520223093.462688"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "625"
+            endingLineNumber = "625"
+            landmarkName = "-createYingyongView"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GoodShop/&#x8d2d;&#x7269;&#x8f66;/&#x5206;&#x7c7b;/SelectedFenleiViewController.m"
+            timestampString = "519120880.3929"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "284"
+            endingLineNumber = "284"
+            landmarkName = "-getAllShangpin"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GoodShop/&#x8ba2;&#x5355;/&#x8ba2;&#x5355;&#x8be6;&#x60c5;/View/DetailTableHeadView.m"
-            timestampString = "517564058.087491"
+            filePath = "GoodShop/&#x6211;/&#x6211;&#x7684;&#x4f18;&#x60e0;/couponViewController.m"
+            timestampString = "519116154.996216"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "183"
-            endingLineNumber = "183"
-            landmarkName = "-createUIWithArray:"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "-reloadData"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[couponViewController reloadData]"
+                  moduleName = "GoodShop"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/shiyuanshangpin/Desktop/%E9%A1%B9%E7%9B%AE/%E5%A6%99%E5%BA%97%E4%BD%B3/GoodShop/GoodShop/%E6%88%91/%E6%88%91%E7%9A%84%E4%BC%98%E6%83%A0/couponViewController.m"
+                  timestampString = "519116176.352001"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "58"
+                  endingLineNumber = "58"
+                  offsetFromSymbolStart = "712">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__34-[couponViewController reloadData]_block_invoke"
+                  moduleName = "GoodShop"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/shiyuanshangpin/Desktop/%E9%A1%B9%E7%9B%AE/%E5%A6%99%E5%BA%97%E4%BD%B3/GoodShop/GoodShop/%E6%88%91/%E6%88%91%E7%9A%84%E4%BC%98%E6%83%A0/couponViewController.m"
+                  timestampString = "519116176.353747"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "58"
+                  endingLineNumber = "58"
+                  offsetFromSymbolStart = "48">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GoodShop/&#x767b;&#x5f55;&#x6ce8;&#x518c;/LoginViewController.m"
+            timestampString = "520413303.538193"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "358"
+            endingLineNumber = "358"
+            landmarkName = "-loginSuccessWithCodeDict:AndIndex:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -35,13 +115,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GoodShop/&#x8ba2;&#x5355;/&#x8ba2;&#x5355;&#x8be6;&#x60c5;/orderDetailViewController.m"
-            timestampString = "518504691.466041"
+            filePath = "GoodShop/&#x767b;&#x5f55;&#x6ce8;&#x518c;/LoginViewController.m"
+            timestampString = "520413303.538193"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "353"
-            endingLineNumber = "353"
-            landmarkName = "-reloadDataWithIndex:"
+            startingLineNumber = "506"
+            endingLineNumber = "506"
+            landmarkName = "-reshBanbenBlockIsAfter:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GoodShop/&#x767b;&#x5f55;&#x6ce8;&#x518c;/AccountView.m"
+            timestampString = "520392803.919947"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "557"
+            endingLineNumber = "557"
+            landmarkName = "-reshBanbenBlockIsAfter:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -51,13 +147,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GoodShop/&#x8ba2;&#x5355;/&#x8ba2;&#x5355;&#x8be6;&#x60c5;/orderDetailViewController.m"
-            timestampString = "518504691.466041"
+            filePath = "GoodShop/&#x767b;&#x5f55;&#x6ce8;&#x518c;/AccountView.m"
+            timestampString = "520392803.919947"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "347"
-            endingLineNumber = "347"
-            landmarkName = "-reloadDataWithIndex:"
+            startingLineNumber = "564"
+            endingLineNumber = "564"
+            landmarkName = "-reshBanbenBlockIsAfter:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -67,13 +163,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GoodShop/&#x6211;/MeViewController.m"
-            timestampString = "518421543.53323"
+            filePath = "GoodShop/&#x767b;&#x5f55;&#x6ce8;&#x518c;/findPasViewController.m"
+            timestampString = "520413303.538193"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "677"
-            endingLineNumber = "677"
-            landmarkName = "-share:"
+            startingLineNumber = "574"
+            endingLineNumber = "574"
+            landmarkName = "-messageEnsure"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -83,14 +179,187 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GoodShop/&#x8ba2;&#x5355;/&#x518d;&#x6765;&#x4e00;&#x5355;/orderMoreArginController.m"
-            timestampString = "518505254.831269"
+            filePath = "GoodShop/&#x767b;&#x5f55;&#x6ce8;&#x518c;/findPasViewController.m"
+            timestampString = "520413303.538193"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1871"
-            endingLineNumber = "1871"
-            landmarkName = "-goToCheck"
+            startingLineNumber = "578"
+            endingLineNumber = "578"
+            landmarkName = "-messageEnsure"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GoodShop/&#x767b;&#x5f55;&#x6ce8;&#x518c;/findPasViewController.m"
+            timestampString = "520413303.538193"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "594"
+            endingLineNumber = "594"
+            landmarkName = "-messageEnsure"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GoodShop/&#x767b;&#x5f55;&#x6ce8;&#x518c;/findPasViewController.m"
+            timestampString = "520413303.538193"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "576"
+            endingLineNumber = "576"
+            landmarkName = "-messageEnsure"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GoodShop/&#x767b;&#x5f55;&#x6ce8;&#x518c;/findPasViewController.m"
+            timestampString = "520413303.538193"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "573"
+            endingLineNumber = "573"
+            landmarkName = "-messageEnsure"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[findPasViewController messageEnsure]"
+                  moduleName = "GoodShop"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/shiyuanshangpin/Desktop/%E9%A1%B9%E7%9B%AE/%E5%A6%99%E5%BA%97%E4%BD%B3/GoodShop/GoodShop/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/findPasViewController.m"
+                  timestampString = "520406165.412895"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "553"
+                  endingLineNumber = "553"
+                  offsetFromSymbolStart = "400">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__38-[findPasViewController messageEnsure]_block_invoke"
+                  moduleName = "GoodShop"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/shiyuanshangpin/Desktop/%E9%A1%B9%E7%9B%AE/%E5%A6%99%E5%BA%97%E4%BD%B3/GoodShop/GoodShop/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/findPasViewController.m"
+                  timestampString = "520406165.415149"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "554"
+                  endingLineNumber = "554"
+                  offsetFromSymbolStart = "48">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GoodShop/&#x767b;&#x5f55;&#x6ce8;&#x518c;/findPasViewController.m"
+            timestampString = "520413303.538193"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "586"
+            endingLineNumber = "586"
+            landmarkName = "-messageEnsure"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[findPasViewController messageEnsure]"
+                  moduleName = "GoodShop"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/shiyuanshangpin/Desktop/%E9%A1%B9%E7%9B%AE/%E5%A6%99%E5%BA%97%E4%BD%B3/GoodShop/GoodShop/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/findPasViewController.m"
+                  timestampString = "520406461.22997"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "568"
+                  endingLineNumber = "568"
+                  offsetFromSymbolStart = "500">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__38-[findPasViewController messageEnsure]_block_invoke"
+                  moduleName = "GoodShop"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/shiyuanshangpin/Desktop/%E9%A1%B9%E7%9B%AE/%E5%A6%99%E5%BA%97%E4%BD%B3/GoodShop/GoodShop/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/findPasViewController.m"
+                  timestampString = "520406461.231578"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "568"
+                  endingLineNumber = "568"
+                  offsetFromSymbolStart = "612">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__copy_helper_block_.402"
+                  moduleName = "GoodShop"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/shiyuanshangpin/Desktop/%E9%A1%B9%E7%9B%AE/%E5%A6%99%E5%BA%97%E4%BD%B3/GoodShop/GoodShop/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/findPasViewController.m"
+                  timestampString = "520406461.233054"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "568"
+                  endingLineNumber = "568"
+                  offsetFromSymbolStart = "64">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__destroy_helper_block_.403"
+                  moduleName = "GoodShop"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/shiyuanshangpin/Desktop/%E9%A1%B9%E7%9B%AE/%E5%A6%99%E5%BA%97%E4%BD%B3/GoodShop/GoodShop/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/findPasViewController.m"
+                  timestampString = "520406461.234391"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "568"
+                  endingLineNumber = "568"
+                  offsetFromSymbolStart = "36">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__38-[findPasViewController messageEnsure]_block_invoke.405"
+                  moduleName = "GoodShop"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/shiyuanshangpin/Desktop/%E9%A1%B9%E7%9B%AE/%E5%A6%99%E5%BA%97%E4%BD%B3/GoodShop/GoodShop/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/findPasViewController.m"
+                  timestampString = "520406461.235812"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "568"
+                  endingLineNumber = "568"
+                  offsetFromSymbolStart = "24">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

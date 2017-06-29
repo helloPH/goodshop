@@ -11,6 +11,7 @@
 #import "Header.h"
 #import <AlipaySDK/AlipaySDK.h>
 #import <AVFoundation/AVFoundation.h>
+#import "PHWeiXin.h"
 
 @interface AppDelegate ()<CLLocationManagerDelegate,BMKGeneralDelegate>
 
@@ -23,36 +24,39 @@
     BMKMapManager* _mapManager;
 
 }
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication *)application
+didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  
     
-   
-    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstShouye"]){
-        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstShouye"];
-    }
-    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstZuiai"]){
-        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstZuiai"];
-    }
-    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstZhuce"]){
-        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstZhuce"];
-    }
-    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstOrder"]){
-        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstOrder"];
-    }
-    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstFankui"]){
-        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstFankui"];
-    }
-    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstShoucang"]){
-        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstShoucang"];
-    }
-    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstShangpinfenlei"]){
-        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstShangpinfenlei"];
-    }
-    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstShangpinxiangqing"]){
-        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstShangpinxiangqing"];
-    }
-    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstShopCar"]){
-        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstShopCar"];
-    }
+    
+//   垃圾玩意 写那么多 不知道简化
+//    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstShouye"]){
+//        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstShouye"];
+//    }
+//    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstZuiai"]){
+//        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstZuiai"];
+//    }
+//    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstZhuce"]){
+//        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstZhuce"];
+//    }
+//    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstOrder"]){
+//        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstOrder"];
+//    }
+//    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstFankui"]){
+//        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstFankui"];
+//    }
+//    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstShoucang"]){
+//        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstShoucang"];
+//    }
+//    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstShangpinfenlei"]){
+//        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstShangpinfenlei"];
+//    }
+//    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstShangpinxiangqing"]){
+//        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstShangpinxiangqing"];
+//    }
+//    if(![[NSUserDefaults standardUserDefaults] valueForKey:@"isFirstShopCar"]){
+//        [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"isFirstShopCar"];
+//    }
  
     set_isPeiSong(@"1");
     
@@ -262,10 +266,11 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-
 -(BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     NSLog(@"result = ");
+  
+    
     //如果极简开发包不可用，会跳转支付宝钱包进行支付，需要将支付宝钱包的支付结果回传给开发包
     if ([url.host isEqualToString:@"safepay"]) {
         [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
@@ -280,6 +285,9 @@
             NSLog(@"result = %@",resultDic);
         }];
         //        return YES;
+    }
+    if ([url.host isEqualToString:@"oauth"]) {// 授权登录
+        [shareWX goBackWithUrl:url];
     }
     //    if ([url.host isEqualToString:@"pay"]) {
     //        return [WXApi handleOpenURL:url delegate:[WXApiManager sharedManager]];
@@ -336,6 +344,12 @@
     //    //正向传值
     //    play.videoUrl = url;
     //    [self.window.rootViewController presentViewController:play animated:YES completion:nil];
+    
+}
+-(void)onReq:(BaseReq *)req{
+    
+}
+-(void)onResp:(BaseResp *)resp{
     
 }
 @end

@@ -11,4 +11,5 @@
 
 @interface NearbyShopsViewController : UIViewController
 @property(nonatomic,assign)NSInteger viewTag;
+@property(nonatomic,assign)BOOL isManual;
 @end

@@ -21,7 +21,7 @@
 @property(nonatomic,strong)NSString *latitude,*longitude,*city;
 @property(nonatomic,strong)CLLocationManager *locationManager;
 @property(nonatomic,strong)UIImageView *headImageView;
-@property(nonatomic,strong)UIImageView *caozuotishiImage;
+//@property(nonatomic,strong)UIImageView *caozuotishiImage;
 @property(nonatomic,assign)BOOL isSearch;
 
 @end
@@ -29,6 +29,8 @@
 @implementation NearbyShopsViewController
 -(void)viewWillAppear:(BOOL)animated
 {
+     
+    
     [super viewWillAppear:animated];
     [self.navigationController.navigationBar setHidden:NO];
 }
@@ -40,26 +42,30 @@
         self.navigationController.interactivePopGestureRecognizer.delegate = weakSelf;
     }
     self.view.backgroundColor = [UIColor whiteColor];
- [self setAutomaticallyAdjustsScrollViewInsets:NO];
+    [self setAutomaticallyAdjustsScrollViewInsets:NO];
     
-    if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted){
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"检测到您未开启定位,将无法查看附近店铺" preferredStyle:1];
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        }];
-        UIAlertAction *suerAction = [UIAlertAction actionWithTitle:@"去设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self.navigationController popViewControllerAnimated:YES];
-            NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-            if ([[UIApplication sharedApplication] canOpenURL:url]) {
-                [[UIApplication sharedApplication] openURL:url];
-            }   [[UIApplication sharedApplication] openURL:url];
-        }];
-        [alert addAction:suerAction];
-        [alert addAction:cancelAction];
-        [self presentViewController:alert animated:YES completion:nil];
+    if (!_isManual) {
+        if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted){
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"检测到您未开启定位,将无法查看附近店铺" preferredStyle:1];
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            }];
+            UIAlertAction *suerAction = [UIAlertAction actionWithTitle:@"去设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self.navigationController popViewControllerAnimated:YES];
+                NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                    [[UIApplication sharedApplication] openURL:url];
+                }   [[UIApplication sharedApplication] openURL:url];
+            }];
+            [alert addAction:suerAction];
+            [alert addAction:cancelAction];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+        else{
+            [self.locationManager startUpdatingLocation];
+        }
     }
-    else{
-        [self.locationManager startUpdatingLocation];
-    }
+    
+
     [self initNavigation];
     [self getHeadImageUrl];
     [self getFujinDianpuData];
@@ -67,29 +73,33 @@
 
 -(void)judgeTheFirst
 {
-    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstZuiai"] integerValue] == 1) {
-        NSString *url = @"images/caozuotishi/zuiai.png";
-        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
-        if (self.caozuotishiImage) {
-            [self.caozuotishiImage removeFromSuperview];
-            self.caozuotishiImage=nil;
-        }
-        
-       self.caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
-        self.caozuotishiImage.userInteractionEnabled = YES;
-        self.caozuotishiImage.alpha = 0.9;
-        [self.caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
-        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
-        [self.caozuotishiImage addGestureRecognizer:imageTap];
-        [self.view addSubview:self.caozuotishiImage];
-    }
+    [self showGuideImageWithUrl:@"images/caozuotishi/zuiai.png"];
+    
+    
+    
+//    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstZuiai"] integerValue] == 1) {
+//        NSString *url = @"images/caozuotishi/zuiai.png";
+//        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
+//        if (self.caozuotishiImage) {
+//            [self.caozuotishiImage removeFromSuperview];
+//            self.caozuotishiImage=nil;
+//        }
+//        
+//       self.caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
+//        self.caozuotishiImage.userInteractionEnabled = YES;
+//        self.caozuotishiImage.alpha = 0.9;
+//        [self.caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
+//        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
+//        [self.caozuotishiImage addGestureRecognizer:imageTap];
+//        [self.view addSubview:self.caozuotishiImage];
+//    }
 }
 
--(void)imageHidden
-{
-    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstZuiai"];
-    [self.caozuotishiImage removeFromSuperview];
-}
+//-(void)imageHidden
+//{
+//    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstZuiai"];
+//    [self.caozuotishiImage removeFromSuperview];
+//}
 -(NSString *)longitude
 {
     if (!_longitude) {
@@ -348,10 +358,7 @@
 {
     if (btn == self.leftButton) {
         NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
-//        if (self.fujinDianpuArray.count !=0) {
-//                shopListModel *model = self.fujinDianpuArray[0];
         
-            
             shopListModel * model = [shopListModel new];
             model.dianpuid=@"0";
         
@@ -458,9 +465,6 @@
                     }
                 }
             }
-//        }else{
-//            
-//        }
     }
     else
     {
@@ -470,6 +474,13 @@
         }
         else
         {
+            if ([self.searchFiled.text isEmptyString]) {
+                [self getFujinDianpuData];
+                self.navigationItem.titleView = nil;
+                self.isSearch=0;
+                return;
+            }
+
             [self searchAction];
             [self.searchFiled resignFirstResponder];
         }

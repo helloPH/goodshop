@@ -66,8 +66,11 @@
     }
     NSString *mdfiveString = [hash lowercaseString];
     
+    
+    
     NSString *adstr = [tel substringFromIndex:8];
     NSString *pasdStr = [NSString stringWithFormat:@"%@%@",adstr,mdfiveString];
+    
     const char *original_str1 = [pasdStr UTF8String];
     unsigned char result1[CC_MD5_DIGEST_LENGTH];
     CC_MD5(original_str1, strlen(original_str1), result1);
@@ -90,6 +93,10 @@
     NSString *mdfiveString = [hash lowercaseString];
     
     NSString *pasdStr = [NSString stringWithFormat:@"%@%@",uid,mdfiveString];
+    
+    
+    
+    
     const char *original_str1 = [pasdStr UTF8String];
     unsigned char result1[CC_MD5_DIGEST_LENGTH];
     CC_MD5(original_str1, strlen(original_str1), result1);
@@ -99,6 +106,18 @@
     }
     NSString *mdfiveString1 = [hash1 lowercaseString];
     return mdfiveString1;
+}
++(NSString *)encryptionPassword:(NSString *)pas{
+    const char *original_str = [pas UTF8String];
+    unsigned char result[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(original_str, strlen(original_str), result);
+    NSMutableString *hash = [NSMutableString string];
+    for (int i = 0; i < 16; i++){
+        [hash appendFormat:@"%02X", result[i]];
+    }
+    NSString *mdfiveString = [hash lowercaseString];
+    
+    return mdfiveString;
 }
 
 @end

@@ -16,7 +16,7 @@
 
 @implementation helpCenterViewController
 {
-    UIImageView *caozuotishiImage;
+//    UIImageView *caozuotishiImage;
 
 }
 -(void)viewWillAppear:(BOOL)animated
@@ -37,22 +37,29 @@
 }
 -(void)judgeTheFirst
 {
-    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstFankui"] integerValue] == 1) {
-        NSString *url = @"images/caozuotishi/fankui.png";
-        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
-        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0,-10, kDeviceWidth, kDeviceHeight)];
-        caozuotishiImage.userInteractionEnabled = YES;
-        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
-        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden:)];
-        [caozuotishiImage addGestureRecognizer:imageTap];
-        [self.view addSubview:caozuotishiImage];
-    }
-}
+    
+    
+    UIImageView * img= [self showGuideImageWithUrl:@"images/caozuotishi/fankui.png"];
 
--(void)imageHidden:(UITapGestureRecognizer *)tap
-{
-    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstFankui"];
-    [caozuotishiImage removeFromSuperview];
+    img.height=img.height+13;
+    img.top=-13;
+    
+//    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstFankui"] integerValue] == 1) {
+//        NSString *url = @"images/caozuotishi/fankui.png";
+//        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
+//        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0,-10, kDeviceWidth, kDeviceHeight)];
+//        caozuotishiImage.userInteractionEnabled = YES;
+//        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
+//        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden:)];
+//        [caozuotishiImage addGestureRecognizer:imageTap];
+//        [self.view addSubview:caozuotishiImage];
+//    }
+//}
+//
+//-(void)imageHidden:(UITapGestureRecognizer *)tap
+//{
+//    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstFankui"];
+//    [caozuotishiImage removeFromSuperview];
 }
 
 -(void)initNavigation

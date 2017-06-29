@@ -55,7 +55,7 @@
     UILabel *fenleiLabel;
     NSString *fenleiStr;
     OrderPromptView *orderPrompt;
-    UIImageView *caozuotishiImage;
+//    UIImageView *caozuotishiImage;
 
 }
 -(void)viewWillAppear:(BOOL)animated
@@ -96,21 +96,23 @@
 }
 -(void)judgeTheFirst
 {
-    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstShangpinfenlei"] integerValue] == 1) {
-        NSString *url = @"images/caozuotishi/shangpinfenlei.png";
-        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
-        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
-        caozuotishiImage.userInteractionEnabled = YES;
-        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
-        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
-        [caozuotishiImage addGestureRecognizer:imageTap];
-        [self.view addSubview:caozuotishiImage];
-    }
-}
--(void)imageHidden
-{
-    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstShangpinfenlei"];
-    [caozuotishiImage removeFromSuperview];
+    [self showGuideImageWithUrl:@"images/caozuotishi/shangpinfenlei.png"];
+//    
+//    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstShangpinfenlei"] integerValue] == 1) {
+//        NSString *url = @"images/caozuotishi/shangpinfenlei.png";
+//        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
+//        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
+//        caozuotishiImage.userInteractionEnabled = YES;
+//        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
+//        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
+//        [caozuotishiImage addGestureRecognizer:imageTap];
+//        [self.view addSubview:caozuotishiImage];
+//    }
+//}
+//-(void)imageHidden
+//{
+//    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstShangpinfenlei"];
+//    [caozuotishiImage removeFromSuperview];
 }
 -(void)setNavigationItem
 {
@@ -237,8 +239,11 @@
     mbHud.labelText = @"请稍后...";
     mbHud.delegate =self;
     [mbHud show:YES];
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSMutableDictionary *pram = [NSMutableDictionary dictionaryWithDictionary:@{@"id":_dianpuID,@"userid":user_id,@"pageNum":[NSString stringWithFormat:@"%d",pageNum],@"leibei":fenleiStr}];
+    if (!pram) {
+        return;
+    }
         [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"findshangpingshow.action" params:pram success:^(id json) {
             [mbHud hide:YES];
             NSLog(@"全部商品%@",json);
@@ -272,15 +277,15 @@
                 }
             }
             
-            dispatch_async(dispatch_get_main_queue(), ^{
+//            dispatch_async(dispatch_get_main_queue(), ^{
                 [mainCollectionView reloadData];
-            });
+//            });
         } failure:^(NSError *error) {
             [mbHud hide:YES];
             [self promptMessageWithString:@"网络连接错误1"];
         }];
         
-    });
+//    });
 }
 
 #pragma mark 获得特价商品数据
@@ -765,7 +770,7 @@
 -(void)selectedFenleiWithString:(NSString *)string
 {
     fenleiLabel.text = string;
-    //    hangyeID = ID;
+//        hangyeID = ID;
     if ([string isEqualToString:@"全部商品"]) {
         fenleiStr = @"0";
     }

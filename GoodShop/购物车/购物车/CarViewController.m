@@ -33,7 +33,7 @@
     BOOL isdel;//
     NSMutableArray *selectGoodsAry;
     OrderPromptView *orderPrompt;
-    UIImageView *caozuotishiImage;
+//    UIImageView *caozuotishiImage;
     NSString *dianpuID;
  
     
@@ -76,22 +76,25 @@
 }
 -(void)judgeTheFirst
 {
-    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstShopCar"] integerValue] == 1) {
-        NSString *url = @"images/caozuotishi/gouwuche.png";
-        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
-        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
-        caozuotishiImage.userInteractionEnabled = YES;
-        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
-        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
-        [caozuotishiImage addGestureRecognizer:imageTap];
-        [self.view addSubview:caozuotishiImage];
-    }
-}
-
--(void)imageHidden
-{
-    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstShopCar"];
-    [caozuotishiImage removeFromSuperview];
+    [self showGuideImageWithUrl:@"images/caozuotishi/gouwuche.png"];
+//    
+//    
+//    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstShopCar"] integerValue] == 1) {
+//        NSString *url = @"images/caozuotishi/gouwuche.png";
+//        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
+//        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
+//        caozuotishiImage.userInteractionEnabled = YES;
+//        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
+//        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
+//        [caozuotishiImage addGestureRecognizer:imageTap];
+//        [self.view addSubview:caozuotishiImage];
+//    }
+//}
+//
+//-(void)imageHidden
+//{
+//    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstShopCar"];
+//    [caozuotishiImage removeFromSuperview];
 }
 -(void)orderSuccessReload
 {

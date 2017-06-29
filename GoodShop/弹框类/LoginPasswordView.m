@@ -7,11 +7,33 @@
 //
 
 #import "LoginPasswordView.h"
-
+@interface LoginPasswordView()
+@property (nonatomic,strong)UIScrollView * backView;
+@end
 @implementation LoginPasswordView
 {
     UIButton *sureBtn;
     UITextField *filed;
+}
+-(instancetype)init{
+    if (self=[super init]) {
+        _backView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+        
+        UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(disAppear)];
+        [_backView addGestureRecognizer:tap];
+        [_backView addSubview:self];
+        
+        
+        self.frame=CGRectMake(kDeviceWidth/20.0, 180*MCscale, kDeviceWidth*9/10.0, 232*MCscale);
+        self.backgroundColor = [UIColor whiteColor];
+        self.layer.cornerRadius = 15.0;
+        self.layer.shadowRadius = 5.0;
+        self.layer.shadowOpacity = 0.5;
+        self.alpha = 0.95;
+        self.layer.shadowOffset = CGSizeMake(0, 0);
+        [self createUI];
+    }
+    return self;
 }
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -64,6 +86,7 @@
 {
     NSString *pas = [md5_password encryptionPassword:filed.text userTel:user_tel];
     NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"tel":user_id,@"pwd":pas}];
+    
     [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"checkPwd1.action" params:pram success:^(id json) {
         NSLog(@"登录密码验证%@",json);
         if ([[json valueForKey:@"message"] integerValue]== 1) {
@@ -76,18 +99,24 @@
             if ([self.loginPasswordDelegate respondsToSelector:@selector(LoginPasswordViewSuccessWithIndex:)]){
                 [self.loginPasswordDelegate LoginPasswordViewSuccessWithIndex:self.indexPath];
             }
+            if (_block) {
+                _block();
+            }
+            
         }
         else{
-            MBProgressHUD *mbHud = [MBProgressHUD showHUDAddedTo:self animated:YES];
-            mbHud.mode = MBProgressHUDModeText;
-            mbHud.labelText = @"登录密码错误!请重新输入";
-            [mbHud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
+            [MBProgressHUD promptWithString:@"登录密码错误!请重新输入"];
+//            MBProgressHUD *mbHud = [MBProgressHUD showHUDAddedTo:self animated:YES];
+//            mbHud.mode = MBProgressHUDModeText;
+//            mbHud.labelText = @"登录密码错误!请重新输入";
+//            [mbHud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
         }
     } failure:^(NSError *error) {
-        MBProgressHUD *bud = [MBProgressHUD showHUDAddedTo:self animated:YES];
-        bud.mode = MBProgressHUDModeCustomView;
-        bud.labelText = @"网络连接错误";
-        [bud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
+            [MBProgressHUD promptWithString:@"网络连接错误"];
+//        MBProgressHUD *bud = [MBProgressHUD showHUDAddedTo:self animated:YES];
+//        bud.mode = MBProgressHUDModeCustomView;
+//        bud.labelText = @"网络连接错误";
+//        [bud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
     }];
 }
 
@@ -96,5 +125,23 @@
     sleep(1.5);
 }
 
-
+-(void)appear{
+    [[UIApplication sharedApplication].delegate.window addSubview:_backView];
+    
+    //    [[self getCurrentVC].view addSubview:_backView];
+    //    [[UIViewController presentingVC].view addSubview:_backView];
+    
+    [_backView addSubview:self];
+    _backView.alpha=0;
+    [UIView animateWithDuration:0.3 animations:^{
+        _backView.alpha=0.95;
+    }];
+}
+-(void)disAppear{
+    [UIView animateWithDuration:0.3 animations:^{
+        _backView.alpha=0;
+    }completion:^(BOOL finished) {
+        [_backView removeFromSuperview];
+    }];
+}
 @end

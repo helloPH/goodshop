@@ -7,14 +7,24 @@
 //
 
 #import "AccountView.h"
+#import "PHWeiXin.h"
+#import "SetPassWordAtLoginView.h"
+
+@interface AccountView()
+@property (nonatomic,strong)NSDictionary * dataDicGetByPhone;
+
+
+@end
 @implementation AccountView
 {
-    UITextField *tleTextFile;//电话号码
+//    UITextField *tleTextFile;//电话号码
     UITextField *pasTextFile;//密码
     UIButton *loginBtn,*deleteBtn,*forgetPasBtn;//登录
     UILabel *remainLabel;//计时label
     NSInteger seconds;//计时
     UIImageView *isAutoImage;//是否自动登录选择
+    
+    UIButton * weixinBtn;
 }
 
 -(id)initWithFrame:(CGRect)frame
@@ -26,6 +36,7 @@
         
         [self performSelector:@selector(countdownAction) withObject:self afterDelay:1];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(timerStop) name:@"timerStopNoti" object:nil];
+       
     }
     return self;
 }
@@ -37,6 +48,13 @@
 }
 -(void)initSubViews
 {
+    UIImageView * logoImg = [[UIImageView alloc]initWithFrame:CGRectZero];
+    [self addSubview:logoImg];
+    logoImg.image=[UIImage imageNamed:@""];
+    logoImg.tag=100;
+    
+    
+    
     UIImageView *userNameImage = [[UIImageView alloc]initWithFrame:CGRectZero];
     userNameImage.image = [UIImage imageNamed:@"账户"];
     userNameImage.tag = 101;
@@ -48,17 +66,21 @@
     passdImage.backgroundColor = [UIColor clearColor];
     [self addSubview:passdImage];
     
-    tleTextFile = [[UITextField alloc]initWithFrame:CGRectZero];
-    tleTextFile.tag = 11001;
-    tleTextFile.backgroundColor = [UIColor clearColor];
-    tleTextFile.textAlignment = NSTextAlignmentLeft;
-    tleTextFile.font = [UIFont systemFontOfSize:MLwordFont_2];
-    tleTextFile.placeholder = @"请输入登录手机号";
-    tleTextFile.text = user_tel;
-    tleTextFile.delegate = self;
-    tleTextFile.textColor = [UIColor blackColor];
-    tleTextFile.keyboardType = UIKeyboardTypeNumberPad;
-    [self addSubview:tleTextFile];
+    _tleTextFile = [[UITextField alloc]initWithFrame:CGRectZero];
+    _tleTextFile.tag = 11001;
+    _tleTextFile.backgroundColor = [UIColor clearColor];
+    _tleTextFile.textAlignment = NSTextAlignmentLeft;
+    _tleTextFile.font = [UIFont systemFontOfSize:MLwordFont_2];
+    _tleTextFile.placeholder = @"请输入登录手机号";
+    _tleTextFile.text = user_tel;
+    if (_tleTextFile.text.length==11) {
+        [self getLogoWithTel:_tleTextFile.text];
+    }
+    
+    _tleTextFile.delegate = self;
+    _tleTextFile.textColor = [UIColor blackColor];
+    _tleTextFile.keyboardType = UIKeyboardTypeNumberPad;
+    [self addSubview:_tleTextFile];
     
     deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [deleteBtn setBackgroundImage:[UIImage imageNamed:@"账号删除"] forState:UIControlStateNormal];
@@ -133,6 +155,22 @@
     [loginBtn addTarget:self action:@selector(lognBtnAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:loginBtn];
     
+    
+    weixinBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, loginBtn.bottom +40, 100, 30)];
+    [weixinBtn setTitle:@"用微信登录" forState:UIControlStateNormal];
+    [weixinBtn setTitleColor:mainColor forState:UIControlStateNormal];
+    [self addSubview:weixinBtn];
+    [weixinBtn addTarget:self action:@selector(pullWeiXin) forControlEvents:UIControlEventTouchUpInside];
+    weixinBtn.hidden=YES;
+    [self reshBanbenBlockIsAfter:^(BOOL isAfter) {
+        if (isAfter){
+            weixinBtn.hidden=NO;
+        }else{
+            weixinBtn.hidden=YES;
+        }
+    }];
+    
+    
     remainLabel = [[UILabel alloc]initWithFrame:CGRectZero];
     if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"longCode_bol"] isEqualToString:@"1"]){
         remainLabel.text = @"5";
@@ -155,15 +193,23 @@
 -(void)layoutSubviews
 {
     [super layoutSubviews];
+    UIImageView * logoImg = [self viewWithTag:100];// 头像
+    logoImg.frame=CGRectMake(0, 80, 100, 100);
+    logoImg.centerX=kDeviceWidth/2;
+    
+    
+    
     UIImageView *userNameImage = [self viewWithTag:101]; // 账户
-    userNameImage.frame = CGRectMake(20*MCscale, 25*MCscale, 30*MCscale, 30*MCscale);
+    userNameImage.frame = CGRectMake(20*MCscale,logoImg.bottom+ 25*MCscale, 30*MCscale, 30*MCscale);
     UIImageView *passdImage = [self viewWithTag:102]; //密码
     passdImage.frame = CGRectMake(20*MCscale, userNameImage.bottom+25*MCscale, 30*MCscale, 30*MCscale);
-    tleTextFile.frame = CGRectMake(userNameImage.right+5, 25*MCscale, self.width-120*MCscale, 30*MCscale);
+    
+    
+    _tleTextFile.frame = CGRectMake(userNameImage.right+5, userNameImage.top, self.width-120*MCscale, 30*MCscale);
     pasTextFile.frame = CGRectMake(passdImage.right+5, passdImage.top, self.width-70*MCscale, 30*MCscale);
-    deleteBtn.frame = CGRectMake(tleTextFile.right+10*MCscale, 27, 25, 25);
+    deleteBtn.frame = CGRectMake(_tleTextFile.right+10*MCscale, _tleTextFile.top+2, 25, 25);
     UIView *line1 = [self viewWithTag:104];//灰色分割线
-    line1.frame = CGRectMake(10, tleTextFile.bottom+12*MCscale, self.width-20, 1);
+    line1.frame = CGRectMake(10, _tleTextFile.bottom+12*MCscale, self.width-20, 1);
     UIView *line2 = [self viewWithTag:105];// 灰色分割线
     line2.frame = CGRectMake(10, pasTextFile.bottom+12*MCscale, self.width-20, 1);
     isAutoImage.frame = CGRectMake(45*MCscale, line2.bottom+18*MCscale, 22*MCscale, 22*MCscale);
@@ -172,6 +218,10 @@
     
     forgetPasBtn.frame = CGRectMake(self.width-120*MCscale, autoLoginLabel.top, 100*MCscale, 30*MCscale);
     loginBtn.frame = CGRectMake(20*MCscale, isAutoImage.bottom+15*MCscale, self.width-40*MCscale, 45*MCscale);
+    
+    weixinBtn.top=loginBtn.bottom+40;
+    weixinBtn.centerX=loginBtn.centerX;
+    
     remainLabel.frame = CGRectMake(loginBtn.left+30*MCscale, loginBtn.top+13*MCscale, 20*MCscale, 20*MCscale);//倒计时
 }
 //btn事件
@@ -179,6 +229,12 @@
 {
     if (btn == deleteBtn) {
         [self delAccount];//账号删除
+        UIImageView *logoImg = [self viewWithTag:100];
+        logoImg.image=nil;
+        logoImg.backgroundColor=[UIColor clearColor];
+        
+        
+        
     }
     else if (btn == loginBtn){
         [self login]; //登录
@@ -205,7 +261,7 @@
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     remainLabel.alpha = 0;
     seconds = 5;
-    tleTextFile.text = @"";
+    _tleTextFile.text = @"";
     pasTextFile.text = @"";
 }
 //自动登录选中
@@ -258,7 +314,7 @@
 #pragma mark -- 登陆
 -(void)login
 {
-    if ([tleTextFile.text isEqualToString:@""] || [pasTextFile.text isEqualToString:@""]) {
+    if ([_tleTextFile.text isEqualToString:@""] || [pasTextFile.text isEqualToString:@""]) {
         [self requestNetworkWrong:@"账户或密码不能为空"];
     }
     else
@@ -272,8 +328,15 @@
         Hud.delegate = self;
         Hud.labelText = @"请稍等...";
         [Hud show:YES];
-        NSString *logName = tleTextFile.text;
+        NSString *logName = _tleTextFile.text;
         NSString *mdPasd = [md5_password encryptionPassword:pasTextFile.text userTel:logName];
+        if (pasTextFile.text.length >20) {
+            
+            
+            
+            mdPasd = [md5_password encryptionPassword:pasTextFile.text];
+        }
+        
         NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] init];
         [jsonDict setObject:logName forKey:@"user.tel"];
         [jsonDict setObject:mdPasd forKey:@"user.password"];
@@ -286,8 +349,13 @@
                 seconds = 5;
                 NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
                 [def setInteger:1 forKey:@"isLogin"];
-                [def setValue:tleTextFile.text forKey:@"userTel"];
-                [def setValue:pasTextFile.text forKey:@"userPass"];
+                [def setValue:_tleTextFile.text forKey:@"userTel"];
+                
+                if ([pasTextFile.text length]<15) {
+                   [def setValue:pasTextFile.text forKey:@"userPass"];
+                }else{
+                    [def setValue:@"" forKey:@"userPass"];
+                }
                 [def setValue:[json valueForKey:@"dianpuname"] forKey:@"dianpuName"];
                 NSString *usid = [NSString stringWithFormat:@"%@",[json objectForKey:@"userid"]];
                 [def setValue:usid forKey:@"userId"];
@@ -298,7 +366,7 @@
                     [self.loginDelegate loginSuccessWithDict:json AndIndex:1];
                 }
                 
-                [tleTextFile resignFirstResponder];
+                [_tleTextFile resignFirstResponder];
                 [pasTextFile resignFirstResponder];
                 
                 NSNotification *userLoginNotification = [NSNotification notificationWithName:@"userLoginNotification" object:nil];
@@ -327,6 +395,38 @@
         }];
     }
 }
+-(void)pullWeiXin{
+    [shareWX loginBlock:^(BOOL isSuccess) {
+        if (!isSuccess) {
+            UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"" message:@"未检测到微信,请安装微信或使用账号密码登录" delegate:nil cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+    }];
+    shareWX.block=^(id url){
+        
+        NSDictionary * pram=@{@"code":[NSString stringWithFormat:@"%@",[url valueForKey:@"openid"]]};
+        [Request getWXLoginPhotoAndPwWithDic:pram success:^(NSInteger message, id data) {
+            if (message == 1) {// 有内容
+//                [MBProgressHUD promptWithString:@"获取成功"];
+                _tleTextFile.text=[NSString stringWithFormat:@"%@",[data valueForKey:@"tel"]];
+                pasTextFile.text=[NSString stringWithFormat:@"%@",[data valueForKey:@"password"]];
+                [self login];
+                
+            }else{// 没内容
+                
+                UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"当前未授权微信登录，请使用密码登录后在“安全设置”授权微信登录。" message:@"" delegate:nil cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+                [alert show];
+//                [MBProgressHUD promptWithString:@""];
+            }
+        } failure:^(NSError *error) {
+            
+        }];
+       
+        
+        [PHWeiXin attempDealloc];
+    };
+  
+}
 -(void)requestNetworkWrong:(NSString *)wrongStr
 {
     MBProgressHUD *bud = [MBProgressHUD showHUDAddedTo:self animated:YES];
@@ -349,23 +449,121 @@
 }
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
+    
+    
     if(textField.tag == 11001){
-        NSInteger leng = textField.text.length;
-        NSInteger selectLeng = range.length;
-        NSInteger replaceLeng = string.length;
-        if (leng - selectLeng + replaceLeng > 11){
-            return NO;
+        NSString * newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        
+        
+         UIImageView *logoImg = [self viewWithTag:100];
+        if (newString.length <= 11){
+            if (newString.length<11) {// 手机号输入不完整
+                logoImg.image=nil;
+                logoImg.backgroundColor=[UIColor clearColor];
+            }else{//
+                [self getLogoWithTel:newString];
+            }
+            
+            return YES;
         }
         else
-            return YES;
+            return NO;
+
     }
     return YES;
 }
+-(void)getLogoWithTel:(NSString *)tel{
+
+    
+    _dataDicGetByPhone = nil;
+    NSDictionary * pram = @{@"code":tel};
+    [Request getLogoByPhoneWithDic:pram success:^(NSInteger message, id data) {
+
+//        [MBProgressHUD promptWithString:@"根据手机号获取logo"];
+        
+        
+        _dataDicGetByPhone = [NSDictionary dictionaryWithDictionary:data];
+        UIImageView * logoImg = [self viewWithTag:100];// 头像
+        
+        [logoImg sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[data valueForKey:@"image"]]] placeholderImage:[UIImage imageNamed:@""]];
+        
+
+        NSString * password = [NSString stringWithFormat:@"%@",[data valueForKey:@"password"]];
+        NSString * userid = [NSString stringWithFormat:@"%@",[data valueForKey:@"userid"]];
+        
+       
+        if ([password isEqualToString:@"0"]) {
+            
+            
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"直接登录" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                pasTextFile.text=@"123456";
+                [self login];
+            }];
+            [cancelAction setValue:redTextColor forKey:@"_titleTextColor"];
+            
+            UIAlertAction *suerAction = [UIAlertAction actionWithTitle:@"重置密码" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                SetPassWordAtLoginView * setpass = [SetPassWordAtLoginView new];
+                setpass.Id=userid;
+                setpass.tel=tel;
+                [setpass appear];
+                setpass.block=^(NSString * newPass){
+                    
+                    pasTextFile.text = newPass;
+                    [self login];
+                };
+//                _newpasView.alpha = 0.95;
+//                [self addSubview:_newpasView];
+            }];
+            [suerAction setValue:naviBarTintColor forKey:@"_titleTextColor"];
+    
+            
+            
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"您的初始密码为123456是否重置" preferredStyle:1];
+            NSMutableAttributedString * mes = [[NSMutableAttributedString alloc]initWithString:@"您的初始密码为123456是否重置"];
+            [mes addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:18] range:NSMakeRange(0, [[mes string] length])];
+            [mes addAttribute:NSForegroundColorAttributeName value:textBlackColor range:NSMakeRange(0, [[mes string] length])];
+            [alert setValue:mes forKey:@"attributedMessage"];
+            
+            
+            [alert addAction:suerAction];
+            [alert addAction:cancelAction];
+            [self.controller presentViewController:alert animated:YES completion:nil];
+            
+            
+
+            
+            
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+
+}
 -(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-    [tleTextFile resignFirstResponder];
+    [_tleTextFile resignFirstResponder];
     [pasTextFile resignFirstResponder];
 }
 
+// 刷新 是不是最新版本
+-(void)reshBanbenBlockIsAfter:(void(^)(BOOL isAfter))block{
+    if (banben_IsAfter){
+        block(YES);
+        return;
+    }
+    [Request getBanBenInfo1Success:^(NSInteger message, id data) {
+        if (message == 0 || message == 1) {
+            set_Banben_IsAfter(YES);
+            block(YES);
+            return;
+        }
+        set_Banben_IsAfter(NO);
+        block(NO);
+    } failure:^(NSError *error) {
+        set_Banben_IsAfter(NO);
+        block(NO);
+    }];
+}
 
 @end

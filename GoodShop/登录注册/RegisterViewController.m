@@ -34,16 +34,26 @@
     UIButton *sendCode,*regisBtn,*ScanBtn;
     NSString *dianpuID;
     MainScrollView *scrol;
-    UIImageView *caozuotishiImage;
+//    UIImageView *caozuotishiImage;
     BOOL isHave;
+}
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    self.navigationController.navigationBar.hidden=YES;
 }
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.navigationController.navigationBar.hidden=YES;
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getDianpurexianNotiClick:) name:@"getDianpurexianNoti" object:nil];
+}
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    self.navigationController.navigationBar.hidden=NO;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -86,23 +96,25 @@
 }
 -(void)judgeTheFirst
 {
-    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstZhuce"] integerValue] == 1) {
-        NSString *url = @"images/caozuotishi/zhucehd.png";
-        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
-        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
-        caozuotishiImage.userInteractionEnabled = YES;
-        caozuotishiImage.alpha = 0.9;
-        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
-        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
-        [caozuotishiImage addGestureRecognizer:imageTap];
-        [self.view addSubview:caozuotishiImage];
-    }
-}
-
--(void)imageHidden
-{
-    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstZhuce"];
-    [caozuotishiImage removeFromSuperview];
+    [self showGuideImageWithUrl:@"images/caozuotishi/zhucehd.png"];
+//    
+//    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstZhuce"] integerValue] == 1) {
+//        NSString *url = @"images/caozuotishi/zhucehd.png";
+//        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
+//        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
+//        caozuotishiImage.userInteractionEnabled = YES;
+//        caozuotishiImage.alpha = 0.9;
+//        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
+//        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
+//        [caozuotishiImage addGestureRecognizer:imageTap];
+//        [self.view addSubview:caozuotishiImage];
+//    }
+//}
+//
+//-(void)imageHidden
+//{
+//    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstZhuce"];
+//    [caozuotishiImage removeFromSuperview];
 }
 -(NSString *)longitude
 {
@@ -152,12 +164,29 @@
 }
 -(void)initNavigation
 {
-    self.navigationItem.title = @"注册";
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],NSForegroundColorAttributeName,[UIFont boldSystemFontOfSize:MLwordFont_2],NSFontAttributeName,nil]];
-    UIBarButtonItem *leftbarBtn = [[UIBarButtonItem alloc]initWithCustomView:self.leftButton];
-    self.navigationItem.leftBarButtonItem =leftbarBtn;
+    UIView * navi = [[UIView alloc]initWithFrame:CGRectMake(0, 0, kDeviceWidth, 64)];
+    [self.view addSubview:navi];
+    navi.tag=150;
+    
+    
+    UIButton * leftbtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 25, 25)];
+    [navi addSubview:leftbtn];
+    [leftbtn setImage:[UIImage imageNamed:@"返回按钮黑"] forState:UIControlStateNormal];
+    leftbtn.titleLabel.font=[UIFont systemFontOfSize:MLwordFont_4];
+    leftbtn.left=20*MCscale;
+    leftbtn.bottom=navi.height-10*MCscale;
+    [leftbtn addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
+    [leftbtn addTarget:self.navigationController action:@selector(popViewControllerAnimated:) forControlEvents:UIControlEventTouchUpInside];
+    
+//    self.navigationItem.title = @"注册";
+//    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],NSForegroundColorAttributeName,[UIFont boldSystemFontOfSize:MLwordFont_2],NSFontAttributeName,nil]];
+//    UIBarButtonItem *leftbarBtn = [[UIBarButtonItem alloc]initWithCustomView:self.leftButton];
+//    self.navigationItem.leftBarButtonItem =leftbarBtn;
     
 }
+//-(void)popActon{
+//    [self.navigationController popViewControllerAnimated:YES];
+//}
 
 -(void)loadScrolloview:(NSArray *)imgAry
 {
@@ -175,7 +204,14 @@
 }
 -(void)initSubViews
 {
-    iconBackView = [BaseCostomer viewWithFrame:CGRectMake(0,80*MCscale,kDeviceWidth, 120*MCscale) backgroundColor:[UIColor clearColor]];
+    UILabel * tipLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 80*MCscale, kDeviceWidth, 20)];
+    tipLabel.font=[UIFont systemFontOfSize:MLwordFont_6];
+    tipLabel.textColor=lineColor;
+    tipLabel.text=@"滑动图片切换商铺";
+    tipLabel.textAlignment=NSTextAlignmentCenter;
+    [self.view addSubview:tipLabel];
+    
+    iconBackView = [BaseCostomer viewWithFrame:CGRectMake(0,tipLabel.bottom,kDeviceWidth, 120*MCscale) backgroundColor:[UIColor clearColor]];
     [self.view addSubview:iconBackView];
     
     dianpuNameLabel = [BaseCostomer labelWithFrame:CGRectMake(0,100*MCscale, iconBackView.width, 20*MCscale) font:[UIFont systemFontOfSize:MLwordFont_5] textColor:textColors backgroundColor:[UIColor clearColor] textAlignment:1 numOfLines:1 text:@""];
@@ -183,17 +219,22 @@
     
     UIImageView *telImage = [BaseCostomer imageViewWithFrame:CGRectMake(20,iconBackView.bottom +40*MCscale, 22*MCscale, 20*MCscale) backGroundColor:[UIColor clearColor] image:@"验证码"];
     [self.view addSubview:telImage];
+    telImage.hidden=YES;
     
     telNumber = [BaseCostomer textfieldWithFrame:CGRectMake(telImage.right+2*MCscale, iconBackView.bottom +35*MCscale, kDeviceWidth-120*MCscale, 30*MCscale) font:[UIFont systemFontOfSize:MLwordFont_4] textColor:textBlackColor backGroundColor:[UIColor clearColor] textAlignment:0 keyboardType:UIKeyboardTypeNumberPad borderStyle:0 placeholder:@"请输入邀请码(选填)"];
     telNumber.delegate = self;
     [self.view addSubview:telNumber];
+    telNumber.hidden=YES;
     
-    ScanBtn = [BaseCostomer buttonWithFrame:CGRectMake(kDeviceWidth - 80*MCscale,telNumber.top,70*MCscale, 30*MCscale) font:[UIFont systemFontOfSize:MLwordFont_5] textColor:[UIColor whiteColor] backGroundColor:txtColors(248, 53, 74, 1) cornerRadius:3.0 text:@"扫一扫" image:@""];
+    ScanBtn = [BaseCostomer buttonWithFrame:CGRectMake(kDeviceWidth - 80*MCscale,iconBackView.bottom+2,100*MCscale, 30*MCscale) font:[UIFont systemFontOfSize:MLwordFont_3] textColor:naviBarTintColor backGroundColor:txtColors(248, 53, 74, 0) cornerRadius:3.0 text:@"扫码切换" image:@""];
+    ScanBtn.centerX=kDeviceWidth/2;
+    
     [ScanBtn addTarget:self action:@selector(changeRegisterStyle:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:ScanBtn];
     
     UIView *line1 = [BaseCostomer viewWithFrame:CGRectMake(10*MCscale,telNumber.bottom+5*MCscale,  kDeviceWidth -20*MCscale, 1) backgroundColor:lineColor];
     [self.view addSubview:line1];
+    line1.hidden=YES;
     
     UIImageView *phoneImage = [BaseCostomer imageViewWithFrame:CGRectMake(20,line1.bottom +20*MCscale, 22*MCscale, 22*MCscale) backGroundColor:[UIColor clearColor]  image:@"输入手机号"];
     [self.view addSubview:phoneImage];
@@ -221,9 +262,9 @@
     [regisBtn addTarget:self action:@selector(changeRegisterStyle:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:regisBtn];
     
-    UIView *xieyiView = [BaseCostomer viewWithFrame:CGRectMake(30*MCscale, 0, kDeviceWidth - 60*MCscale, 30*MCscale) backgroundColor:[UIColor clearColor]];
-    xieyiView.center = CGPointMake(kDeviceWidth/2.0, regisBtn.bottom +35*MCscale);
+    UIView *xieyiView = [BaseCostomer viewWithFrame:CGRectMake(30*MCscale, kDeviceHeight-40, kDeviceWidth-60*MCscale, 30*MCscale) backgroundColor:[UIColor clearColor]];
     [self.view addSubview:xieyiView];
+    xieyiView.centerX = kDeviceWidth/2.0;
     
     UIImageView *agreeImage = [BaseCostomer imageViewWithFrame:CGRectMake(0, 6.5*MCscale, 17*MCscale, 17*MCscale) backGroundColor:[UIColor clearColor] cornerRadius:0 userInteractionEnabled:YES image:@"选中"];
     agreeImage.tag = 1001;
@@ -236,12 +277,19 @@
     [xieyiView addSubview:xieyi];
     
     UILabel *xieyiCon = [BaseCostomer labelWithFrame:CGRectMake(xieyi.right+2, xieyi.top, 100*MCscale_1, 22*MCscale) font:[UIFont systemFontOfSize:MLwordFont_7] textColor:mainColor backgroundColor:[UIColor clearColor] textAlignment:1 numOfLines:1 text:@"妙店佳用户协议"];
+    xieyiView.width=xieyiCon.right;
+    xieyiView.centerX=kDeviceWidth/2;
+    
     xieyiCon.userInteractionEnabled = YES;
     [xieyiView addSubview:xieyiCon];
     UITapGestureRecognizer *agreeTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userAgreement)];
     [xieyiCon addGestureRecognizer:agreeTap];
     UIView *line4 = [BaseCostomer viewWithFrame:CGRectMake(xieyiCon.left-1, xieyiCon.bottom-2, xieyiCon.width+2, 1) backgroundColor:mainColor];
     [xieyiView addSubview:line4];
+    
+    
+    UIView * navi = [self.view viewWithTag:150];
+    [self.view bringSubviewToFront:navi];
 }
 
 #pragma mark -- 定位Delegate
@@ -642,6 +690,12 @@
 {
     UITextField *paswd = (UITextField *)[newpasView viewWithTag:1];
     UITextField *paswdagn = (UITextField *)[newpasView viewWithTag:2];
+    if ([paswd.text isEqualToString:@"123456"]) {
+        [MBProgressHUD promptWithString:@"密码过于简单,请设置其他密码!"];
+        return;
+    }
+    
+    
     if (![paswd.text isEqualToString:@""]) {
         if ([paswd.text isEqualToString:paswdagn.text]) {
             NSString *mdPasd = [md5_password encryptionPassword:@"-1" userTel:user_tel];
@@ -794,6 +848,14 @@
     bar.title=@"";
     self.navigationItem.backBarButtonItem=bar;
     [self.navigationController pushViewController:vc animated:YES];
+    vc.block=^(id data){
+//        NSNotification * noti = [[NSNotification alloc]initWithName:@"" object:nil userInfo:@{@"dianpuid":[NSString stringWithFormat:@"%@",data]}];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"getDianpurexianNoti" object:nil userInfo:@{@"dianpuid":[NSString stringWithFormat:@"%@",data]}];
+        
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    };
     //    UIWindow *window = [[[UIApplication sharedApplication] windows] firstObject];
     //    [window addSubview:vc.view];
 }
@@ -808,10 +870,14 @@
 #pragma mark 根据扫描内容获取热线电话
 -(void)getDianpurexianNotiClick:(NSNotification *)noti
 {
+    NSString * dianpuid = noti.userInfo[@"dianpuid"];
+    [[NSUserDefaults standardUserDefaults]setValue:dianpuid forKey:@"dianpuqiehuan"];
+    
+    
     NSInteger index = 0;
     isHave = 0;
     for (shopListModel *model in self.fujinDianpuArray) {
-        if ([[NSString stringWithFormat:@"%@",model.dianpuid] isEqualToString:noti.userInfo[@"dianpuid"]]) {
+        if ([[NSString stringWithFormat:@"%@",model.dianpuid] isEqualToString:dianpuid]) {
             dianpuNameLabel.text = model.dianpuname;
             [[NSUserDefaults standardUserDefaults]setValue:model.dianpuid forKey:@"dianpuqiehuan"];
 
@@ -824,13 +890,13 @@
     }
     
     if (!isHave) {
-        
         [self getDianpurexianWithIndex:2];
     }
 }
 -(void)getDianpurexianWithIndex:(NSInteger)index
 {
     dianpuID = user_qiehuandianpu;
+    
     NSMutableDictionary *pram = [[NSMutableDictionary alloc] initWithDictionary:@{@"dianpuid":dianpuID}];
     [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"getShanghurexianById.action" params:pram success:^(id json) {
         NSLog(@"热线电话%@",json);

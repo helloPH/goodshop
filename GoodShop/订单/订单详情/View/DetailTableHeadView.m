@@ -51,7 +51,7 @@
     line1.backgroundColor = txtColors(193, 194, 196, 1);
     [self addSubview:line1];
     
-    NSArray *tit = @[@"订单号:",@"收货人:",@"手机号码:",@"收货地址:",@"支付方式:",@"送达时间:",@"发票抬头:"];
+    NSArray *tit = @[@"订单号:",@"收货人:",@"手机号码:",@"地点:",@"支付方式:",@"送达时间:",@"发票抬头:"];
     for (int i = 0;i<tit.count;i++ ) {
         UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(30*MCscale,25*MCscale*i + 95*MCscale, 80*MCscale, 20*MCscale)];
         title.textAlignment = NSTextAlignmentLeft;

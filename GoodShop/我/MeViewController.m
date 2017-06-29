@@ -181,7 +181,7 @@
         [ddHud show:YES];
         NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"usertel":user_id}];
         [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"findbyuseridalllibao.action" params:pram success:^(id json) {
-            NSLog(@"消费礼包%@",json);
+            NSLog(@"消费券%@",json);
             [ddHud hide:YES];
             if ([[json valueForKey:@"massages"]integerValue] == 1) {
                 UILabel *coupLabe2 = (UILabel *)[headView viewWithTag:2001];
@@ -314,15 +314,15 @@
     [favicon addGestureRecognizer :chooseTap];
     [headView addSubview:favicon];
     //认证图标
-    NSArray *rzArray = @[@"认证",@"未认证"];
-    rzImage = [BaseCostomer imageViewWithFrame:CGRectMake(favicon.right-20*MCscale, favicon.bottom-22*MCscale, 25*MCscale, 25*MCscale) backGroundColor:[UIColor clearColor] image:rzArray[rzcode]];
-    [headView addSubview:rzImage];
+//    NSArray *rzArray = @[@"认证",@"未认证"];
+//    rzImage = [BaseCostomer imageViewWithFrame:CGRectMake(favicon.right-20*MCscale, favicon.bottom-22*MCscale, 25*MCscale, 25*MCscale) backGroundColor:[UIColor clearColor] image:rzArray[rzcode]];
+//    [headView addSubview:rzImage];
     //账户
     accountLabel = [BaseCostomer labelWithFrame:CGRectMake(0, 0, favicon.width+20*MCscale, 20*MCscale) font:[UIFont systemFontOfSize:MLwordFont_8] textColor:textBlackColor backgroundColor:[UIColor clearColor] textAlignment:1 numOfLines:1 text:@""];
     [headView addSubview:accountLabel];
     accountLabel.center = CGPointMake(kDeviceWidth/2.0, favicon.bottom+15*MCscale);
     
-    NSArray *titleArray = @[@"余额",@"消费礼包",@"优惠"];
+    NSArray *titleArray = @[@"余额",@"消费券",@"优惠"];
     //分割线
     for (int i = 0;i<3;i++ ) {
         UIView *backView = [BaseCostomer viewWithFrame:CGRectMake(kDeviceWidth/3.0*i, backImage.bottom+5*MCscale, kDeviceWidth /3.0, 60*MCscale) backgroundColor:[UIColor clearColor]]
@@ -348,7 +348,7 @@
         else
         {
             coupLabe1.textColor = mainColor;
-            coupLabe1.text = @"3";
+            coupLabe1.text = @"0";
         }
         
         UILabel *coup = [BaseCostomer labelWithFrame:CGRectMake(0, coupLabe1.bottom, coupLabe1.width, 20*MCscale) font:[UIFont systemFontOfSize:MLwordFont_5] textColor:txtColors(72, 73, 74, 1) backgroundColor:[UIColor clearColor] textAlignment:1 numOfLines:1 text:titleArray[i]];

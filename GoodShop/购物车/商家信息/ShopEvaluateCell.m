@@ -150,7 +150,7 @@
         }
         
         if (![model.guanjia isEqualToString:@"0"]) {
-            NSString *huifu =[NSString stringWithFormat:@"管家回复: %@",model.guanjia];
+            NSString *huifu =[NSString stringWithFormat:@"商家回复: %@",model.guanjia];
             CGSize huifuSize = [huifu boundingRectWithSize:CGSizeMake(360*MCscale,1000) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:MLwordFont_5],NSFontAttributeName, nil] context:nil].size;
             guanjiaLabel.frame = CGRectMake(10*MCscale,contentLabel.bottom + 5*MCscale, huifuSize.width, huifuSize.height);
             guanjiaLabel.text = huifu;

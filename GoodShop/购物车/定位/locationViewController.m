@@ -7,6 +7,8 @@
 
 #import "locationViewController.h"
 #import "Header.h"
+#import "NearbyShopsViewController.h"
+//#import "PHMap.h"
 
 @interface locationViewController ()<UITableViewDataSource,UITableViewDelegate,MBProgressHUDDelegate,UITextFieldDelegate,BMKLocationServiceDelegate,BMKGeoCodeSearchDelegate,UIGestureRecognizerDelegate>
 @end
@@ -202,6 +204,7 @@
     [[NSUserDefaults standardUserDefaults]setValue:addressNameArray[indexPath.row] forKey:@"addressName"];
     
     [self searchTipsWithKey:address];
+    
 }
 
 -(void)searchTipsWithKey:(NSString *)key
@@ -241,21 +244,22 @@
         NSString *longit = [NSString stringWithFormat:@"%lf",userLocation.location.coordinate.longitude];
         address_x = longit;
         address_y = latit;
-//        sloccation = [[CLLocation alloc]initWithLatitude:userLocation.location.coordinate.latitude longitude:userLocation.location.coordinate.longitude];
-//        geocoder = [[CLGeocoder alloc]init];
-//        [geocoder reverseGeocodeLocation:sloccation completionHandler:^(NSArray *placemarks, NSError *error) {
-//            if (placemarks.count) {
-//                //获取当前城市
-//                CLPlacemark *mark = placemarks.firstObject;
-//                NSDictionary *dict = [mark addressDictionary];
-//                
-//                NSLog(@"%@",dict);
-//                city = [dict objectForKey:@"City"];
-//            }
-//        }];
+        sloccation = [[CLLocation alloc]initWithLatitude:userLocation.location.coordinate.latitude longitude:userLocation.location.coordinate.longitude];
+        geocoder = [[CLGeocoder alloc]init];
+        [geocoder reverseGeocodeLocation:sloccation completionHandler:^(NSArray *placemarks, NSError *error) {
+            if (placemarks.count) {
+                //获取当前城市
+                CLPlacemark *mark = placemarks.firstObject;
+                NSDictionary *dict = [mark addressDictionary];
+                
+                NSLog(@"%@",dict);
+                city = [dict objectForKey:@"City"];
+            }
+        }];
 //        [self addressGetShequ];
         [_locService stopUserLocationService];
-        [self btnAction];
+        [self skipToNear];
+//        [self btnAction];
     }
     else
     {
@@ -318,7 +322,8 @@
             [[NSUserDefaults standardUserDefaults]setValue:address_y forKey:@"latitude"];
             [[NSUserDefaults standardUserDefaults]setValue:address_x forKey:@"longitude"];
 //            [self addressGetShequ];
-            [self btnAction];
+            [self skipToNear];
+//            [self btnAction];
         }
         NSLog(@"%@",addressNameArray);
     }
@@ -335,6 +340,8 @@
         //在此处理正常结果
         [addressNameArray removeAllObjects];
         [addressArray removeAllObjects];
+        
+        city = result.addressDetail.city;
         for (int i = 0; i < result.poiList.count; i++) {
             BMKPoiInfo* poi = [result.poiList objectAtIndex:i];
             NSLog(@"%@",poi.name);
@@ -350,7 +357,32 @@
         NSLog(@"抱歉，未找到结果");
     }
 }
-
+-(void)skipToNear{
+    NearbyShopsViewController * near = [NearbyShopsViewController new];
+    near.isManual=YES;
+//    *latitude,*longitude,*city;
+    [near setValue:city forKey:@"city"];
+    [near setValue:address_x forKey:@"longitude"];
+    [near setValue:address_y forKey:@"latitude"];
+//    if ([city isEmptyString] || [address_y isEmptyString] || [address_x isEmptyString]) {
+//        if (![city isEmptyString]) {
+//            PHMapHelper * helper = [PHMapHelper new];
+//            [helper geoWithAddress:@"" city:city block:^(BMKGeoCodeResult *result, BMKSearchErrorCode error) {
+//                
+//            }];
+//        }
+//        if (![address_x isEmptyString]&&![address_y isEmptyString]) {
+//            PHMapHelper * helper = [PHMapHelper new];
+//            [helper regeoWithLocation:CLLocationCoordinate2DMake(address_y.floatValue, address_x.floatValue) block:^(BMKReverseGeoCodeResult *result, BMKSearchErrorCode error) {
+//            }];
+//        }
+//        return;
+//    }
+    
+    
+    
+    [self.navigationController pushViewController:near animated:YES];
+}
 
 -(void)locationTapClick
 {
@@ -392,7 +424,9 @@
         [hub hide:YES];
         NSLog(@"定位%@",json);
         [[NSUserDefaults standardUserDefaults] setValue:[json valueForKey:@"shequid"] forKey:@"userShequid"];
-                [self btnAction];
+        
+        [self skipToNear];
+//        [self btnAction];
     } failure:^(NSError *error) {
         [hub hide:YES];
         MBProgressHUD *bud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -401,8 +435,11 @@
         [bud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
     }];
 }
+
 -(void)btnAction
 {
+    
+    
     CustomTabBarViewController *main = (CustomTabBarViewController *)self.tabBarController;
     main.buttonIndex = 0;
     [UIView  beginAnimations:nil context:NULL];

@@ -69,6 +69,7 @@
         else{
             listTabel.backgroundView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"无优惠券"]];
         }
+      
         [listTabel reloadData];
     } failure:^(NSError *error) {
         [Hud hide:YES];
@@ -82,35 +83,36 @@
 -(void)initTableView
 {
     listTabel = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+
     listTabel.backgroundColor = [UIColor whiteColor];
     listTabel.delegate = self;
     listTabel.dataSource = self;
     listTabel.separatorStyle = UITableViewCellSeparatorStyleNone;
-    UIView *headView = [[UIView alloc]initWithFrame:CGRectMake(0, 0,kDeviceWidth , 40)];
-    headView.backgroundColor = [UIColor whiteColor];
-    
-    UIImageView *image = [[UIImageView alloc]initWithFrame:CGRectMake(kDeviceWidth/3.0, 10, 22*MCscale_1, 22*MCscale_1)];
-    image.backgroundColor = [UIColor clearColor];
-    image.image = [UIImage imageNamed:@"叹号"];
-    [headView addSubview:image];
-    
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(image.right+5, 10, 100, 20)];
-    label.backgroundColor = [UIColor clearColor];
-    label.text = @"优惠券使用说明";
-    label.textAlignment = NSTextAlignmentLeft;
-    label.textColor = textColors;
-    label.font = [UIFont systemFontOfSize:MLwordFont_7];
-    [headView addSubview:label];
-    
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = headView.bounds;
-    btn.backgroundColor = [UIColor clearColor];
-    btn.tag = 1002;
-    [btn addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
-    [headView addSubview:btn];
-    UIView *line1 = [[UIView alloc]initWithFrame:CGRectMake(0, 39, kDeviceWidth,1)];
-    line1.backgroundColor = txtColors(193, 194, 196, 1);
-    [headView addSubview:line1];
+//    UIView *headView = [[UIView alloc]initWithFrame:CGRectMake(0, 0,kDeviceWidth , 0.1)];
+//    headView.backgroundColor = [UIColor whiteColor];
+//    
+//    UIImageView *image = [[UIImageView alloc]initWithFrame:CGRectMake(kDeviceWidth/3.0, 10, 22*MCscale_1, 22*MCscale_1)];
+//    image.backgroundColor = [UIColor clearColor];
+//    image.image = [UIImage imageNamed:@"叹号"];
+//    [headView addSubview:image];
+//    
+//    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(image.right+5, 10, 100, 20)];
+//    label.backgroundColor = [UIColor clearColor];
+//    label.text = @"优惠券使用说明";
+//    label.textAlignment = NSTextAlignmentLeft;
+//    label.textColor = textColors;
+//    label.font = [UIFont systemFontOfSize:MLwordFont_7];
+//    [headView addSubview:label];
+//    
+//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    btn.frame = headView.bounds;
+//    btn.backgroundColor = [UIColor clearColor];
+//    btn.tag = 1002;
+//    [btn addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
+//    [headView addSubview:btn];
+//    UIView *line1 = [[UIView alloc]initWithFrame:CGRectMake(0, 39, kDeviceWidth,1)];
+//    line1.backgroundColor = txtColors(193, 194, 196, 1);
+//    [headView addSubview:line1];
 //    listTabel.tableHeaderView = headView;
     [self.view addSubview:listTabel];
 }
@@ -122,6 +124,12 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return dataAry.count;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 0.1;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 10;
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {

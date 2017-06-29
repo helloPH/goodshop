@@ -53,13 +53,28 @@
         content.textColor = textBlackColor;
         [self addSubview:content];
         
+        
+        
+        
         if (tit.count == 2) {
-            content.text = [NSString stringWithFormat:@"￥%.2f",[array[i+2] floatValue]];
+             NSString * string = [NSString stringWithFormat:@"%@",array[i+2]];
+            content.text = [NSString stringWithFormat:@"￥%.2f",[string floatValue]];
+            if (string.floatValue == 0) {
+                content.hidden=YES;
+                title.hidden=YES;
+            }
         }
         else
         {
-            content.text = [NSString stringWithFormat:@"￥%.2f",[array[i+1] floatValue]];
+            NSString * string = [NSString stringWithFormat:@"%@",array[i+1]];
+            content.text = [NSString stringWithFormat:@"￥%.2f",[string floatValue]];
+            if (string.floatValue == 0) {
+                content.hidden=YES;
+                title.hidden=YES;
+            }
         }
+        
+        
     }
     
     if (![array[4] isEqualToString:@""] && ![array[4] isEqualToString:@"0"]) {

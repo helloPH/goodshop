@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @interface md5_password : NSObject
+
 +(NSString *)encryptionPassword:(NSString *)pas userTel:(NSString *)tel;
 +(NSString *)encryptionPassword:(NSString *)pas userId:(NSString *)uid;
++(NSString *)encryptionPassword:(NSString *)pas;
 @end

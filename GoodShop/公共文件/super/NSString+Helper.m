@@ -318,5 +318,41 @@
     return  [regextestmoney evaluateWithObject:self];
     
 }
++(NSInteger)compareWith:(NSString *)number1 andNumber2:(NSString *)number2{
+    if ([number1 isEmptyString] || [number2 isEmptyString]) {
+        return 1;
+    }
+    NSMutableArray * number1Arr =[NSMutableArray arrayWithArray:[number1 componentsSeparatedByString:@"."]];
+    NSMutableArray * number2Arr =[NSMutableArray arrayWithArray:[number2 componentsSeparatedByString:@"."]];
+    
+ 
+    if ([number1Arr count]<[number2Arr count]) {
+        for (int i = 0;  i < [number2Arr count]-[number1Arr count]; i++) {
+            [number1Arr addObject:@"0"];
+        }
+        
+    }else if([number2Arr count]<[number1Arr count]){
+        for (int i = 0;  i < [number1Arr count]-[number2Arr count]; i++) {
+            [number2Arr addObject:@"0"];
+        }
+    }
+    
+    for (int i = 0; i < [number1Arr count]; i++) {
+        NSInteger current1 = [[NSString stringWithFormat:@"%@",number1Arr[i]] integerValue];
+        NSInteger current2 = [[NSString stringWithFormat:@"%@",number2Arr[i]] integerValue];
+        if (current1 == current2 && i == [number1Arr count]-1) {
+            return 1;
+        }else if (current2 < current1){
+            return 0;
+        }else if(current2 > current1){
+            return 2;
+        }
+    }
+    return 1;
+    
+    
+    
+    
+}
 
 @end

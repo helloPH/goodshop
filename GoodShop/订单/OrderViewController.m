@@ -41,7 +41,7 @@
     OnLinePayView *onlinePayWayPop;// 在线支付选择支付方式
     BOOL isOnlinePay; //在线支付
     NSMutableDictionary *wxPaymessage;
-    UIImageView *caozuotishiImage;
+//    UIImageView *caozuotishiImage;
     OrderExceptionPrompt *orderPromptView;
     UIView *updateBackgroundView;
 }
@@ -101,28 +101,30 @@
     
     [self maskView];
     [self initPaymentPasswordView];
-    //    [self judgeTheFirst];
+//    [self judgeTheFirst];
     [self refresh];
 }
 
 -(void)judgeTheFirst
 {
-    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstOrder"] integerValue] == 1) {
-        NSString *url = @"images/caozuotishi/kefu.png";
-        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
-        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
-        caozuotishiImage.userInteractionEnabled = YES;
-        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
-        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
-        [caozuotishiImage addGestureRecognizer:imageTap];
-        [self.view addSubview:caozuotishiImage];
-    }
-    
-}
--(void)imageHidden
-{
-    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstOrder"];
-    [caozuotishiImage removeFromSuperview];
+//    [self showGuideImageWithUrl:@"images/caozuotishi/kefu.png"];
+//    
+//    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstOrder"] integerValue] == 1) {
+//        NSString *url = @"images/caozuotishi/kefu.png";
+//        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
+//        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
+//        caozuotishiImage.userInteractionEnabled = YES;
+//        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
+//        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
+//        [caozuotishiImage addGestureRecognizer:imageTap];
+//        [self.view addSubview:caozuotishiImage];
+//    }
+//    
+//}
+//-(void)imageHidden
+//{
+//    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstOrder"];
+//    [caozuotishiImage removeFromSuperview];
 }
 //判断订单状态
 -(void)orderStatus

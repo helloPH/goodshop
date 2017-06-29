@@ -15,6 +15,9 @@
 @interface LoginPasswordView : UIView<UITextFieldDelegate,MBProgressHUDDelegate>
 @property(nonatomic,strong)id<LoginPasswordViewDelegate>loginPasswordDelegate;
 
+@property (nonatomic,strong)void (^block)();
 @property(nonatomic,assign)NSInteger indexPath;
 
+-(void)appear;
+-(void)disAppear;
 @end

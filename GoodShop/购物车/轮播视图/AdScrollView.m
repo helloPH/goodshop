@@ -13,8 +13,7 @@
 
 #define HIGHT self.bounds.origin.y //由于_pageControl是添加进父视图的,所以实际位置要参考,滚动视图的y坐标
 
-static CGFloat const chageImageTime = 3.0;
-static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为1
+static NSInteger currentImage = 1;//记录中间图片的下标,开始总是为1
 
 @interface AdScrollView ()
 
@@ -26,9 +25,9 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
     UIImageView * _centerImageView;
     UIImageView * _rightImageView;
     //循环滚动的周期时间
-    NSTimer * _moveTime;
+//    NSTimer * _moveTime;
     //用于确定滚动式由人导致的还是计时器到了,系统帮我们滚动的,YES,则为系统滚动,NO则为客户滚动(ps.在客户端中客户滚动一个广告后,这个广告的计时器要归0并重新计时)
-    BOOL _isTimeUp;
+    
     NSInteger aryStyle;
     //为每一个图片添加一个广告语(可选)
 //    UILabel * _leftAdLabel;
@@ -39,6 +38,11 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
 @property (retain,nonatomic,readonly) UIImageView * centerImageView;
 @property (retain,nonatomic,readonly) UIImageView * rightImageView;
 
+@property (nonatomic,assign)NSInteger timeInteger;
+
+@property (nonatomic,strong)NSTimer * moveTime;
+
+@property (nonatomic,assign)NSInteger timeCount;
 @end
 @implementation AdScrollView
 #pragma mark - 自由指定广告所占的frame
@@ -46,6 +50,9 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        _timeCount=2;
+        _timeInteger = 3;
         self.bounces = NO;
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
@@ -59,8 +66,7 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
         [self addSubview:_centerImageView];
         _rightImageView = [[UIImageView alloc]initWithFrame:CGRectMake(UISCREENWIDTH*2, 0, UISCREENWIDTH, UISCREENHEIGHT)];
         [self addSubview:_rightImageView];
-        _moveTime = [NSTimer scheduledTimerWithTimeInterval:chageImageTime target:self selector:@selector(animalMoveImage) userInfo:nil repeats:YES];
-        _isTimeUp = NO;
+
     }
     return self;
 }
@@ -71,9 +77,7 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
         aryStyle = 0;
         _imageNameArray = @[];
         _imageNameArray = imageNameArray;
-        [_leftImageView sd_setImageWithURL:_imageNameArray[3] placeholderImage:[UIImage imageNamed:@"shoucilunbo"] options:SDWebImageRefreshCached];
-        [_centerImageView sd_setImageWithURL:_imageNameArray[0] placeholderImage:[UIImage imageNamed:@"shoucilunbo"] options:SDWebImageRefreshCached];
-        [_rightImageView sd_setImageWithURL:_imageNameArray[1] placeholderImage:[UIImage imageNamed:@"shoucilunbo"] options:SDWebImageRefreshCached];
+        
     }
     else{
         aryStyle = 1;
@@ -81,10 +85,18 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
         NSArray *arry =@[@"shoucilunbo",@"shoucilunbo",@"shoucilunbo",@"shoucilunbo"];
         _imageNameArray = @[];
         _imageNameArray = arry;
-        _leftImageView.image = [UIImage imageNamed: _imageNameArray[0]];
-        _centerImageView.image = [UIImage imageNamed: _imageNameArray[1]];
-        _rightImageView.image = [UIImage imageNamed: _imageNameArray[2]];
+
     }
+
+    [self reshView];
+  
+    _moveTime = [NSTimer scheduledTimerWithTimeInterval:_timeInteger target:self selector:@selector(animalMoveImage) userInfo:nil repeats:YES];
+//    [NSTimer scheduledTimerWithTimeInterval:3 repeats:YES block:^(NSTimer * _Nonnull timer) {
+//        [self animalMoveImage];
+//    }];
+    
+
+
 }
 //#pragma mark - 设置每个对应广告对应的广告语
 //- (void)setAdTitleArray:(NSArray *)adTitleArray withShowStyle:(AdTitleShowStyle)adTitleStyle
@@ -162,39 +174,67 @@ static NSUInteger currentImage = 1;//记录中间图片的下标,开始总是为
 #pragma mark - 计时器到时,系统滚动图片
 - (void)animalMoveImage
 {
-    [self setContentOffset:CGPointMake(UISCREENWIDTH * 2, 0) animated:YES];
-    _isTimeUp = YES;
-    [NSTimer scheduledTimerWithTimeInterval:0.4f target:self selector:@selector(scrollViewDidEndDecelerating:) userInfo:nil repeats:NO];
+    if (self.contentOffset.x==UISCREENWIDTH * 2) {
+        return;
+    }
+    [UIView animateWithDuration:1 animations:^{
+        self.contentOffset=CGPointMake(UISCREENWIDTH * 2, 0);
+    }completion:^(BOOL finished) {
+        if (finished) {
+            currentImage++;
+            [self reshView];
+        }
+    }];
+    
+    
 }
+
+
 #pragma mark - 图片停止时,调用该函数使得滚动视图复用
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    [_moveTime invalidate];
+    _moveTime = nil;
+    
+}
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     if (self.contentOffset.x == 0){
-        currentImage = (currentImage-1)%_imageNameArray.count;
-//        _pageControl.currentPage = (_pageControl.currentPage - 1)%_imageNameArray.count;
+        currentImage = currentImage-1;
     }
     else if(self.contentOffset.x == UISCREENWIDTH * 2){
-       currentImage = (currentImage+1)%_imageNameArray.count;
-//       _pageControl.currentPage = (_pageControl.currentPage + 1)%_imageNameArray.count;
+        currentImage = currentImage+1;
     }
     else{
-        return;
     }
-    if (aryStyle == 0) {
-        [_leftImageView sd_setImageWithURL:_imageNameArray[(currentImage-2)%_imageNameArray.count] placeholderImage:[UIImage imageNamed:@"shoucilunbo"] options:SDWebImageRefreshCached];
-        [_centerImageView sd_setImageWithURL:_imageNameArray[(currentImage-1)%_imageNameArray.count]  placeholderImage:[UIImage imageNamed:@"shoucilunbo"] options:SDWebImageRefreshCached];
-        [_rightImageView sd_setImageWithURL:_imageNameArray[(currentImage)%_imageNameArray.count] placeholderImage:[UIImage imageNamed:@"shoucilunbo"] options:SDWebImageRefreshCached];
+    [self reshView];
+    if (!_moveTime) {
+        _moveTime = [NSTimer scheduledTimerWithTimeInterval:_timeInteger target:self selector:@selector(animalMoveImage) userInfo:nil repeats:YES];
     }
-    else{
-        _leftImageView.image =[UIImage imageNamed: _imageNameArray[(currentImage-1)%_imageNameArray.count]];
-        _centerImageView.image = [UIImage imageNamed: _imageNameArray[currentImage%_imageNameArray.count] ];
-        _rightImageView.image = [UIImage imageNamed: _imageNameArray[(currentImage+1)%_imageNameArray.count] ];
-    }
+
+}
+-(void)reshView{
+    currentImage = currentImage%_imageNameArray.count;
+    currentImage = currentImage<0?_imageNameArray.count-1:currentImage;
+   
+    NSInteger before = currentImage-1;
+    before = before<0?_imageNameArray.count-1:before;
+    
+    NSInteger after  = currentImage + 1;
+    after= after>_imageNameArray.count-1?0:after;
+    
     self.contentOffset = CGPointMake(UISCREENWIDTH, 0);
-    //手动控制图片滚动应该取消那个三秒的计时器
-    if (!_isTimeUp) {
-        [_moveTime setFireDate:[NSDate dateWithTimeIntervalSinceNow:chageImageTime]];
+    
+    
+    
+    if (aryStyle == 0) {
+        [_leftImageView sd_setImageWithURL:_imageNameArray[before] placeholderImage:[UIImage imageNamed:@"shoucilunbo"] options:SDWebImageRefreshCached];
+        [_centerImageView sd_setImageWithURL:_imageNameArray[currentImage]  placeholderImage:[UIImage imageNamed:@"shoucilunbo"] options:SDWebImageRefreshCached];
+        [_rightImageView sd_setImageWithURL:_imageNameArray[after] placeholderImage:[UIImage imageNamed:@"shoucilunbo"] options:SDWebImageRefreshCached];
     }
-    _isTimeUp = NO;
+    else{
+        _leftImageView.image =[UIImage imageNamed: _imageNameArray[before]];
+        _centerImageView.image = [UIImage imageNamed: _imageNameArray[currentImage] ];
+        _rightImageView.image = [UIImage imageNamed: _imageNameArray[after]];
+    }
 }
 @end

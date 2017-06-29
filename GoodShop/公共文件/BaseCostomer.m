@@ -89,6 +89,8 @@
     [button setTitle:text forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
     [button setBackgroundColor:backColor];
+    
+    
     return button;
 }
 

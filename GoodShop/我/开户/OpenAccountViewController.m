@@ -28,7 +28,7 @@
 //method not implement
 @implementation OpenAccountViewController
 {
-    UIImageView *caozuotishiImage;
+//    UIImageView *caozuotishiImage;
     
     UIView *protocolView;
     UIImageView *protocolImage;
@@ -134,22 +134,24 @@
 }
 -(void)judgeTheFirst
 {
-    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstkaihu"] integerValue] == 1) {
-        NSString *url = @"images/caozuotishi/caogao.png";
-        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPHEADER,url];
-        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
-        caozuotishiImage.alpha = 0.9;
-        caozuotishiImage.userInteractionEnabled = YES;
-        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
-        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
-        [caozuotishiImage addGestureRecognizer:imageTap];
-        [self.view addSubview:caozuotishiImage];
-    }
-}
--(void)imageHidden
-{
-    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstkaihu"];
-    [caozuotishiImage removeFromSuperview];
+    [self showGuideImageWithUrl:@"images/caozuotishi/caogao.png"];
+    
+//    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstkaihu"] integerValue] == 1) {
+//        NSString *url = @"images/caozuotishi/caogao.png";
+//        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPHEADER,url];
+//        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
+//        caozuotishiImage.alpha = 0.9;
+//        caozuotishiImage.userInteractionEnabled = YES;
+//        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
+//        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
+//        [caozuotishiImage addGestureRecognizer:imageTap];
+//        [self.view addSubview:caozuotishiImage];
+//    }
+//}
+//-(void)imageHidden
+//{
+//    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstkaihu"];
+//    [caozuotishiImage removeFromSuperview];
 }
 
 -(UIScrollView *)mainScrollView

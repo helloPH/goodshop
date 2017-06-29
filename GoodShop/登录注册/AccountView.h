@@ -14,6 +14,8 @@
 
 @end
 @interface AccountView : UIView<MBProgressHUDDelegate,UITextFieldDelegate>
+@property (nonatomic,strong)UITextField *tleTextFile;
 
+@property (nonatomic,strong)LoginViewController * controller;
 @property (nonatomic,weak)id<AccountViewDelegate>loginDelegate;
 @end

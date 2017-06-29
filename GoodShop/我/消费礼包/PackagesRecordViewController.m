@@ -34,7 +34,7 @@
     packagesArray = [NSMutableArray arrayWithCapacity:0];
     self.view.backgroundColor = [UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    [self.navigationItem setTitle:@"消费礼包"];
+    [self.navigationItem setTitle:@"消费券"];
     [self initSubviews];
     [self getPackageData];
 }
@@ -58,7 +58,7 @@
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"findbyuseridalllibao.action" params:pram success:^(id json) {
             [mbHud hide:YES];
-            NSLog(@"消费礼包%@",json);
+            NSLog(@"消费券%@",json);
             if ([[json valueForKey:@"massages"]integerValue] == 1) {
                 NSArray *listArray = [json valueForKey:@"list"];
                 for (NSDictionary *dict in listArray) {

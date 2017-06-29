@@ -34,7 +34,7 @@
     NSInteger loadType;
     int pageNum;
     int lastPage;
-    UIImageView *caozuotishiImage;
+//    UIImageView *caozuotishiImage;
 
 }
 @end
@@ -66,22 +66,23 @@
 }
 -(void)judgeTheFirst
 {
-    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstShoucang"] integerValue] == 1) {
-        NSString *url = @"images/caozuotishi/shoucang.png";
-        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
-        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
-        caozuotishiImage.userInteractionEnabled = YES;
-        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
-        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
-        [caozuotishiImage addGestureRecognizer:imageTap];
-        [self.view addSubview:caozuotishiImage];
-    }
-}
-
--(void)imageHidden
-{
-    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstShoucang"];
-    [caozuotishiImage removeFromSuperview];
+    [self showGuideImageWithUrl:@"images/caozuotishi/shoucang.png"];
+//    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"isFirstShoucang"] integerValue] == 1) {
+//        NSString *url = @"images/caozuotishi/shoucang.png";
+//        NSString * urlPath = [NSString stringWithFormat:@"%@%@",HTTPWeb,url];
+//        caozuotishiImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, kDeviceWidth, kDeviceHeight)];
+//        caozuotishiImage.userInteractionEnabled = YES;
+//        [caozuotishiImage sd_setImageWithURL:[NSURL URLWithString:urlPath]];
+//        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageHidden)];
+//        [caozuotishiImage addGestureRecognizer:imageTap];
+//        [self.view addSubview:caozuotishiImage];
+//    }
+//}
+//
+//-(void)imageHidden
+//{
+//    [[NSUserDefaults standardUserDefaults] setValue:@"0" forKey:@"isFirstShoucang"];
+//    [caozuotishiImage removeFromSuperview];
 }
 //初始化导航栏
 -(void)initNavigation
@@ -341,7 +342,14 @@
     [headView addSubview:shopTitle];
     
     RatingView *rating = [[RatingView alloc]initWithFrame:CGRectMake(0, 0, 170*MCscale, 30*MCscale)];
+    
+    
     rating.ratingScore = [modl.pingja floatValue]*MCscale;
+    if (rating.ratingScore==0) {
+        rating.ratingScore=100;
+    }
+    
+    
     rating.center = CGPointMake(kDeviceWidth/2.0, shopTitle.bottom+20);
     rating.backgroundColor = [UIColor clearColor];
     UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 159*MCscale, kDeviceWidth, 1)];

@@ -111,6 +111,7 @@
     }
     
     //
+//    zhuangtai = @"2019-1-2444444444";
     if (zhuangtai.length > 11) {
         tishiLabel.text = zhuangtai;
        tishiLabel.backgroundColor = [UIColor grayColor];

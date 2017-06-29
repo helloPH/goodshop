@@ -8,6 +8,8 @@
 
 #import "findPasViewController.h"
 #import "Header.h"
+#import "MoNiSystemAlert.h"
+
 @interface findPasViewController ()<UIAlertViewDelegate,MBProgressHUDDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate>
 {
     UIView *findNumView;//找回密码方式
@@ -29,6 +31,7 @@
     UIView *mask;//键盘遮罩
     BOOL isTan;
     BOOL isEmail;
+    BOOL isSystem;
 }
 @end
 
@@ -64,8 +67,14 @@
 }
 -(void)initNavigation
 {
-    self.navigationItem.title = @"找回密码";
+    self.navigationItem.title = @"重置密码";
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],NSForegroundColorAttributeName,[UIFont boldSystemFontOfSize:20],NSFontAttributeName,nil]];
+    
+    
+    UIButton * leftBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, NVbtnWight, NVbtnWight)];
+    [leftBtn addTarget:self.navigationController action:@selector(popViewControllerAnimated:) forControlEvents:UIControlEventTouchUpInside];
+    [leftBtn setImage:[UIImage imageNamed:@"返回按钮"] forState:UIControlStateNormal];
+    self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc]initWithCustomView:leftBtn];
 }
 -(void)initMask
 {
@@ -87,7 +96,7 @@
     [findNumView addSubview:telview];
     
     UITextField *telFiled = [[UITextField alloc]initWithFrame:telview.bounds];
-    telFiled.placeholder = @"请输入账号";
+    telFiled.placeholder = @"请输入绑定手机号";
     telFiled.keyboardType = UIKeyboardTypeNumberPad;
     telFiled.textAlignment = NSTextAlignmentCenter;
     telFiled.textColor = [UIColor blackColor];
@@ -96,6 +105,9 @@
     telFiled.tag = 101;
     telFiled.delegate = self;
     [telview addSubview:telFiled];
+    if (_beforeTel && [_beforeTel isValidateMobile]) {
+        telFiled.text = _beforeTel;
+    }
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(telview.right+10, 0, 130*MCscale, 40*MCscale);
@@ -169,10 +181,10 @@
 -(void)initAryData
 {
     [findWayNameAry removeAllObjects];
-    if ([userDevId isEqualToString:userSheBei_id]) {
-        [findWayNameAry addObject:@"系统找回"];
-        [findWayTagAry addObject:@"1"];
-    }
+//    if ([userDevId isEqualToString:userSheBei_id]) {
+//        [findWayNameAry addObject:@"系统找回"];
+//        [findWayTagAry addObject:@"1"];
+//    }
     if (![userEmail isEqualToString:@""]) {
         [findWayNameAry addObject:@"邮箱找回"];
         [findWayTagAry addObject:@"2"];
@@ -183,7 +195,7 @@
     }
     [self dismPopView];
     [self initfindWayView];
-    if (findWayNameAry.count == 1) {
+    if (findWayNameAry.count == 1 ) {
         topHeight = 236*MCscale;
     }
     else if (findWayNameAry.count == 2){
@@ -414,28 +426,54 @@
 }
 -(void)messageFindAction
 {
-    NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"user.tel":userTel}];
-    [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"backCode.action" params:pram success:^(id json) {
-        NSDictionary *dic = (NSDictionary *)json;
-        if ([[dic valueForKey:@"massage"]intValue]==1) {
-            [self dismPopView];
-            [UIView animateWithDuration:0.3 animations:^{
-                lastPopTag = 111;
-                [self.view addSubview:codePopView];
-            }];
-        }
-        else{
-            MBProgressHUD *mbHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            mbHud.mode = MBProgressHUDModeText;
-            mbHud.labelText = @"验证码发送失败!请稍后重试";
-            [mbHud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
-        }
-    } failure:^(NSError *error) {
-        MBProgressHUD *bud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        bud.mode = MBProgressHUDModeCustomView;
-        bud.labelText = @"网络连接错误";
-        [bud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
-    }];
+    NSDictionary * pram = @{@"canshu":@"1",// 1 用户 2 员工
+                            @"tel":userTel,
+                            @"content":userSheBei_id};
+     [self yanZhengShengFenWithDic:pram success:^(id json) {
+         [self dismPopView];
+         [UIView animateWithDuration:0.3 animations:^{
+             lastPopTag = 111;
+             [self.view addSubview:codePopView];
+         }];
+
+         
+         if ([json isEqualToString:@"0"]) {
+             isSystem = NO;
+         }else{
+             isSystem = YES;
+             MoNiSystemAlert * alert = [MoNiSystemAlert new];
+             alert.content=[NSString stringWithFormat:@"%@",json];
+             [alert appear];
+         }
+     } failure:^(NSError *error) {
+         
+     }];
+    
+
+    
+    
+//    NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"user.tel":userTel}];
+//    [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"backCode.action" params:pram success:^(id json) {
+//        NSDictionary *dic = (NSDictionary *)json;
+//        if ([[dic valueForKey:@"massage"]intValue]==1) {
+//            [self dismPopView];
+//            [UIView animateWithDuration:0.3 animations:^{
+//                lastPopTag = 111;
+//                [self.view addSubview:codePopView];
+//            }];
+//        }
+//        else{
+//            MBProgressHUD *mbHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//            mbHud.mode = MBProgressHUDModeText;
+//            mbHud.labelText = @"验证码发送失败!请稍后重试";
+//            [mbHud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
+//        }
+//    } failure:^(NSError *error) {
+//        MBProgressHUD *bud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//        bud.mode = MBProgressHUDModeCustomView;
+//        bud.labelText = @"网络连接错误";
+//        [bud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
+//    }];
 }
 #pragma mark -- 接口事件处理
 //新密码 修改
@@ -459,6 +497,11 @@
                 mbHud.mode = MBProgressHUDModeText;
                 mbHud.labelText = @"密码重置成功";
                 [mbHud showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
+                [self.navigationController popViewControllerAnimated:YES];
+                
+                if (_backPhone) {
+                    _backPhone(userTel);
+                }
             }
             else{
                 MBProgressHUD *mbHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -512,9 +555,22 @@
 //验证码确定
 -(void)messageEnsure
 {
+   
+    
+    
     UITextField *mes = (UITextField *)[codePopView viewWithTag:101];
     NSMutableDictionary *pram = [[NSMutableDictionary alloc]initWithDictionary:@{@"user.tel":userTel,@"code":mes.text}];
-    [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"backlongin.action" params:pram success:^(id json) {
+    NSString * httpheader = HTTPHEADER;
+    
+    
+    if (isSystem) {
+        pram  = [[NSMutableDictionary alloc]initWithDictionary:@{@"yuangong.tel":userTel,@"code":mes.text}];
+        httpheader = HTTPPush;
+    }
+    
+    
+    
+    [HTTPTool getWithUrlPath:httpheader AndUrl:@"backlongin.action" params:pram success:^(id json) {
         NSDictionary *dic = (NSDictionary *)json;
         if([[dic valueForKey:@"massage"]intValue]==3){
             [self dismPopView];
@@ -522,6 +578,8 @@
                 lastPopTag = 110;
                 [self.view addSubview:newPasPopView];
             }];
+            
+            
         }
         else{
             MBProgressHUD *mbHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -600,5 +658,46 @@
 {
     [self.view endEditing:YES];
 }
+
+
+
+-(void)yanZhengShengFenWithDic:(NSDictionary *)dic success:(successBlock)success failure:(failureBlock)failure{
+    NSString * tel = [NSString stringWithFormat:@"%@",[dic valueForKey:@"tel"]];
+    
+    
+    [Request yanZhengShengFenWithDic:dic success:^(id json) {
+        NSString * message = [NSString stringWithFormat:@"%@",[json valueForKey:@"messages"]];
+        
+        if ([message isEqualToString:@"0"]) {//
+          
+            
+                NSMutableDictionary *pram1 = [[NSMutableDictionary alloc]initWithDictionary:@{@"user.tel":tel}];
+                [HTTPTool getWithUrlPath:HTTPHEADER AndUrl:@"backCode.action" params:pram1 success:^(id json) {
+                    NSDictionary *dic = (NSDictionary *)json;
+                    if ([[dic valueForKey:@"massage"]intValue]==1) {
+                        success(@"0");//
+                
+                    }
+                    else{
+                        failure(nil);
+                        
+                    }
+                } failure:^(NSError *error) {
+                    failure(error);
+
+                }];
+
+        }else{// 发送手机验证码
+            success(message);// 本地
+        }
+    } failure:^(NSError *error) {
+        failure(error);
+
+        
+    }];
+    
+    
+}
+
 
 @end

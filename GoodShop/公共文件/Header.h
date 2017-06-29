@@ -10,6 +10,7 @@
 #define LifeForMM_Header_h
 #endif
 
+#import "UIViewController+Helper.h"
 #import "NSString+Helper.h"
 #import "UIViewExt.h"
 #import "Request.h"
@@ -60,19 +61,37 @@
 #define IPHONE_6 ((kDeviceHeight == 667.0)? (YES):(NO))
 #define IPHONE_Plus ((kDeviceHeight > 667.0)? (YES):(NO))
 
+
+#define APPVERSION [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
+
 #define user_dianpuName [[NSUserDefaults standardUserDefaults]objectForKey:@"dianpuName"]
 #define user_dianpuId [[NSUserDefaults standardUserDefaults]valueForKey:@"dianpuId"]
 #define user_qiehuandianpu [[NSUserDefaults standardUserDefaults]valueForKey:@"dianpuqiehuan"]
+
+// before and after
+#define banben_IsAfter [[NSUserDefaults standardUserDefaults]boolForKey:@"banBen_isAfter"]
+#define set_Banben_IsAfter(isAfter) [[NSUserDefaults standardUserDefaults] setBool:isAfter forKey:@"banBen_isAfter"]
+
 #define user_Xinrenli [[NSUserDefaults standardUserDefaults]valueForKey:@"xinrenli"]
 #define user_tel [[NSUserDefaults standardUserDefaults]valueForKey:@"userTel"]
 #define user_pass [[NSUserDefaults standardUserDefaults]valueForKey:@"userPass"]
 #define user_id [[NSUserDefaults standardUserDefaults]valueForKey:@"userId"]
 #define isLogin [[NSUserDefaults standardUserDefaults]valueForKey:@"isLogin"]
 #define userSheBei_id [[UIDevice currentDevice].identifierForVendor UUIDString]
-#define user_city [[NSUserDefaults standardUserDefaults]valueForKey:@"userCity"]
+
 #define userLastAddress [[NSUserDefaults standardUserDefaults]valueForKey:@"addressName"]
+
+
+// 用户定位的当前城市
+#define user_city [[NSUserDefaults standardUserDefaults]valueForKey:@"userCity"]
+#define set_user_city(user_city) [[NSUserDefaults standardUserDefaults]setValue:user_city forKey:@"userCity"]
+
+// 用户定位的当前经纬度
 #define userLongitude [[NSUserDefaults standardUserDefaults]valueForKey:@"longitude"]
+#define set_user_Longitude(user_Longitude) [[NSUserDefaults standardUserDefaults]setValue:user_Longitude forKey:@"longitude"]
+
 #define userLatitude [[NSUserDefaults standardUserDefaults]valueForKey:@"latitude"]
+#define set_user_Latitude(user_Latitude) [[NSUserDefaults standardUserDefaults]setValue:user_Latitude forKey:@"latitude"]
 
 // 是否配送  主要针对扫码进行购买 扫码不进行配送 修改值为0  默认为1
 #define isPeiSong [[NSUserDefaults standardUserDefaults]valueForKey:@"isPeiSong"]
@@ -138,8 +157,8 @@
 #define MCscale_1 (IPHONE_5 ? 0.9 : 1)
 //颜色
 
-#define naviBarTintColor [UIColor colorWithRed:67/255.0 green:208/255.0 blue:212/255.0 alpha:1]
-#define mainColor [UIColor colorWithRed:67/255.0 green:208/255.0 blue:212/255.0 alpha:1]
+#define naviBarTintColor [UIColor colorWithRed:72/255.0 green:204/255.0 blue:224/255.0 alpha:1]
+#define mainColor        [UIColor colorWithRed:72/255.0 green:204/255.0 blue:224/255.0 alpha:1]
 
 #define txtColors(r,g,b,alp) [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:alp]
 #define textColors txtColors(109.0,109.0,109.0,1)

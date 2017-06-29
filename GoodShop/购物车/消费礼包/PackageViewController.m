@@ -55,7 +55,7 @@
 }
 -(void)initNavigation
 {
-    [self.navigationItem setTitle:@"消费礼包"];
+    [self.navigationItem setTitle:@"消费券"];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],NSForegroundColorAttributeName,[UIFont boldSystemFontOfSize:MLwordFont_2],NSFontAttributeName,nil]];
 
 }
