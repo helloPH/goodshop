@@ -829,7 +829,7 @@
     UIView *back = [BaseCostomer viewWithFrame:CGRectMake(0,lineViewTop +5*MCscale,kDeviceWidth,30*MCscale) backgroundColor:[UIColor clearColor]];
     [headView addSubview:back];
     
-    UILabel *fenleiLabel = [BaseCostomer labelWithFrame:CGRectMake(15*MCscale,0, 70*MCscale, 20*MCscale) font:[UIFont systemFontOfSize:MLwordFont_5] textColor:txtColors(173, 173, 173, 1) backgroundColor:[UIColor clearColor] textAlignment:1 numOfLines:1 text:@"优惠专区"];
+    UILabel *fenleiLabel = [BaseCostomer labelWithFrame:CGRectMake(15*MCscale,0, 70*MCscale, 20*MCscale) font:[UIFont systemFontOfSize:MLwordFont_5] textColor:txtColors(173, 173, 173, 1) backgroundColor:[UIColor clearColor] textAlignment:1 numOfLines:1 text:@"招牌推荐"];
 //    fenleiLabel.center = CGPointMake(backView.width/2.0, 15*MCscale);
     [back addSubview:fenleiLabel];
     
@@ -839,12 +839,10 @@
     line1.top=fenleiLabel.bottom+5;
     line1.left=0;
     
-    
-    
-    
-    
+
 //    UIView *line2 = [BaseCostomer viewWithFrame:CGRectMake(fenleiLabel.right +10*MCscale, 15*MCscale,(kDeviceWidth-230*MCscale)/2.0,0.5) backgroundColor:txtColors(173, 173, 173, 1)];
 //    [back addSubview:line2];
+    
     if (rexiaoImageArray.count%3 == 0) {
         if (rexiaoImageArray.count >0 &&rexiaoImageArray.count <=3) {
             for (int j = 0; j<rexiaoImageArray.count; j++) {
